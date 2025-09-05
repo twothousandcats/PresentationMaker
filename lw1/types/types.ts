@@ -1,9 +1,8 @@
-// export type SlideBackground =
-//     | { type: 'none' }
-//     | { type: 'color'; color: string }
-//     | { type: 'image'; src: string }
-//     | { type: 'gradient'; colors: string[]
-// };
+export type SlideBackground =
+    | { type: 'none' }
+    | { type: 'color'; color: string }
+    | { type: 'image'; src: string }
+    | { type: 'gradient'; colors: string[] };
 
 export type Position = {
     x: number;
@@ -17,6 +16,7 @@ export type Size = {
 
 export type ImageElement = {
     id: string;
+    kind: 'image'
     src: string;
     position: Position;
     size: Size
@@ -24,6 +24,7 @@ export type ImageElement = {
 
 export type TextElement = {
     id: string;
+    kind: 'text'
     text: string;
     position: Position;
     size: Size;
@@ -46,7 +47,7 @@ export type SlideCollection = Slide[];
 
 export type Slide = {
     id: string;
-    // background: SlideBackground;
+    background: SlideBackground;
     elements: SlideElement[];
     selectedElementIds: string[]
 };
