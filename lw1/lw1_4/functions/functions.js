@@ -65,4 +65,3 @@ function changeTextColor(slide, elementId, color) {
 function changeSlideBackground(slide, background) {
     return Object.assign(Object.assign({}, slide), { background });
 }
-export {};
