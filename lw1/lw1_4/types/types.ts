@@ -43,8 +43,6 @@ export type Selection = {
     selectedElementIds: string[]
 };
 
-export type SlideCollection = Slide[];
-
 export type Slide = {
     id: string;
     background: SlideBackground;
@@ -53,8 +51,9 @@ export type Slide = {
 };
 
 export type Presentation = {
-    id: number;
+    id: string;
     title: string;
-    slides: SlideCollection;
+    slides: Slide[];
+    size: Size;
     selectedSlideId: string | null
 }

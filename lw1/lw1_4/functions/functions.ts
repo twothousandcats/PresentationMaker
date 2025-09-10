@@ -1,21 +1,21 @@
-import {
-    ImageElement,
-    Position,
-    Presentation,
-    Size,
-    Slide,
-    SlideBackground,
-    TextElement
-} from "../types/types";
+import {ImageElement, Position, Presentation, Size, Slide, SlideBackground, TextElement} from "../types/types";
 
-function renamePresentation(newTitle: string, pres: Presentation): Presentation {
+export function getCurSlideId(pres: Presentation): string {
+    if (!pres.selectedSlideId.length) {
+        return '';
+    }
+
+    return pres.selectedSlideId;
+}
+
+export function renamePresentation(newTitle: string, pres: Presentation): Presentation {
     return {
         ...pres,
         title: newTitle
     };
 }
 
-function addSlide(newSlide: Slide, pres: Presentation, position?: number): Presentation {
+export function addSlide(newSlide: Slide, pres: Presentation, position?: number): Presentation {
     const slides = [...pres.slides];
     const insertAt = position ?? slides.length;
     slides.splice(insertAt, 0, newSlide);
@@ -26,11 +26,13 @@ function addSlide(newSlide: Slide, pres: Presentation, position?: number): Prese
     };
 }
 
-function deleteSlides(slideIds: string[], pres: Presentation): Presentation {
+export function deleteSlides(slideIds: string[], pres: Presentation): Presentation {
     const slides = pres.slides.filter(slide => {
         !slideIds.includes(slide.id);
     });
-    const selectedSlideId = slides.find(slide => slide.id === pres.selectedSlideId)?.id ?? (slides[0]?.id ?? null);
+    const selectedSlideId = slides.find(
+        slide => slide.id === pres.selectedSlideId
+    )?.id ?? (slides[0]?.id ?? null);
 
     return {
         ...pres,
@@ -40,7 +42,7 @@ function deleteSlides(slideIds: string[], pres: Presentation): Presentation {
 }
 
 // Пока для одного слайда
-function moveSlide(fromIndex: number, toIndex: number, pres: Presentation): Presentation {
+export function moveSlide(fromIndex: number, toIndex: number, pres: Presentation): Presentation {
     const slides = [...pres.slides];
     const [moved] = slides.splice(fromIndex, 1);
     slides.splice(toIndex, 0, moved);
@@ -51,96 +53,236 @@ function moveSlide(fromIndex: number, toIndex: number, pres: Presentation): Pres
     };
 }
 
-function addTextElement(slide: Slide, newElement: TextElement): Slide {
-    return {
-        ...slide,
+export function addTextElement(pres: Presentation, newElement: TextElement): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
         elements: [
-            ...slide.elements,
+            ...selectedSlide.elements,
             newElement
         ]
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function addImageElement(slide: Slide, newElement: ImageElement): Slide {
-    return {
-        ...slide,
+export function addImageElement(pres: Presentation, newElement: ImageElement): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
         elements: [
-            ...slide.elements,
+            ...selectedSlide.elements,
             newElement
         ]
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function deleteElements(slide: Slide, elementIds: string[]): Slide {
+export function deleteElements(pres: Presentation, elementIds: string[]): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.filter(el => !elementIds.includes(el.id))
+    }
+
     return {
-        ...slide,
-        elements: slide.elements.filter(el => !elementIds.includes(el.id))
-    };
+        ...pres,
+        slides
+    }
 }
 
-function changeElementPosition(slide: Slide, elementId: string, position: Position): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId
+export function changeElementPosition(pres: Presentation, elementId: string, position: Position): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId
             ? {...el, position}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeElementSize(slide: Slide, elementId: string, size: Size): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId
+export function changeElementSize(pres: Presentation, elementId: string, size: Size): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId
             ? {...el, size}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeText(slide: Slide, elementId: string, newText: string): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId && el.kind === 'text'
+export function changeText(pres: Presentation, elementId: string, newText: string): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId && el.kind === 'text'
             ? {...el, text: newText}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeTextFontSize(slide: Slide, elementId: string, newFontSize: number): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId && el.kind === 'text'
+export function changeTextFontSize(pres: Presentation, elementId: string, newFontSize: number): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId && el.kind === 'text'
             ? {...el, fontSize: newFontSize}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeTextFontFamily(slide: Slide, elementId: string, fontFamily: string): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId && el.kind === 'text'
+export function changeTextFontFamily(pres: Presentation, elementId: string, fontFamily: string): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId && el.kind === 'text'
             ? {...el, fontFamily}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeTextColor(slide: Slide, elementId: string, color: string): Slide {
-    return {
-        ...slide,
-        elements: slide.elements.map(el => el.id === elementId && el.kind === 'text'
+export function changeTextColor(pres: Presentation, elementId: string, color: string): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
+        elements: selectedSlide.elements.map(el => el.id === elementId && el.kind === 'text'
             ? {...el, color}
             : el
         )
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
 
-function changeSlideBackground(slide: Slide, background: SlideBackground): Slide {
-    return {
-        ...slide,
+export function changeSlideBackground(pres: Presentation, background: SlideBackground): Presentation {
+    const selectedId = getCurSlideId(pres);
+    if (!selectedId.length) {
+        return {
+            ...pres
+        }
+    }
+
+    const slides = [...pres.slides];
+    const selectedSlide = slides[selectedId];
+    slides[selectedId] = {
+        ...selectedSlide,
         background
+    }
+
+    return {
+        ...pres,
+        slides
     };
 }
