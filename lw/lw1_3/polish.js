@@ -4,7 +4,7 @@ function calc(expression) {
     try {
         const result = evaluateExpression(tokens);
         if (index < tokens.length) {
-            throw new Error("Некорректное выражение: лишние токены");
+            throw new Error("Некорректное выражение: лишний символ");
         }
         return result;
     }
