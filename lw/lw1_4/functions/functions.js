@@ -26,9 +26,14 @@ export function moveSlide(slideId, newIndex, pres) {
     if (curIndex === -1 || curIndex === newIndex) {
         return pres;
     }
-    const [movedSlide] = slides.splice(curIndex, 0);
-    slides.splice(newIndex, 0, movedSlide);
-    return Object.assign(Object.assign({}, pres), { slides });
+    const movedSlide = slides.find(slide => slide.id === slideId);
+    const filteredSlides = slides.filter(slide => slide.id !== slideId);
+    const newSlides = [
+        ...filteredSlides.slice(0, newIndex),
+        movedSlide,
+        ...filteredSlides.slice(newIndex)
+    ];
+    return Object.assign(Object.assign({}, pres), { slides: newSlides });
 }
 export function addElementToSlide(slideId, newElement, pres) {
     const targetSlide = pres.slides.find(slide => slide.id === slideId);
