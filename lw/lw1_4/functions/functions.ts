@@ -64,18 +64,22 @@ export function removeSlide(slideIdsToRemove: string[], pres: Presentation): Pre
 export function moveSlide(slideId: string, newIndex: number, pres: Presentation): Presentation {
     const slides = [...pres.slides];
     const curIndex = slides.findIndex(slide => slide.id === slideId);
-
     if (curIndex === -1 || curIndex === newIndex) {
         return pres;
     }
 
-    const [movedSlide] = slides.splice(curIndex, 0);
-    slides.splice(newIndex, 0, movedSlide);
+    const movedSlide = slides.find(slide => slide.id === slideId)!;
+    const filteredSlides = slides.filter(slide => slide.id !== slideId);
+    const newSlides = [
+        ...filteredSlides.slice(0, newIndex),
+        movedSlide,
+        ...filteredSlides.slice(newIndex)
+    ];
 
     return {
         ...pres,
-        slides
-    }
+        slides: newSlides
+    };
 }
 
 export function addElementToSlide(slideId: string, newElement: SlideElement, pres: Presentation): Presentation {

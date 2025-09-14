@@ -6,35 +6,38 @@
 </head>
 <body>
 <script>
-    // utils
-     function updateSlide(updatedSlide, pres) {
-        return Object.assign(Object.assign({}, pres), { slides: pres.slides.map(slide => slide.id === updatedSlide.id
+    function updateSlide(updatedSlide, pres) {
+        return Object.assign(Object.assign({}, pres), {
+            slides: pres.slides.map(slide => slide.id === updatedSlide.id
                 ? updatedSlide
-                : slide) });
+                : slide)
+        });
     }
-     function updateElementInSlide(slideId, elementId, updater, pres) {
+
+    function updateElementInSlide(slideId, elementId, updater, pres) {
         const targetSlide = pres.slides.find(slide => slide.id === slideId);
         if (!targetSlide) {
             return pres;
         }
-        const updatedSlide = Object.assign(Object.assign({}, targetSlide), { elements: targetSlide.elements.map(element => element.id === elementId
+        const updatedSlide = Object.assign(Object.assign({}, targetSlide), {
+            elements: targetSlide.elements.map(element => element.id === elementId
                 // без тайп гарда ide ругается {}[] из-за map
                 ? updater(element)
-                : element) });
+                : element)
+        });
         return updateSlide(updatedSlide, pres);
     }
 
-    // functions
-     function renamePresentation(newName, pres) {
+    function renamePresentation(newName, pres) {
         return Object.assign(Object.assign({}, pres), { title: newName });
     }
-     function addSlide(newSlide, pres) {
+    function addSlide(newSlide, pres) {
         return Object.assign(Object.assign({}, pres), { slides: [
                 ...pres.slides,
                 newSlide
             ] });
     }
-     function removeSlide(slideIdsToRemove, pres) {
+    function removeSlide(slideIdsToRemove, pres) {
         const newSlides = pres.slides.filter(slide => !slideIdsToRemove.includes(slide.id));
         const newSelectedSlideIds = pres.selection.selectedSlideIds.filter(id => !slideIdsToRemove.includes(id));
         let newSelection = pres.selection;
@@ -46,17 +49,22 @@
         }
         return Object.assign(Object.assign({}, pres), { slides: newSlides, selection: newSelection });
     }
-     function moveSlide(slideId, newIndex, pres) {
+    function moveSlide(slideId, newIndex, pres) {
         const slides = [...pres.slides];
         const curIndex = slides.findIndex(slide => slide.id === slideId);
         if (curIndex === -1 || curIndex === newIndex) {
             return pres;
         }
-        const [movedSlide] = slides.splice(curIndex, 0);
-        slides.splice(newIndex, 0, movedSlide);
-        return Object.assign(Object.assign({}, pres), { slides });
+        const movedSlide = slides.find(slide => slide.id === slideId);
+        const filteredSlides = slides.filter(slide => slide.id !== slideId);
+        const newSlides = [
+            ...filteredSlides.slice(0, newIndex),
+            movedSlide,
+            ...filteredSlides.slice(newIndex)
+        ];
+        return Object.assign(Object.assign({}, pres), { slides: newSlides });
     }
-     function addElementToSlide(slideId, newElement, pres) {
+    function addElementToSlide(slideId, newElement, pres) {
         const targetSlide = pres.slides.find(slide => slide.id === slideId);
         if (!targetSlide) {
             return pres;
@@ -67,7 +75,7 @@
             ] });
         return updateSlide(updatedSlide, pres);
     }
-     function removeElementsFromSlide(slideId, elementIds, pres) {
+    function removeElementsFromSlide(slideId, elementIds, pres) {
         const targetSlide = pres.slides.find(slide => slide.id === slideId);
         if (!targetSlide) {
             return pres;
@@ -77,19 +85,19 @@
         const newSelection = Object.assign(Object.assign({}, pres.selection), { selectedElementIds: newSelectedElementIds });
         return Object.assign(Object.assign({}, updateSlide(updatedSlide, pres)), { selection: newSelection });
     }
-     function changeElPosition(slideId, elementId, newPosition, pres) {
+    function changeElPosition(slideId, elementId, newPosition, pres) {
         return updateElementInSlide(slideId, elementId, (el) => (Object.assign(Object.assign({}, el), { position: newPosition })), pres);
     }
-     function changeElSize(slideId, elementId, newSize, pres) {
+    function changeElSize(slideId, elementId, newSize, pres) {
         return updateElementInSlide(slideId, elementId, (el) => (Object.assign(Object.assign({}, el), { size: newSize })), pres);
     }
-     function changeTextElContent(slideId, elementId, newContent, pres) {
+    function changeTextElContent(slideId, elementId, newContent, pres) {
         return updateElementInSlide(slideId, elementId, (el) => (Object.assign(Object.assign({}, el), { content: newContent })), pres);
     }
-     function changeFontFamily(slideId, elementId, newFF, pres) {
+    function changeFontFamily(slideId, elementId, newFF, pres) {
         return updateElementInSlide(slideId, elementId, (el) => (Object.assign(Object.assign({}, el), { fontFamily: newFF })), pres);
     }
-     function changeSlideBg(slideId, newBg, pres) {
+    function changeSlideBg(slideId, newBg, pres) {
         const targetSlide = pres.slides.find(slide => slide.id === slideId);
         if (!targetSlide) {
             return pres;
@@ -98,296 +106,134 @@
         return updateSlide(updatedSlide, pres);
     }
     /* на будущее */
-     function setSelectedSlides(slideIds, pres) {
+    function setSelectedSlides(slideIds, pres) {
         return Object.assign(Object.assign({}, pres), { selection: Object.assign(Object.assign({}, pres.selection), { selectedSlideIds: slideIds }) });
     }
-     function setSelectedElements(elementsIds, pres) {
+    function setSelectedElements(elementsIds, pres) {
         return Object.assign(Object.assign({}, pres), { selection: Object.assign(Object.assign({}, pres.selection), { selectedElementIds: elementsIds }) });
     }
 
-    // tests
-    // Минимальные тестовые данные
-    const minimalPosition = {
-        x: "0",
-        y: "0"
-    };
-    const minimalSize = {
-        width: "100",
-        height: "100"
-    };
-    const minimalRGBColor = "rgb(0, 0, 0)";
-    const minimalHEXColor = "#000000";
-    const minimalColor = minimalRGBColor;
-    const minimalGradient = {
-        angle: 0,
-        colors: [minimalRGBColor, minimalHEXColor]
-    };
-    const minimalImageBackground = {
-        type: 'image',
-        data: 'data:image/png;base64,minimal'
-    };
-    const minimalSolidColorBackground = {
-        type: 'solid',
-        color: minimalRGBColor
-    };
-    const minimalGradientBackground = {
-        type: 'gradient',
-        gradient: minimalGradient
-    };
-    const minimalBackground = null;
-    const minimalImageElement = {
-        id: "img1",
-        type: 'image',
-        position: minimalPosition,
-        size: minimalSize,
-        data: 'data:image/png;base64,minimal'
-    };
-    const minimalTextElement = {
-        id: "text1",
-        type: 'text',
-        position: minimalPosition,
-        size: minimalSize,
-        content: "Minimal text",
-        fontFamily: "Arial",
-        fontSize: 12,
-        color: minimalRGBColor
-    };
-    const minimalSlide = {
-        id: "slide1",
-        background: minimalBackground,
-        elements: []
-    };
-    const minimalSelection = {
-        selectedSlideIds: [],
-        selectedElementIds: []
-    };
-    const minimalPresentation = {
-        id: "pres1",
-        title: "Minimal Presentation",
-        slides: [],
-        size: minimalSize,
-        selection: minimalSelection
-    };
-    // Максимальные тестовые данные
-    const maxPosition1 = {
-        x: "100",
-        y: "200"
-    };
-    const maxPosition2 = {
-        x: "300",
-        y: "400"
-    };
-    const maxSize1 = {
-        width: "500",
-        height: "300"
-    };
-    const maxSize2 = {
-        width: "800",
-        height: "600"
-    };
-    const maxRGBColor = "rgb(255, 128, 64)";
-    const maxHEXColor = "#FF8040";
-    const maxColor1 = maxRGBColor;
-    const maxColor2 = maxHEXColor;
-    const maxGradient = {
-        angle: 45,
-        colors: [maxRGBColor, maxHEXColor, "rgb(0, 255, 0)", "#00F"]
-    };
-    const maxImageBackground = {
-        type: 'image',
-        data: 'data:image/jpeg;base64,maximal1'
-    };
-    const maxSolidColorBackground = {
-        type: 'solid',
-        color: maxRGBColor
-    };
-    const maxGradientBackground = {
-        type: 'gradient',
-        gradient: maxGradient
-    };
-    const maxBackground1 = maxImageBackground;
-    const maxBackground2 = maxSolidColorBackground;
-    const maxBackground3 = maxGradientBackground;
-    const maxImageElement1 = {
-        id: "img1",
-        type: 'image',
-        position: maxPosition1,
-        size: maxSize1,
-        data: 'data:image/png;base64,maximal1'
-    };
-    const maxImageElement2 = {
-        id: "img2",
-        type: 'image',
-        position: maxPosition2,
-        size: maxSize2,
-        data: 'data:image/jpeg;base64,maximal2'
-    };
-    const maxTextElement1 = {
-        id: "text1",
-        type: 'text',
-        position: maxPosition1,
-        size: maxSize1,
-        content: "First maximal text content with more details",
-        fontFamily: "Times New Roman",
-        fontSize: 24,
-        color: maxRGBColor
-    };
-    const maxTextElement2 = {
-        id: "text2",
-        type: 'text',
-        position: maxPosition2,
-        size: maxSize2,
-        content: "Second maximal text with different styling",
-        fontFamily: "Verdana",
-        fontSize: 18,
-        color: maxHEXColor
-    };
-    const maxSlide1 = {
-        id: "slide1",
-        background: maxBackground1,
-        elements: [maxImageElement1, maxTextElement1]
-    };
-    const maxSlide2 = {
-        id: "slide2",
-        background: maxBackground2,
-        elements: [maxImageElement2, maxTextElement2]
-    };
-    const maxSlide3 = {
-        id: "slide3",
-        background: maxBackground3,
-        elements: [maxImageElement1, maxTextElement2]
-    };
-    const maxSelection = {
-        selectedSlideIds: ["slide1", "slide2"],
-        selectedElementIds: ["img1", "text1"]
-    };
-    const maxPresentation = {
-        id: "pres2",
-        title: "Maximal Presentation with Multiple Slides",
-        slides: [maxSlide1, maxSlide2, maxSlide3],
-        size: maxSize1,
-        selection: maxSelection
-    };
-    // Тестирование функций
-    function testFunctions() {
-        var _a, _b, _c, _d, _e, _f;
-        console.log("=== Тестирование с минимальными данными ===");
-        // 1. renamePresentation
-        const renamedMinimal = renamePresentation("New Minimal Name", minimalPresentation);
-        console.log("renamePresentation minimal:", renamedMinimal.title === "New Minimal Name");
-        // 2. addSlide
-        const withAddedSlide = addSlide(minimalSlide, minimalPresentation);
-        console.log("addSlide minimal:", withAddedSlide.slides.length === 1);
-        // 3. removeSlide
-        const presentationWithSlides = addSlide(minimalSlide, minimalPresentation);
-        const afterRemove = removeSlide([minimalSlide.id], presentationWithSlides);
-        console.log("removeSlide minimal:", afterRemove.slides.length === 0);
-        // 4. moveSlide
-        const presentationForMove = addSlide(minimalSlide, minimalPresentation);
-        const afterMove = moveSlide(minimalSlide.id, 0, presentationForMove);
-        console.log("moveSlide minimal:", afterMove.slides[0].id === minimalSlide.id);
-        // 5. addElementToSlide
-        const slideWithElement = addElementToSlide(minimalSlide.id, minimalTextElement, presentationForMove);
-        console.log("addElementToSlide minimal:", slideWithElement.slides[0].elements.length === 1);
-        // 6. removeElementsFromSlide
-        const slideWithElements = addElementToSlide(minimalSlide.id, minimalTextElement, presentationForMove);
-        const afterElementRemove = removeElementsFromSlide(minimalSlide.id, [minimalTextElement.id], slideWithElements);
-        console.log("removeElementsFromSlide minimal:", afterElementRemove.slides[0].elements.length === 0);
-        // 7. changeElPosition
-        const newPosition = { x: "50", y: "50" };
-        const afterPositionChange = changeElPosition(minimalSlide.id, minimalTextElement.id, newPosition, slideWithElements);
-        console.log("changeElPosition minimal:", afterPositionChange.slides[0].elements[0].position.x === "50");
-        // 8. changeElSize
-        const newSize = { width: "200", height: "200" };
-        const afterSizeChange = changeElSize(minimalSlide.id, minimalTextElement.id, newSize, slideWithElements);
-        console.log("changeElSize minimal:", afterSizeChange.slides[0].elements[0].size.width === "200");
-        // 9. changeTextElContent
-        const afterContentChange = changeTextElContent(minimalSlide.id, minimalTextElement.id, "New content", slideWithElements);
-        const textElement = afterContentChange.slides[0].elements[0];
-        console.log("changeTextElContent minimal:", textElement.content === "New content");
-        // 10. changeFontFamily
-        const afterFontChange = changeFontFamily(minimalSlide.id, minimalTextElement.id, "Helvetica", slideWithElements);
-        const textElementAfterFont = afterFontChange.slides[0].elements[0];
-        console.log("changeFontFamily minimal:", textElementAfterFont.fontFamily === "Helvetica");
-        // 11. changeSlideBg
-        const afterBgChange = changeSlideBg(minimalSlide.id, minimalSolidColorBackground, presentationForMove);
-        console.log("changeSlideBg minimal:", ((_a = afterBgChange.slides[0].background) === null || _a === void 0 ? void 0 : _a.type) === 'solid');
-        // 12. setSelectedSlides
-        const afterSlideSelect = setSelectedSlides([minimalSlide.id], minimalPresentation);
-        console.log("setSelectedSlides minimal:", afterSlideSelect.selection.selectedSlideIds[0] === minimalSlide.id);
-        // 13. setSelectedElements
-        const afterElementSelect = setSelectedElements([minimalTextElement.id], minimalPresentation);
-        console.log("setSelectedElements minimal:", afterElementSelect.selection.selectedElementIds[0] === minimalTextElement.id);
-        console.log("\n=== Тестирование с максимальными данными ===");
-        // 1. renamePresentation
-        const renamedMaximal = renamePresentation("New Maximal Name", maxPresentation);
-        console.log("renamePresentation maximal:", renamedMaximal.title === "New Maximal Name");
-        // 2. addSlide
-        const newMaxSlide = {
-            id: "slide4",
-            background: maxGradientBackground,
-            elements: [maxImageElement1, maxTextElement2]
-        };
-        const withAddedMaxSlide = addSlide(newMaxSlide, maxPresentation);
-        console.log("addSlide maximal:", withAddedMaxSlide.slides.length === 4);
-        // 3. removeSlide
-        const afterMaxRemove = removeSlide(["slide2"], maxPresentation);
-        console.log("removeSlide maximal:", afterMaxRemove.slides.length === 2);
-        // 4. moveSlide
-        const afterMaxMove = moveSlide("slide1", 2, maxPresentation);
-        console.log("moveSlide maximal:", afterMaxMove.slides[2].id === "slide1");
-        // 5. addElementToSlide
-        const newTextElement = {
-            id: "text3",
-            type: 'text',
-            position: maxPosition1,
-            size: maxSize1,
-            content: "Additional text element",
-            fontFamily: "Courier",
-            fontSize: 14,
-            color: maxHEXColor
-        };
-        const slideWithNewElement = addElementToSlide("slide1", newTextElement, maxPresentation);
-        const targetSlide = slideWithNewElement.slides.find(s => s.id === "slide1");
-        console.log("addElementToSlide maximal:", (targetSlide === null || targetSlide === void 0 ? void 0 : targetSlide.elements.length) === 3);
-        // 6. removeElementsFromSlide
-        const afterMaxElementRemove = removeElementsFromSlide("slide1", ["img1"], maxPresentation);
-        const slideAfterRemove = afterMaxElementRemove.slides.find(s => s.id === "slide1");
-        console.log("removeElementsFromSlide maximal:", (slideAfterRemove === null || slideAfterRemove === void 0 ? void 0 : slideAfterRemove.elements.length) === 1);
-        // 7. changeElPosition
-        const newMaxPosition = { x: "150", y: "250" };
-        const afterMaxPositionChange = changeElPosition("slide1", "img1", newMaxPosition, maxPresentation);
-        const elementAfterPosition = (_b = afterMaxPositionChange.slides.find(s => s.id === "slide1")) === null || _b === void 0 ? void 0 : _b.elements.find(e => e.id === "img1");
-        console.log("changeElPosition maximal:", (elementAfterPosition === null || elementAfterPosition === void 0 ? void 0 : elementAfterPosition.position.x) === "150");
-        // 8. changeElSize
-        const newMaxSize = { width: "600", height: "400" };
-        const afterMaxSizeChange = changeElSize("slide1", "img1", newMaxSize, maxPresentation);
-        const elementAfterSize = (_c = afterMaxSizeChange.slides.find(s => s.id === "slide1")) === null || _c === void 0 ? void 0 : _c.elements.find(e => e.id === "img1");
-        console.log("changeElSize maximal:", (elementAfterSize === null || elementAfterSize === void 0 ? void 0 : elementAfterSize.size.width) === "600");
-        // 9. changeTextElContent
-        const afterMaxContentChange = changeTextElContent("slide1", "text1", "Updated maximal content", maxPresentation);
-        const textElementMax = (_d = afterMaxContentChange.slides.find(s => s.id === "slide1")) === null || _d === void 0 ? void 0 : _d.elements.find(e => e.id === "text1");
-        console.log("changeTextElContent maximal:", (textElementMax === null || textElementMax === void 0 ? void 0 : textElementMax.content) === "Updated maximal content");
-        // 10. changeFontFamily
-        const afterMaxFontChange = changeFontFamily("slide1", "text1", "Georgia", maxPresentation);
-        const textElementAfterMaxFont = (_e = afterMaxFontChange.slides.find(s => s.id === "slide1")) === null || _e === void 0 ? void 0 : _e.elements.find(e => e.id === "text1");
-        console.log("changeFontFamily maximal:", (textElementAfterMaxFont === null || textElementAfterMaxFont === void 0 ? void 0 : textElementAfterMaxFont.fontFamily) === "Georgia");
-        // 11. changeSlideBg
-        const afterMaxBgChange = changeSlideBg("slide1", maxGradientBackground, maxPresentation);
-        const slideAfterBgChange = afterMaxBgChange.slides.find(s => s.id === "slide1");
-        console.log("changeSlideBg maximal:", ((_f = slideAfterBgChange === null || slideAfterBgChange === void 0 ? void 0 : slideAfterBgChange.background) === null || _f === void 0 ? void 0 : _f.type) === 'gradient');
-        // 12. setSelectedSlides
-        const afterMaxSlideSelect = setSelectedSlides(["slide3"], maxPresentation);
-        console.log("setSelectedSlides maximal:", afterMaxSlideSelect.selection.selectedSlideIds[0] === "slide3");
-        // 13. setSelectedElements
-        const afterMaxElementSelect = setSelectedElements(["img2", "text2"], maxPresentation);
-        console.log("setSelectedElements maximal:", afterMaxElementSelect.selection.selectedElementIds.includes("img2") &&
-            afterMaxElementSelect.selection.selectedElementIds.includes("text2"));
-        console.log("\n=== Все тесты завершены ===");
-    }
-    // Запуск тестов
-    testFunctions();
 
+    // tests
+    const presentationMin = {
+        id: '1',
+        title: 'testMin',
+        slides: [],
+        size: {
+            x: '0',
+            y: '0',
+        },
+        selection: {
+            selectedSlideIds: [],
+            selectedElementIds: []
+        },
+    }
+
+    const slideMin = {
+        id: '10',
+        background: null,
+        elements: [],
+    };
+
+    console.log('Тест ф-ии renamePresentation');
+    console.log(presentationMin);
+    console.log(renamePresentation('newTestMin', presentationMin));
+    console.log('');
+
+    console.log('Тест ф-ии addSlide');
+    console.log(presentationMin);
+    const presentationWithSlides = addSlide(slideMin, presentationMin);
+    console.log(presentationWithSlides);
+    console.log('');
+
+    console.log('Тест ф-ии removeSlide');
+    console.log(presentationWithSlides);
+    const presentationWithoutSlides = removeSlide(['10'], presentationWithSlides);
+    console.log(presentationWithoutSlides);
+    console.log('');
+
+    console.log('Тест ф-ии moveSlide');
+    console.log(presentationWithSlides);
+    let presentationSeveralSlides = addSlide({
+        id: '11',
+        background: null,
+        elements: [],
+    }, addSlide({
+        id: '12',
+        background: null,
+        elements: [],
+    }, presentationWithSlides));
+    // presentationSeveralSlides = moveSlide('11', 1, presentationWithSlides);
+    console.log(moveSlide('11', 2, presentationSeveralSlides));
+    console.log('');
+
+    console.log('Тест ф-ии addElementToSlide');
+    console.log(presentationSeveralSlides);
+    const textEl = {
+        id: '100',
+        position: {
+            x: '0',
+            y: '0',
+        },
+        size: {
+            w: '10',
+            h: '10'
+        },
+        type: 'text',
+        content: 'test slide element',
+        fontFamily: 'Times New Roman',
+        fontSize: 14,
+        color: '#000',
+    }
+    console.log('textElement: ', textEl);
+    const presSlideWithEl = addElementToSlide('11', textEl, presentationSeveralSlides);
+    console.log(presSlideWithEl);
+    console.log('');
+
+    console.log('Тест ф-ии removeElementsFromSlide');
+    console.log(presSlideWithEl);
+    console.log(removeElementsFromSlide('11', ['100'], presSlideWithEl));
+    console.log('');
+
+    console.log('Тест ф-ии changeElPosition');
+    console.log(presSlideWithEl);
+    const newPos = {
+        x: '0',
+        y: '1'
+    };
+    console.log(newPos);
+    console.log(changeElPosition('11', '100', newPos, presSlideWithEl));
+    console.log('');
+
+    console.log('Тест ф-ии changeElSize');
+    console.log(presSlideWithEl);
+    const newSize = {
+        w: '100',
+        h: '100'
+    };
+    console.log(newSize);
+    console.log(changeElSize('11', '100', newSize, presSlideWithEl));
+    console.log('');
+
+    console.log('Тест ф-ии changeTextElContent');
+    console.log(presSlideWithEl);
+    console.log(changeTextElContent('11', '100', 'new text content for element', presSlideWithEl));
+    console.log('');
+
+    console.log('Тест ф-ии changeFontFamily');
+    console.log(presSlideWithEl);
+    console.log(changeFontFamily('11', '100', 'Arial', presSlideWithEl));
+    console.log('');
+
+    console.log('Тест ф-ии changeSlideBg');
+    console.log(presSlideWithEl);
+    const newBg = {
+        type: 'solid',
+        color: '#fff',
+    }
+    console.log()
+    console.log(changeSlideBg('11', newBg, presSlideWithEl));
+    console.log('');
 </script>
 </body>
 </html>
