@@ -1,103 +1,74 @@
 function calc(expression) {
-    const tokens = expression.trim().split(/\s+/);
-    let index = 0;
-    try {
-        const result = evaluateExpression(tokens);
-        if (index < tokens.length) {
-            throw new Error("Некорректное выражение: лишний символ");
-        }
-        return result;
+    const cleanedExpression = expression
+        .replace(/\s+/g, ' ')
+        .replace(/[()]/g, '')
+        .trim();
+    if (!cleanedExpression.length) {
+        console.log('Ошибка: пустое выражение');
+        return;
     }
-    catch (error) {
-        if (error instanceof Error) {
-            throw new Error(`Ошибка вычисления: ${error.message}`);
-        }
-        throw new Error("Неизвестная ошибка вычисления");
-    }
-    function evaluateExpression(tokens) {
-        if (index >= tokens.length) {
-            throw new Error("Неожиданный конец выражения");
-        }
-        const token = tokens[index++];
+    const tokens = cleanedExpression.split(' ');
+    const stack = [];
+    console.log(tokens);
+    for (let i = tokens.length - 1; i >= 0; i--) {
+        const token = tokens[i];
         if (isOperator(token)) {
-            if (index < tokens.length && tokens[index] === '(') {
-                index++;
+            if (stack.length < 2) {
+                console.log('Ошибка: недостаточно операндов для оператора: ', token);
+                return;
             }
-            const left = evaluateExpression(tokens);
-            const right = evaluateExpression(tokens);
-            if (index < tokens.length && tokens[index] === ')') {
-                index++;
+            const operand1 = stack.pop();
+            const operand2 = stack.pop();
+            const result = performOperation(token, operand1, operand2);
+            if (result === null) {
+                console.log('Ошибка: деление на ноль');
+                return;
             }
-            return performOperation(token, left, right);
+            stack.push(result);
         }
-        else if (isInteger(token)) {
-            return parseInt(token, 10);
-        }
-        else if (token === '(') {
-            const result = evaluateExpression(tokens);
-            if (index >= tokens.length || tokens[index] !== ')') {
-                throw new Error("Отсутствует закрывающая скобка");
-            }
-            index++;
-            return result;
-        }
-        else if (token === ')') {
-            throw new Error("Неожиданная закрывающая скобка");
+        else if (isNumber(token)) {
+            stack.push(parseInt(token));
         }
         else {
-            throw new Error(`Неизвестный токен: ${token}`);
+            console.log('Ошибка: неверный токен', token);
+            return;
         }
     }
-    function isOperator(token) {
-        return ['+', '-', '*', '/'].includes(token);
+    if (stack.length !== 1) {
+        console.log('Ошибка: неверное выражение');
+        return;
     }
-    function isInteger(token) {
-        return /^-?\d+$/.test(token);
-    }
-    function performOperation(operator, left, right) {
-        switch (operator) {
-            case '+':
-                return left + right;
-            case '-':
-                return left - right;
-            case '*':
-                return left * right;
-            case '/':
-                if (right === 0) {
-                    throw new Error("Деление на ноль");
-                }
-                return Math.trunc(left / right); // Целочисленное деление с округлением к нулю
-            default:
-                throw new Error(`Неизвестный оператор: ${operator}`);
-        }
+    console.log('Результат:', stack[0]);
+}
+function isOperator(token) {
+    return ['+', '-', '*', '/'].includes(token);
+}
+function isNumber(token) {
+    return !isNaN(parseInt(token)) && isFinite(parseInt(token));
+}
+function performOperation(operator, operand1, operand2) {
+    switch (operator) {
+        case '+':
+            return operand1 + operand2;
+        case '-':
+            return operand1 - operand2;
+        case '*':
+            return operand1 * operand2;
+        case '/':
+            if (operand2 === 0) {
+                return null; // Деление на ноль
+            }
+            return operand1 / operand2;
+        default:
+            return 0;
     }
 }
-// Тест
-function testCalc(expression) {
-    try {
-        const result = calc(expression);
-        console.log(`${expression} = ${result}`);
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            console.error(`Ошибка в выражении "${expression}": ${error.message}`);
-        }
-        else {
-            console.error(`Неизвестная ошибка в выражении "${expression}"`);
-        }
-    }
-}
-// Тестирование функции
-testCalc("+ 3 4"); // Результат: 7
-testCalc("* ( - 5 6 ) 7"); // Результат: -7
-testCalc("/ * + 3 4 5 6"); // Результат: (3+4)*5/6 = 35/6 = 5
-testCalc("- 10 3"); // Результат: 7
-testCalc("* - + 2 3 5 1"); // Результат: 5 * 4 = 20
-testCalc("/ 10 3"); // Результат: 3 (целочисленное деление)
-testCalc("/ -10 3"); // Результат: -3 (целочисленное деление)
-testCalc("/ 10 -3"); // Результат: -3 (целочисленное деление)
-testCalc("+ 1"); // Ошибка: недостаточно операндов
-testCalc("a 3 4"); // Ошибка: неизвестный токен
-testCalc("/ 5 0"); // Ошибка: деление на ноль
-testCalc("+ 3 4 5"); // Ошибка: лишние токены
-testCalc("+ 3.5 4"); // Ошибка: нецелое число
+calc('+ 3 4');
+calc('* (- 5 6) 7');
+calc('/ 10 2');
+calc('- 8 3');
+calc('* + 2 3 4');
+calc('+ 1 * 2 3');
+calc('+ 3');
+calc('/ 5 0');
+calc('& 3 4');
