@@ -1,0 +1,29 @@
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 15px;
+
+    background-color: var(--accent-bg-color);
+    border-radius: 30px;
+}
+
+.toolbar__item {
+    display: flex;
+    padding: 5px;
+
+    font-family: inherit;
+    font-size: 24px;
+    color: var(--default-text-color);
+
+    border-radius: 50%;
+    background-color: transparent;
+
+    transition: background-color 0.2s ease;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--accent-bg-color2);
+    }
+}

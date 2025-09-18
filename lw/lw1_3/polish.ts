@@ -13,7 +13,6 @@ function calc(expression: string): void {
     const tokens = cleanedExpression.split(' ');
     const stack: number[] = [];
 
-    console.log(tokens);
     for (let i = tokens.length - 1; i >= 0; i--) {
         const token = tokens[i];
 
@@ -75,12 +74,13 @@ function performOperation(operator: string, operand1: number, operand2: number):
     }
 }
 
-calc('+ 3 4');
+calc('  )((())     +           3 4     ');
 calc('* (- 5 6) 7');
 calc('/ 10 2');
 calc('- 8 3');
 calc('* + 2 3 4');
 calc('+ 1 * 2 3');
+
 
 calc('+ 3');
 calc('/ 5 0');

@@ -9,7 +9,6 @@ function calc(expression) {
     }
     const tokens = cleanedExpression.split(' ');
     const stack = [];
-    console.log(tokens);
     for (let i = tokens.length - 1; i >= 0; i--) {
         const token = tokens[i];
         if (isOperator(token)) {
@@ -63,7 +62,7 @@ function performOperation(operator, operand1, operand2) {
             return 0;
     }
 }
-calc('+ 3 4');
+calc('  )((())     +           3 4     ');
 calc('* (- 5 6) 7');
 calc('/ 10 2');
 calc('- 8 3');

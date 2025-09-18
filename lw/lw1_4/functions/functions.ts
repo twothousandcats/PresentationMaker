@@ -16,7 +16,10 @@ import {
     Selection,
     Presentation,
 } from "../types/types";
-import {updateElementInSlide, updateSlide} from "./untils/utils";
+import {
+    updateElementInSlide,
+    updateSlide
+} from "./untils/utils";
 
 export function renamePresentation(newName: string, pres: Presentation): Presentation {
     return {

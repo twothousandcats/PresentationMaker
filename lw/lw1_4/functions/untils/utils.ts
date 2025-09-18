@@ -1,6 +1,7 @@
 import {
     Presentation,
-    Slide, SlideElement
+    Slide,
+    SlideElement
 } from "../../types/types";
 
 export function updateSlide(updatedSlide: Slide, pres: Presentation): Presentation {

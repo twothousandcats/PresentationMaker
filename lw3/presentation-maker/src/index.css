@@ -1,0 +1,56 @@
+:root {
+    --default-bg-color: #ffffff;
+    --accent-bg-color: #f0f4f9;
+    --accent-bg-color2: #cbcbcb;
+
+    --default-border-color: #c4c7c5;
+    --accent-border-color: #7b7b7b;
+
+    --default-text-color: #444746;
+
+    --base-font: 'Golos UI', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    line-height: 1;
+}
+
+ul,ol {
+    list-style: none;
+}
+
+@font-face {
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos-UI_Regular.woff2') format('woff2'),
+    url('./assets/fonts/Golos-UI_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos-UI_Medium.woff2') format('woff2'),
+    url('./assets/fonts/Golos-UI_Medium.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos-UI_Medium.woff2') format('woff2'),
+    url('./assets/fonts/Golos-UI_Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos-UI_Bold.woff2') format('woff2'),
+    url('./assets/fonts/Golos-UI_Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
