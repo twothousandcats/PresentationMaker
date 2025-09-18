@@ -23,22 +23,52 @@ export default function App() {
                     type: 'solid',
                     color: '#fff',
                 },
-                elements: []
+                elements: [
+                    {
+                        id: '1',
+                        position: {
+                            x: '0',
+                            y: '0'
+                        },
+                        size: {
+                            width: 0,
+                            height: 0
+                        },
+                        type: 'text',
+                        content: 'Slide title',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: '#000',
+                    },
+                    {
+                        id: '2',
+                        position: {
+                            x: '100',
+                            y: '100'
+                        },
+                        size: {
+                            width: 100,
+                            height: 100
+                        },
+                        type: 'image',
+                        data: 'https://images.unsplash.com/photo-1757865579164-23ff0b8e3e5f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                    }
+                ]
             },
         ],
         size: {
-            width: '100%',
-            height: '100%'
+            width: 100,
+            height: 100
         },
         selection: {
-            selectedSlideIds: [],
+            selectedSlideIds: ['2'],
             selectedElementIds: []
         }
     }
 
     return (
         <section className={AppStyle.presentation}>
-            <Toolbar/>
+            <Toolbar {...pres}/>
             <div className={AppStyle.presentation__container}>
                 <MiniatureContainer {...pres}/>
                 <Slide {...pres}/>

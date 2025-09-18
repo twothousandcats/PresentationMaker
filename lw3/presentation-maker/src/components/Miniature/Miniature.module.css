@@ -1,18 +1,3 @@
-.slide {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    gap: 10px;
-
-    font-family: var(--base-font);
-    color: var(--default-text-color);
-}
-
-.slide__num {
-    font-family: inherit;
-    color: inherit;
-}
-
 .slide__wrapper {
     width: 100%;
     height: 100px;

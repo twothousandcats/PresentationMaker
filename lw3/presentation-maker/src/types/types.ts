@@ -4,8 +4,8 @@ type Position = {
 }
 
 type Size = {
-    width: string;
-    height: string
+    width: number;
+    height: number
 }
 
 type RGBColor = `rgb(${number}, ${number}, ${number})`;

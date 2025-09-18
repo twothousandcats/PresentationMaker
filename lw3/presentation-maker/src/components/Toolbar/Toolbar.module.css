@@ -12,7 +12,7 @@
     display: flex;
     padding: 5px;
 
-    font-family: inherit;
+    font-family: var(--base-font);
     font-size: 24px;
     color: var(--default-text-color);
 
@@ -26,4 +26,34 @@
     &:hover {
         background-color: var(--accent-bg-color2);
     }
+}
+
+.toolbar__item_title {
+    border: 0;
+    border-radius: 10px;
+    background-color: var(--default-bg-color);
+
+    cursor: default;
+
+    &:hover {
+        background-color: var(--default-bg-color);
+    }
+}
+
+.toolbar__input {
+    max-width: 100px;
+    height: 100%;
+
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--default-text-color);
+
+    border: 0;
+    outline: none;
+
+    transition: max-width 0.3s ease;
+}
+
+.toolbar__input_expanded {
+    max-width: 200px;
 }
