@@ -1,3 +1,17 @@
 .element {
+    position: absolute;
 
+    display: flex;
+
+    border: 1px solid rgba(var(--accent-border-color-rgb), 0.5);
+}
+
+.image {
+    /*max-width: 100%;*/
+    width: -webkit-fill-available;
+    object-fit: cover;
+}
+
+.text {
+    width: -webkit-fill-available;
 }

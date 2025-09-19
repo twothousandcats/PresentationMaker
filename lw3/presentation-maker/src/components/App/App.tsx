@@ -27,31 +27,36 @@ export default function App() {
                     {
                         id: '1',
                         position: {
-                            x: '0',
-                            y: '0'
+                            x: 0,
+                            y: 0
                         },
                         size: {
-                            width: 0,
-                            height: 0
+                            width: 100,
+                            height: 100
                         },
                         type: 'text',
                         content: 'Slide title',
                         fontFamily: 'Arial',
                         fontSize: 14,
                         color: '#000',
+                        background: {
+                            type: 'solid',
+                            color: '#f5f5dc',
+                        }
                     },
                     {
                         id: '2',
                         position: {
-                            x: '100',
-                            y: '100'
+                            x: 100,
+                            y: 100
                         },
                         size: {
-                            width: 100,
-                            height: 100
+                            width: 200,
+                            height: 200
                         },
                         type: 'image',
-                        data: 'https://images.unsplash.com/photo-1757865579164-23ff0b8e3e5f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                        data: 'https://images.unsplash.com/photo-1757865579164-23ff0b8e3e5f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                        background: null
                     }
                 ]
             },

@@ -5,10 +5,17 @@
 
     --default-border-color: #c4c7c5;
     --accent-border-color: #7b7b7b;
+    --selected-border-color: #7ec3e3;
 
     --default-text-color: #444746;
 
     --base-font: 'Golos UI', sans-serif;
+
+    /* RGB */
+    --accent-border-color-rgb: 123, 123, 123;
+
+    /* ICONS */
+    --default-icon-stroke: #000;
 }
 
 * {

@@ -6,6 +6,11 @@ import {
     useRef,
     useEffect
 } from 'react';
+import IconPlus from "../Icons/IconPlus.tsx";
+import IconPrev from "../Icons/IconPrev.tsx";
+import IconNext from "../Icons/IconNext.tsx";
+import IconSaveAs from "../Icons/IconSaveAs.tsx";
+import IconDownload from "../Icons/IconDownload.tsx";
 
 export default function Toolbar(presentation: Presentation) {
     const [isExpanded, setExpanded] = useState(false);
@@ -34,13 +39,11 @@ export default function Toolbar(presentation: Presentation) {
         if (isExpanded && inputRef.current) {
             inputRef.current.select();
         }
-    }, [isExpanded]);
 
-    useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
 
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    }, [isExpanded]);
 
     return (
         <ul className={style.toolbar}>
@@ -55,14 +58,20 @@ export default function Toolbar(presentation: Presentation) {
                        onChange={handleTitleChange}/>
             </li>
             <li className={style.toolbar__item}
+                onClick={() => console.log('Сохранить как')}>
+                <IconDownload />
+            </li>
+            <li className={style.toolbar__item}
                 onClick={() => console.log('Добавить слайд')}>
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     width="24"
-                     height="24"
-                     viewBox="0 0 24 24">
-                    <path fill="#000000"
-                          d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2Z"/>
-                </svg>
+                <IconPlus />
+            </li>
+            <li className={style.toolbar__item}
+                onClick={() => console.log('undo')}>
+                <IconPrev />
+            </li>
+            <li className={style.toolbar__item}
+                onClick={() => console.log('redo')}>
+                <IconNext />
             </li>
         </ul>
     )

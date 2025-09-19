@@ -1,6 +1,6 @@
 type Position = {
-    x: string;
-    y: string
+    x: number;
+    y: number
 }
 
 type Size = {
@@ -41,6 +41,7 @@ type DefaultElementProps = {
     id: string;
     position: Position;
     size: Size;
+    background: Background;
 }
 
 type ImageElement = DefaultElementProps & {

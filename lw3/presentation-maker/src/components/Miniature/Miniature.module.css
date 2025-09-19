@@ -12,3 +12,7 @@
         border-color: var(--accent-border-color);
     }
 }
+
+.slide__wrapper_active {
+    border-color: var(--selected-border-color);
+}

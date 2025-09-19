@@ -3,8 +3,16 @@ import type {
     Slide
 } from "../../types/types.ts";
 
-export default function Miniature(props: Slide) {
+type MiniatureProps = {
+    slideData: Slide,
+    isActive: boolean,
+}
+
+export default function Miniature({slideData, isActive}: MiniatureProps) {
+
     return (
-        <div className={style.slide__wrapper}></div>
+        <div className={`${style.slide__wrapper} ${isActive ? style.slide__wrapper_active : ''}`}>
+
+        </div>
     );
 }
