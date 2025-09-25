@@ -43,7 +43,8 @@ export default function SlideElement(
              }}>
             {element.type === 'image'
                 ? <img className={style.image}
-                       src={element.data} alt={element.id + 'slide element'}/>
+                       src={element.data}
+                       alt={element.id + 'slide element'}/>
                 : <p className={style.text}
                      style={{
                          fontFamily: `${element.fontFamily}`,

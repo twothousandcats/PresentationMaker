@@ -79,11 +79,11 @@ type Presentation = {
     selection: Selection
 }
 
-type History = {
-    past: Presentation[];
-    present: Presentation;
-    future: Presentation[]
-}
+// type History = {
+//     past: Presentation[];
+//     present: Presentation;
+//     future: Presentation[]
+// }
 
 export type {
     Position,
