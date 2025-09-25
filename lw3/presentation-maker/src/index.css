@@ -1,21 +1,29 @@
 :root {
+    /* FONT */
+    --base-font: 'Golos UI', sans-serif;
+
+    /* BACKGROUND */
     --default-bg-color: #ffffff;
     --accent-bg-color: #f0f4f9;
     --accent-bg-color2: #cbcbcb;
 
+    /* BORDER */
     --default-border-color: #c4c7c5;
     --accent-border-color: #7b7b7b;
     --selected-border-color: #7ec3e3;
 
+    /* TEXT */
     --default-text-color: #444746;
-
-    --base-font: 'Golos UI', sans-serif;
 
     /* RGB */
     --accent-border-color-rgb: 123, 123, 123;
 
     /* ICONS */
     --default-icon-stroke: #000;
+
+    /* SCROLLBAR */
+    --scroll-track-color: #f1f1f1;
+    --scroll-thumb-color: #888888;
 }
 
 * {

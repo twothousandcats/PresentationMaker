@@ -1,5 +1,5 @@
 import style from './Toolbar.module.css';
-import type {Presentation} from "../../types/types.ts";
+import type {Presentation} from "../../store/types/types.ts";
 import {
     type ChangeEvent,
     useState,
@@ -9,8 +9,31 @@ import {
 import IconPlus from "../Icons/IconPlus.tsx";
 import IconPrev from "../Icons/IconPrev.tsx";
 import IconNext from "../Icons/IconNext.tsx";
-import IconSaveAs from "../Icons/IconSaveAs.tsx";
 import IconDownload from "../Icons/IconDownload.tsx";
+import ToolbarButton from "../ToolbarButton/ToolbarButton.tsx";
+
+const buttons = [
+    {
+        icon: <IconDownload/>,
+        fn: () => console.log('Сохранить как'),
+        ariaLabel: 'Сохранить презентацию'
+    },
+    {
+        icon: <IconPlus/>,
+        fn: () => console.log('Добавить слайд'),
+        ariaLabel: 'Добавить слайд'
+    },
+    {
+        icon: <IconPrev/>,
+        fn: () => console.log('undo'),
+        ariaLabel: 'undo'
+    },
+    {
+        icon: <IconNext/>,
+        fn: () => console.log('redo'),
+        ariaLabel: 'redo'
+    },
+]
 
 export default function Toolbar(presentation: Presentation) {
     const [isExpanded, setExpanded] = useState(false);
@@ -57,22 +80,14 @@ export default function Toolbar(presentation: Presentation) {
                        onClick={handleInputClick}
                        onChange={handleTitleChange}/>
             </li>
-            <li className={style.toolbar__item}
-                onClick={() => console.log('Сохранить как')}>
-                <IconDownload />
-            </li>
-            <li className={style.toolbar__item}
-                onClick={() => console.log('Добавить слайд')}>
-                <IconPlus />
-            </li>
-            <li className={style.toolbar__item}
-                onClick={() => console.log('undo')}>
-                <IconPrev />
-            </li>
-            <li className={style.toolbar__item}
-                onClick={() => console.log('redo')}>
-                <IconNext />
-            </li>
+            {buttons && buttons.map((btn, index) =>
+                <ToolbarButton
+                    key={index}
+                    icon={btn.icon}
+                    onclickFn={btn.fn}
+                    aria-label={btn.ariaLabel}
+                />
+            )}
         </ul>
     )
 }

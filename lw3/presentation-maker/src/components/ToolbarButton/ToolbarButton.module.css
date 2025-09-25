@@ -1,0 +1,19 @@
+.toolbar__item {
+    display: flex;
+    padding: 5px;
+
+    font-family: var(--base-font);
+    font-size: 24px;
+    color: var(--default-text-color);
+
+    border-radius: 50%;
+    background-color: transparent;
+
+    transition: background-color 0.2s ease;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--accent-bg-color2);
+    }
+}

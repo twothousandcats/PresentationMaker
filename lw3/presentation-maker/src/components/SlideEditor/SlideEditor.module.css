@@ -1,0 +1,8 @@
+.editor {
+    max-width: 1920px;
+    max-height: 1080px;
+    width: 100vw;
+    height: calc(100vh - 104px);
+
+    border: 1px solid var(--default-border-color);
+}

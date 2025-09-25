@@ -1,11 +1,9 @@
-import style from './MiniatureContainer.module.css';
-import Miniature from "../Miniature/Miniature.tsx";
-import type {Presentation} from "../../types/types.ts";
+import style from './SlidesList.module.css';
+import type {Presentation} from "../../store/types/types.ts";
+import Slide from "../Slide/Slide.tsx";
 
-export default function MiniatureContainer(props: Presentation) {
-    const pres = {...props};
-
-    return (
+export default function SlidesList(pres: Presentation) {
+        return (
         <ul className={style.container}>
             {pres.slides.length > 0 && pres.slides.map((slide, index) =>
                 <li className={style.holder}
@@ -19,9 +17,12 @@ export default function MiniatureContainer(props: Presentation) {
                     <p className={style.holder__num}>
                         {index + 1}
                     </p>
-                    <Miniature
-                        {...slide}
+                    <Slide
+                        slide={slide}
+                        slideSize={pres.size}
+                        isEditable={false}
                         isActive={pres.selection.selectedSlideIds.includes(slide.id)}
+                        activeElements={pres.selection.selectedSlideIds}
                     />
                 </li>
             )}

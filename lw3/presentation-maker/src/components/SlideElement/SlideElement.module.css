@@ -6,8 +6,11 @@
     border: 1px solid rgba(var(--accent-border-color-rgb), 0.5);
 }
 
+.element_active {
+    border: 2px solid var(--selected-border-color);
+}
+
 .image {
-    /*max-width: 100%;*/
     width: -webkit-fill-available;
     object-fit: cover;
 }

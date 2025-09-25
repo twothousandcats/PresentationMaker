@@ -1,24 +1,57 @@
 import style from './Slide.module.css';
-import type {Presentation} from "../../types/types.ts";
+import type {
+    Size,
+    Slide
+} from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
 
-export default function Slide(props: Presentation) {
-    const pres = {...props};
+type SlideProps = {
+    slide: Slide;
+    slideSize: Size;
+    isEditable?: boolean;
+    isActive?: boolean;
+    activeElements?: string[];
+};
+
+export default function Slide(
+    {
+        slide,
+        slideSize,
+        isEditable,
+        isActive,
+        activeElements
+    }: SlideProps) {
+    let classNames = `${style.slide}`;
+    if (isEditable) {
+        classNames += ` ${style.slide_editable}`;
+    } else {
+        classNames += ` ${style.slide_preview}`;
+    }
+    if (isActive) {
+        classNames += ` ${style.slide_active}`;
+    }
+    const bgColor = slide.background && slide.background.type === 'solid'
+        ? slide.background.color
+        : '';
+    const bgImg = slide.background && slide.background.type === 'image'
+        ? slide.background.data
+        : '';
 
     return (
-        <section className={style.workspace}>
-            <div className={style.wrapper}
-                 style={{
-                     width: `${pres.size.width}%`,
-                     height: `${pres.size.height}%`
-                 }}>
-                {pres.slides.map((slide) =>
-                    pres.selection.selectedSlideIds.includes(slide.id) && slide.elements.map((element) =>
-                        <SlideElement
-                            key={element.id}
-                            {...element}/>)
-                )}
-            </div>
-        </section>
+        <div
+            className={classNames}
+            style={{
+                backgroundColor: `${bgColor}`,
+                backgroundImage: `url(${bgImg})`,
+            }}>
+            {slide.elements.map((element) =>
+                <SlideElement
+                    key={element.id}
+                    element={element}
+                    slideSize={slideSize}
+                    isActive={isEditable && activeElements?.includes(element.id)}
+                />
+            )}
+        </div>
     );
 }

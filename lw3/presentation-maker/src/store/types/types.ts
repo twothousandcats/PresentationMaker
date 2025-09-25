@@ -54,6 +54,7 @@ type TextElement = DefaultElementProps & {
     content: string;
     fontFamily: string;
     fontSize: number;
+    fontWeight: number;
     color: Color;
 }
 
