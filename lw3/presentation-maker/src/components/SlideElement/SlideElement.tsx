@@ -17,6 +17,10 @@ export default function SlideElement(
         isEditable,
         isActive
     }: ElementProps) {
+    function getPercentValue(v1: number, v2: number): number {
+        return (v1 / v2) * 100;
+    }
+
     const bgColor = element.background && element.background.type === 'solid' && element.background.color
         ? element.background.color
         : null;
@@ -26,23 +30,24 @@ export default function SlideElement(
     /* const BgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
         ? element.background.gradient
         : null */
-    const xPercent = (element.position.x / slideSize.width) * 100;
-    const yPercent = (element.position.y / slideSize.height) * 100;
-    const widthPercent = (element.size.width / slideSize.width) * 100;
-    const heightPercent = (element.size.height / slideSize.height) * 100;
+    const xPercent = getPercentValue(element.position.x, slideSize.width);
+    const yPercent = getPercentValue(element.position.y, slideSize.height);
+    const widthPercent = getPercentValue(element.size.width, slideSize.width);
+    const heightPercent = getPercentValue(element.size.height, slideSize.height);
 
     return (
-        <div className={`${style.element} ${isActive ? style.element_active : ''} ${!isEditable ? style.element_disabled : ''}`}
-             style={{
-                 top: `${yPercent}%`,
-                 left: `${xPercent}%`,
-                 width: `${widthPercent}%`,
-                 height: `${heightPercent}%`,
-             }}
-             onClick={() => {
-                 console.log(element.id);
-                 console.log(element.background ?? 'transparent');
-             }}>
+        <div
+            className={`${style.element} ${isActive ? style.element_active : ''} ${!isEditable ? style.element_disabled : ''}`}
+            style={{
+                top: `${yPercent}%`,
+                left: `${xPercent}%`,
+                width: `${widthPercent}%`,
+                height: `${heightPercent}%`,
+            }}
+            onClick={() => {
+                console.log(element.id);
+                console.log(element.background ?? 'transparent');
+            }}>
             {element.type === 'image'
                 ? <img className={style.image}
                        src={element.data}

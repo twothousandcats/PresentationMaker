@@ -1,5 +1,5 @@
 import style from './Toolbar.module.css';
-import type {Presentation} from "../../store/types/types.ts";
+import type {Presentation, Slide} from "../../store/types/types.ts";
 import {
     type ChangeEvent,
     useState,
@@ -15,51 +15,67 @@ import IconRemove from "../Icons/IconRemove.tsx";
 import IconAddText from "../Icons/IconAddText.tsx";
 import IconAddImage from "../Icons/IconAddImage.tsx";
 import IconBrush from "../Icons/IconBrush.tsx";
+import {
+    addSlide,
+    renamePresentation
+} from "../../store/functions/functions.ts";
+import {dispatch} from "../../store/editor.ts";
 
-const buttons = [
-    {
-        icon: <IconDownload/>,
-        fn: () => console.log('Сохранить как'),
-        ariaLabel: 'Сохранить презентацию'
+const slide: Slide = {
+    id: 'asdf!23',
+    background: {
+        type: 'solid',
+        color: '#fff',
     },
-    {
-        icon: <IconPlus/>,
-        fn: () => console.log('Добавить слайд'),
-        ariaLabel: 'Добавить слайд'
-    },
-    { // Как будто бы хочется кнопками удалять
-        icon: <IconRemove/>,
-        fn: () => console.log('Удалить активный слайд'),
-        ariaLabel: 'Удалить активный слайд'
-    },
-    {
-        icon: <IconAddText/>,
-        fn: () => console.log('Добавить текстовый элемент'),
-        ariaLabel: 'Добавить текстовый элемент'
-    },
-    {
-        icon: <IconAddImage/>,
-        fn: () => console.log('Добавить элемент изображение'),
-        ariaLabel: 'Добавить элемент изображение'
-    },
-    {
-        icon: <IconUndo/>,
-        fn: () => console.log('undo'),
-        ariaLabel: 'undo'
-    },
-    {
-        icon: <IconRedo/>,
-        fn: () => console.log('redo'),
-        ariaLabel: 'redo'
-    },
-    {
-        icon: <IconBrush/>,
-        fn: () => console.log('Палитра/выбор цвета'),
-        ariaLabel: 'Палитра/выбор цвета'
-    },
-]
+    elements: []
+};
 
 export default function Toolbar(presentation: Presentation) {
+    const buttons = [
+        {
+            icon: <IconDownload/>,
+            fn: () => console.log('Сохранить как'),
+            ariaLabel: 'Сохранить презентацию'
+        },
+        {
+            icon: <IconPlus/>,
+            fn: () => {
+                console.log('Добавить слайд');
+                dispatch(addSlide, slide);
+            },
+            ariaLabel: 'Добавить слайд'
+        },
+        { // Как будто бы хочется кнопками удалять
+            icon: <IconRemove/>,
+            fn: () => console.log('Удалить активный слайд'),
+            ariaLabel: 'Удалить активный слайд'
+        },
+        {
+            icon: <IconAddText/>,
+            fn: () => console.log('Добавить текстовый элемент'),
+            ariaLabel: 'Добавить текстовый элемент'
+        },
+        {
+            icon: <IconAddImage/>,
+            fn: () => console.log('Добавить элемент изображение'),
+            ariaLabel: 'Добавить элемент изображение'
+        },
+        {
+            icon: <IconUndo/>,
+            fn: () => console.log('undo'),
+            ariaLabel: 'undo'
+        },
+        {
+            icon: <IconRedo/>,
+            fn: () => console.log('redo'),
+            ariaLabel: 'redo'
+        },
+        {
+            icon: <IconBrush/>,
+            fn: () => console.log('Палитра/выбор цвета'),
+            ariaLabel: 'Палитра/выбор цвета'
+        },
+    ]
     const [isExpanded, setExpanded] = useState(false);
     const [title, setTitle] = useState(presentation.title);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -69,6 +85,7 @@ export default function Toolbar(presentation: Presentation) {
         const newTitle = evt.target.value;
         setTitle(newTitle);
         console.log('Новое название: ', newTitle);
+        dispatch(renamePresentation, newTitle);
     }
 
     const handleInputClick = () => {
