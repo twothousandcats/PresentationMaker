@@ -10,6 +10,10 @@
     border: 2px solid var(--selected-border-color);
 }
 
+.element_disabled {
+    pointer-events: none;
+}
+
 .image {
     width: -webkit-fill-available;
     object-fit: cover;

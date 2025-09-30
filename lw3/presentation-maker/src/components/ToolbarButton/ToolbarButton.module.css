@@ -1,4 +1,6 @@
 .toolbar__item {
+    position: relative;
+
     display: flex;
     padding: 5px;
 
@@ -16,4 +18,34 @@
     &:hover {
         background-color: var(--accent-bg-color2);
     }
+}
+
+.toolbar__hint {
+    position: absolute;
+    top: calc(100% + 10px);
+    z-index: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+    font-family: var(--base-font);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--default-text-color);
+
+    border-radius: 5px;
+    background-color: var(--accent-bg-color2);
+
+    transition: opacity 0.3s ease;
+    opacity: 0;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+.toolbar__hint_show {
+    opacity: 1;
 }

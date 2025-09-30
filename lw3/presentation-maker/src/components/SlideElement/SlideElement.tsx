@@ -6,6 +6,7 @@ import type {
 type ElementProps = {
     element: SlideElement;
     slideSize: Size;
+    isEditable?: boolean;
     isActive?: boolean;
 }
 
@@ -13,6 +14,7 @@ export default function SlideElement(
     {
         element,
         slideSize,
+        isEditable,
         isActive
     }: ElementProps) {
     const bgColor = element.background && element.background.type === 'solid' && element.background.color
@@ -30,7 +32,7 @@ export default function SlideElement(
     const heightPercent = (element.size.height / slideSize.height) * 100;
 
     return (
-        <div className={`${style.element} ${isActive ? style.element_active : ''}`}
+        <div className={`${style.element} ${isActive ? style.element_active : ''} ${!isEditable ? style.element_disabled : ''}`}
              style={{
                  top: `${yPercent}%`,
                  left: `${xPercent}%`,

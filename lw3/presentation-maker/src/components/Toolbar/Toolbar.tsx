@@ -7,10 +7,14 @@ import {
     useEffect
 } from 'react';
 import IconPlus from "../Icons/IconPlus.tsx";
-import IconPrev from "../Icons/IconPrev.tsx";
-import IconNext from "../Icons/IconNext.tsx";
+import IconUndo from "../Icons/IconUndo.tsx";
+import IconRedo from "../Icons/IconRedo.tsx";
 import IconDownload from "../Icons/IconDownload.tsx";
 import ToolbarButton from "../ToolbarButton/ToolbarButton.tsx";
+import IconRemove from "../Icons/IconRemove.tsx";
+import IconAddText from "../Icons/IconAddText.tsx";
+import IconAddImage from "../Icons/IconAddImage.tsx";
+import IconBrush from "../Icons/IconBrush.tsx";
 
 const buttons = [
     {
@@ -23,15 +27,35 @@ const buttons = [
         fn: () => console.log('Добавить слайд'),
         ariaLabel: 'Добавить слайд'
     },
+    { // Как будто бы хочется кнопками удалять
+        icon: <IconRemove/>,
+        fn: () => console.log('Удалить активный слайд'),
+        ariaLabel: 'Удалить активный слайд'
+    },
     {
-        icon: <IconPrev/>,
+        icon: <IconAddText/>,
+        fn: () => console.log('Добавить текстовый элемент'),
+        ariaLabel: 'Добавить текстовый элемент'
+    },
+    {
+        icon: <IconAddImage/>,
+        fn: () => console.log('Добавить элемент изображение'),
+        ariaLabel: 'Добавить элемент изображение'
+    },
+    {
+        icon: <IconUndo/>,
         fn: () => console.log('undo'),
         ariaLabel: 'undo'
     },
     {
-        icon: <IconNext/>,
+        icon: <IconRedo/>,
         fn: () => console.log('redo'),
         ariaLabel: 'redo'
+    },
+    {
+        icon: <IconBrush/>,
+        fn: () => console.log('Палитра/выбор цвета'),
+        ariaLabel: 'Палитра/выбор цвета'
     },
 ]
 

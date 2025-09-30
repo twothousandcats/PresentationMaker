@@ -49,6 +49,7 @@ export default function Slide(
                     key={element.id}
                     element={element}
                     slideSize={slideSize}
+                    isEditable={isEditable}
                     isActive={isEditable && activeElements?.includes(element.id)}
                 />
             )}
