@@ -33,19 +33,15 @@ export function removeSlide(slideIdsToRemove: string[], pres: Presentation): Pre
     const newSelectedSlideIds = pres.selection.selectedSlideIds.filter(
         id => !slideIdsToRemove.includes(id)
     );
-    let newSelection = pres.selection;
-
-    if (!newSelectedSlideIds.length && newSlides.length > 0) {
-        newSelection = {
+    const newSelection = !newSelectedSlideIds.length && newSlides.length > 0
+        ? {
             ...pres.selection,
             selectedSlideIds: [newSlides[0].id]
-        };
-    } else {
-        newSelection = {
+        }
+        : {
             ...pres.selection,
             selectedSlideIds: newSelectedSlideIds
         };
-    }
 
     return {
         ...pres,

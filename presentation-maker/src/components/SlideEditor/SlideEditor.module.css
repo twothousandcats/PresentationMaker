@@ -8,4 +8,10 @@
     align-items: center;
 
     border: 1px solid var(--default-border-color);
+
+    overflow: hidden;
+}
+
+.editor__container {
+    max-width: 100%;
 }

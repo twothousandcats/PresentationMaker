@@ -42,7 +42,7 @@ export default function Toolbar(presentation: Presentation) {
             },
             ariaLabel: 'Добавить слайд'
         },
-        { // Как будто бы хочется кнопками удалять
+        { // TODO: delete by btn
             icon: <IconRemove/>,
             fn: () => {
                 console.log('Удалить активный слайд');
@@ -148,12 +148,12 @@ export default function Toolbar(presentation: Presentation) {
                        onChange={handleTitleChange}
                        readOnly={!isExpanded}/>
             </li>
-            {buttons && buttons.map((btn, index) =>
+            {buttons.map((btn, index) =>
                 <ToolbarButton
                     key={index}
                     icon={btn.icon}
-                    onclickFn={btn.fn}
-                    aria-label={btn.ariaLabel}
+                    onClickFn={btn.fn}
+                    ariaLabel={btn.ariaLabel}
                 />
             )}
         </ul>

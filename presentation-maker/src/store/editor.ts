@@ -128,12 +128,13 @@ function addPresentationChangeHandler(handler: Function): void {
 }
 
 function dispatch(modifiedFn: any, payload: any = null): void {
-    let newPresentation = null;
+    let newPresentation;
     if(payload) {
         newPresentation = modifiedFn(payload, presentation);
     } else {
         newPresentation = modifiedFn(presentation);
     }
+
     setPresentation(newPresentation);
     if (presentationChangeHandler) {
         presentationChangeHandler(newPresentation);

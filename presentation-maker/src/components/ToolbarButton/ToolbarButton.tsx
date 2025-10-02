@@ -4,22 +4,22 @@ import {useState} from "react";
 
 interface ToolbarButtonProps {
     icon: ReactNode;
-    onclickFn: () => void;
-    'aria-label'?: string;
+    onClickFn: () => void;
+    ariaLabel?: string;
 }
 
 export default function ToolbarButton(
     {
         icon,
-        onclickFn,
-        'aria-label': ariaLabel,
+        onClickFn,
+        ariaLabel,
     }: ToolbarButtonProps
 ) {
     const [isShowTooltip, setShowTooltip] = useState(false);
 
     return (
         <li className={style.toolbar__item}
-            onClick={onclickFn}
+            onClick={onClickFn}
             aria-label={ariaLabel}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}>

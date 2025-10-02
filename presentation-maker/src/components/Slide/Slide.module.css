@@ -2,7 +2,6 @@
     position: relative;
 
     overflow: hidden;
-    /*aspect-ratio: 16 / 9;*/
 }
 
 .slide_editable {
@@ -10,9 +9,6 @@
 }
 
 .slide_preview {
-    /*min-width: 320px;*/
-    /*min-height: 180px;*/
-
     border: 2px solid var(--default-border-color);
     border-radius: 5px;
 

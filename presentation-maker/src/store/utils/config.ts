@@ -1,6 +1,8 @@
 import type {ImageElement, Slide, TextElement} from "../types/types.ts";
 import {getRandomId} from "../functions/untils/utils.ts";
 
+const defaultSlideWidth = 240;
+
 const defaultSlide: Slide = {
     id: getRandomId(),
     background: {
@@ -43,6 +45,7 @@ const defaultImgElement: ImageElement = {
 };
 
 export {
+    defaultSlideWidth,
     defaultSlide as slide,
     defaultTextElement as newTextElement,
     defaultImgElement as newImgElement,

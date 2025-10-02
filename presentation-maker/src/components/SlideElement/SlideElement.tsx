@@ -2,6 +2,8 @@ import style from './SlideElement.module.css';
 import type {
     Size, SlideElement
 } from "../../store/types/types.ts";
+import {getPercentValue} from "../../store/functions/untils/utils.ts";
+import {defaultSlideWidth} from "../../store/utils/config.ts";
 
 type ElementProps = {
     element: SlideElement;
@@ -17,28 +19,23 @@ export default function SlideElement(
         isEditable,
         isActive
     }: ElementProps) {
-    function getPercentValue(v1: number, v2: number): number {
-        return (v1 / v2) * 100;
-    }
-
-    const defaultSlideWidth = 240;
     let fontSize = element.type === 'text'
         ? element.fontSize
         : null;
-    if(!isEditable) {
+    if (!isEditable) {
         const scale = defaultSlideWidth / slideSize.width;
         fontSize = fontSize
-        ? Math.max(1, Math.round(fontSize! * scale))
-        : 1;
+            ? Math.max(1, Math.round(fontSize * scale))
+            : 1;
     }
 
-    const bgColor = element.background && element.background.type === 'solid' && element.background.color
+    const bgColor = element.background?.type === 'solid' && element.background.color
         ? element.background.color
         : null;
-    const BgImg = element.background && element.background.type === 'image' && element.background.data
+    const bgImg = element.background?.type === 'image' && element.background.data
         ? element.background.data
         : null;
-    /* const BgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
+    /* const bgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
         ? element.background.gradient
         : null */
     const xPercent = getPercentValue(element.position.x, slideSize.width);
@@ -70,7 +67,7 @@ export default function SlideElement(
                          fontWeight: `${element.fontWeight}`,
                          color: `${element.color}`,
                          backgroundColor: `${bgColor}`,
-                         backgroundImage: `${BgImg}`,
+                         backgroundImage: `${bgImg}`,
                      }}>
                     {element.content}
                 </p>

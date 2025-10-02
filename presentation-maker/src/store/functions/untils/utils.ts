@@ -52,3 +52,15 @@ export function clearElementsSelection(pres: Presentation): Presentation {
         },
     }
 }
+
+export function concatModifiersByFlag(classNames: string[]) {
+    let modifiers = '';
+    classNames.forEach(className => {
+        modifiers += ' ' + className;
+    });
+    return modifiers
+}
+
+export function getPercentValue(v1: number, v2: number): number {
+    return (v1 / v2) * 100;
+}
