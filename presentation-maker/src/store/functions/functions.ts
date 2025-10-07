@@ -11,14 +11,22 @@ import {
     updateSlide
 } from "./untils/utils";
 
-export function renamePresentation(newName: string, pres: Presentation): Presentation {
+export function renamePresentation(
+    pres: Presentation,
+    payload: { newName: string }
+): Presentation {
+    const {newName} = payload;
     return {
         ...pres,
         title: newName
     }
 }
 
-export function addSlide(newSlide: Slide, pres: Presentation): Presentation {
+export function addSlide(
+    pres: Presentation,
+    payload: { newSlide: Slide }
+): Presentation {
+    const {newSlide} = payload;
     return {
         ...pres,
         slides: [
@@ -28,7 +36,11 @@ export function addSlide(newSlide: Slide, pres: Presentation): Presentation {
     }
 }
 
-export function removeSlide(slideIdsToRemove: string[], pres: Presentation): Presentation {
+export function removeSlide(
+    pres: Presentation,
+    payload: { slideIdsToRemove: string[] }
+): Presentation {
+    const {slideIdsToRemove} = payload;
     const newSlides = pres.slides.filter(slide => !slideIdsToRemove.includes(slide.id));
     const newSelectedSlideIds = pres.selection.selectedSlideIds.filter(
         id => !slideIdsToRemove.includes(id)
@@ -50,7 +62,14 @@ export function removeSlide(slideIdsToRemove: string[], pres: Presentation): Pre
     }
 }
 
-export function moveSlide(slideId: string, newIndex: number, pres: Presentation): Presentation {
+export function moveSlide(
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        newIndex: number
+    }
+): Presentation {
+    const {slideId, newIndex} = payload;
     const slides = [...pres.slides];
     const curIndex = slides.findIndex(slide => slide.id === slideId);
     if (curIndex === -1 || curIndex === newIndex) {
@@ -71,10 +90,13 @@ export function moveSlide(slideId: string, newIndex: number, pres: Presentation)
     };
 }
 
-export function addElementToSlide(payload: {
-    slideId: string,
-    newElement: SlideElement
-}, pres: Presentation): Presentation {
+export function addElementToSlide(
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        newElement: SlideElement
+    }
+): Presentation {
     const {slideId, newElement} = payload;
     const targetSlide = pres.slides.find(slide => slide.id === slideId);
     if (!targetSlide) {
@@ -92,10 +114,13 @@ export function addElementToSlide(payload: {
     return updateSlide(updatedSlide, pres);
 }
 
-export function removeElementsFromSlide(payload: {
-    slideId: string,
-    elementIds: string[]
-}, pres: Presentation): Presentation {
+export function removeElementsFromSlide(
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementIds: string[]
+    }
+): Presentation {
     const {slideId, elementIds} = payload;
     const targetSlide = pres.slides.find(slide => slide.id === slideId);
     if (!targetSlide) {
@@ -119,11 +144,14 @@ export function removeElementsFromSlide(payload: {
 }
 
 export function changeElPosition(
-    slideId: string,
-    elementId: string,
-    newPosition: Position,
-    pres: Presentation
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementId: string,
+        newPosition: Position
+    }
 ): Presentation {
+    const {slideId, elementId, newPosition} = payload;
     return updateElementInSlide(
         slideId,
         elementId,
@@ -133,11 +161,14 @@ export function changeElPosition(
 }
 
 export function changeElSize(
-    slideId: string,
-    elementId: string,
-    newSize: Size,
-    pres: Presentation
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementId: string,
+        newSize: Size
+    }
 ): Presentation {
+    const {slideId, elementId, newSize} = payload;
     return updateElementInSlide(
         slideId,
         elementId,
@@ -147,11 +178,14 @@ export function changeElSize(
 }
 
 export function changeTextElContent(
-    slideId: string,
-    elementId: string,
-    newContent: string,
-    pres: Presentation
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementId: string,
+        newContent: string
+    }
 ): Presentation {
+    const {slideId, elementId, newContent} = payload;
     return updateElementInSlide(
         slideId,
         elementId,
@@ -161,11 +195,14 @@ export function changeTextElContent(
 }
 
 export function changeFontFamily(
-    slideId: string,
-    elementId: string,
-    newFF: string,
-    pres: Presentation
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementId: string,
+        newFF: string
+    }
 ): Presentation {
+    const {slideId, elementId, newFF} = payload;
     return updateElementInSlide(
         slideId,
         elementId,
@@ -174,7 +211,14 @@ export function changeFontFamily(
     );
 }
 
-export function changeSlideBg(slideId: string, newBg: Background, pres: Presentation): Presentation {
+export function changeSlideBg(
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        newBg: Background
+    }
+): Presentation {
+    const {slideId, newBg} = payload;
     const targetSlide = pres.slides.find(slide => slide.id === slideId);
     if (!targetSlide) {
         return pres;
@@ -189,7 +233,13 @@ export function changeSlideBg(slideId: string, newBg: Background, pres: Presenta
 }
 
 /* на будущее */
-export function setSelectedSlides(slideIds: string[], pres: Presentation): Presentation {
+export function setSelectedSlides(
+    pres: Presentation,
+    payload: {
+        slideIds: string[]
+    }
+): Presentation {
+    const {slideIds} = payload;
     return {
         ...pres,
         selection: {
@@ -199,7 +249,12 @@ export function setSelectedSlides(slideIds: string[], pres: Presentation): Prese
     };
 }
 
-export function setSelectedElements(elementsIds: string[], pres: Presentation): Presentation {
+export function setSelectedElements(
+    pres: Presentation,
+    payload: {
+        elementsIds: string[]
+    }): Presentation {
+    const {elementsIds} = payload;
     return {
         ...pres,
         selection: {

@@ -46,7 +46,7 @@ const defaultImgElement: ImageElement = {
 
 export {
     defaultSlideWidth,
-    defaultSlide as slide,
-    defaultTextElement as newTextElement,
-    defaultImgElement as newImgElement,
+    defaultSlide,
+    defaultTextElement,
+    defaultImgElement,
 }

@@ -6,14 +6,14 @@ let presentation: Presentation = {
     title: 'new presentation',
     slides: [
         {
-            id: '1', // TODO: getRandomId()
+            id: getRandomId(), // TODO: getRandomId()
             background: {
                 type: 'solid',
                 color: '#000',
             },
             elements: [
                 {
-                    id: '1_1', // TODO: getRandomId()
+                    id: getRandomId(), // TODO: getRandomId()
                     position: {
                         x: 400,
                         y: 400
@@ -109,11 +109,12 @@ let presentation: Presentation = {
         height: 720
     },
     selection: {
-        selectedSlideIds: ['1'],
-        selectedElementIds: ['1_1']
+        selectedSlideIds: [],
+        selectedElementIds: []
     }
 };
-let presentationChangeHandler: Function = () => {};
+let presentationChangeHandler: Function = () => {
+};
 
 function getPresentation(): Presentation {
     return presentation;
@@ -127,13 +128,9 @@ function addPresentationChangeHandler(handler: Function): void {
     presentationChangeHandler = handler;
 }
 
-function dispatch(modifiedFn: any, payload: any = null): void {
+function dispatch(modifiedFn: any, payload: any = {}): void {
     let newPresentation;
-    if(payload) {
-        newPresentation = modifiedFn(payload, presentation);
-    } else {
-        newPresentation = modifiedFn(presentation);
-    }
+    newPresentation = modifiedFn(presentation, payload);
 
     setPresentation(newPresentation);
     if (presentationChangeHandler) {

@@ -5,6 +5,8 @@ import type {
 } from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
 import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
+import {dispatch} from "../../store/editor.ts";
+import {setSelectedElements} from "../../store/functions/functions.ts";
 
 type SlideProps = {
     slide: Slide;

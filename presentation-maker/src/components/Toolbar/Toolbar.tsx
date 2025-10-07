@@ -25,7 +25,11 @@ import {
     renamePresentation
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
-import {newImgElement, newTextElement, slide} from "../../store/utils/config.ts";
+import {
+    defaultSlide,
+    defaultTextElement,
+    defaultImgElement
+} from "../../store/utils/config.ts";
 
 export default function Toolbar(presentation: Presentation) {
     const buttons = [
@@ -38,7 +42,8 @@ export default function Toolbar(presentation: Presentation) {
             icon: <IconPlus/>,
             fn: () => {
                 console.log('Добавить слайд');
-                dispatch(addSlide, slide);
+                console.log(defaultSlide);
+                dispatch(addSlide, {newSlide: defaultSlide});
             },
             ariaLabel: 'Добавить слайд'
         },
@@ -46,7 +51,7 @@ export default function Toolbar(presentation: Presentation) {
             icon: <IconRemove/>,
             fn: () => {
                 console.log('Удалить активный слайд');
-                dispatch(removeSlide, presentation.selection.selectedSlideIds);
+                dispatch(removeSlide, {slideIdsToRemove: presentation.selection.selectedSlideIds});
             },
             ariaLabel: 'Удалить активный слайд'
         },
@@ -56,7 +61,7 @@ export default function Toolbar(presentation: Presentation) {
                 console.log('Добавить текстовый элемент');
                 dispatch(addElementToSlide, {
                         slideId: presentation.selection.selectedSlideIds[0],
-                        newElement: newTextElement
+                        newElement: defaultTextElement
                     }
                 );
             },
@@ -68,7 +73,7 @@ export default function Toolbar(presentation: Presentation) {
                 console.log('Добавить элемент изображение');
                 dispatch(addElementToSlide, {
                         slideId: presentation.selection.selectedSlideIds[0],
-                        newElement: newImgElement
+                        newElement: defaultImgElement
                     }
                 );
             },

@@ -4,12 +4,15 @@ import type {
 } from "../../store/types/types.ts";
 import {getPercentValue} from "../../store/functions/untils/utils.ts";
 import {defaultSlideWidth} from "../../store/utils/config.ts";
+import {dispatch, getPresentation} from "../../store/editor.ts";
+import {setSelectedElements} from "../../store/functions/functions.ts";
 
 type ElementProps = {
     element: SlideElement;
     slideSize: Size;
     isEditable?: boolean;
     isActive?: boolean;
+    onClickFn?: (index: string) => void;
 }
 
 export default function SlideElement(
@@ -55,6 +58,7 @@ export default function SlideElement(
             onClick={() => {
                 console.log(element.id);
                 console.log(element.background ?? 'transparent');
+                dispatch(setSelectedElements, {elementsIds: [element.id]});
             }}>
             {element.type === 'image'
                 ? <img className={style.image}
