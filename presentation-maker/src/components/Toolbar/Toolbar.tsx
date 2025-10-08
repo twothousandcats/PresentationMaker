@@ -1,14 +1,15 @@
 import style from './Toolbar.module.css';
 import type {
     HEXColor,
-    Presentation, SolidColorBackground,
+    Selection,
+    SolidColorBackground,
 } from "../../store/types/types.ts";
 import {
     type ChangeEvent,
     type KeyboardEvent,
     useState,
     useRef,
-    useEffect, JSX
+    useEffect,
 } from 'react';
 import IconPlus from "../Icons/IconPlus.tsx";
 import IconUndo from "../Icons/IconUndo.tsx";
@@ -21,16 +22,28 @@ import IconAddImage from "../Icons/IconAddImage.tsx";
 import IconBrush from "../Icons/IconBrush.tsx";
 import {
     addElementToSlide,
-    addSlide, changeSlideBg,
+    addSlide,
+    changeSlideBg,
     removeSlide,
     renamePresentation
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
 import {createImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
-import * as React from "react";
 import {AddImageDialog} from "../AddImageDialog/AddImageDialog.tsx";
 
-export default function Toolbar(presentation: Presentation) {
+interface ToolbarProps {
+    presentationId: string;
+    presentationTitle: string;
+    presentationSelection: Selection;
+}
+
+export default function Toolbar(
+    {
+        presentationId,
+        presentationTitle,
+        presentationSelection
+    }: ToolbarProps
+) {
     const buttons = [
         {
             icon: <IconDownload/>,
@@ -49,7 +62,7 @@ export default function Toolbar(presentation: Presentation) {
             icon: <IconRemove/>,
             fn: () => {
                 console.log('Удалить активный слайд');
-                dispatch(removeSlide, {slideIdsToRemove: presentation.selection.selectedSlideIds});
+                dispatch(removeSlide, {slideIdsToRemove: presentationSelection.selectedSlideIds});
             },
             ariaLabel: 'Удалить активный слайд'
         },
@@ -58,7 +71,7 @@ export default function Toolbar(presentation: Presentation) {
             fn: () => {
                 console.log('Добавить текстовый элемент');
                 dispatch(addElementToSlide, {
-                        slideId: presentation.selection.selectedSlideIds[0],
+                        slideId: presentationSelection.selectedSlideIds[0],
                         newElement: createDefaultTextEl()
                     }
                 );
@@ -93,7 +106,7 @@ export default function Toolbar(presentation: Presentation) {
         },
     ];
     const [isExpanded, setExpanded] = useState(false);
-    const [title, setTitle] = useState(presentation.title);
+    const [title, setTitle] = useState(presentationTitle);
     const [isAddImageDialogOpen, setIsAddImageDialogOpen] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -101,7 +114,7 @@ export default function Toolbar(presentation: Presentation) {
 
     const handleAddImage = (url: string) => {
         dispatch(addElementToSlide, {
-                slideId: presentation.selection.selectedSlideIds[0],
+                slideId: presentationSelection.selectedSlideIds[0],
                 newElement: createImageEl(url)
             }
         );
@@ -114,7 +127,7 @@ export default function Toolbar(presentation: Presentation) {
             color: evt.currentTarget.value as HEXColor
         };
         dispatch(changeSlideBg, {
-            slideId: presentation.selection.selectedSlideIds[0],
+            slideId: presentationSelection.selectedSlideIds[0],
             newBg: newBg
         });
     }
@@ -128,7 +141,7 @@ export default function Toolbar(presentation: Presentation) {
 
     const handleInputClick = () => {
         setExpanded(true);
-        console.log('Смена названия')
+        console.log('Смена названия');
     }
 
     const handleKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
@@ -136,7 +149,7 @@ export default function Toolbar(presentation: Presentation) {
             setExpanded(false);
             inputRef.current?.blur();
         } else if (evt.key === 'Escape') {
-            setTitle(presentation.title);
+            setTitle(presentationTitle);
             setExpanded(false);
             inputRef.current?.blur();
         }
@@ -154,7 +167,6 @@ export default function Toolbar(presentation: Presentation) {
         }
 
         document.addEventListener('mousedown', handleClickOutside);
-
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isExpanded]);
 
@@ -164,7 +176,7 @@ export default function Toolbar(presentation: Presentation) {
                 <li className={`${style.toolbar__item} ${style.toolbar__item_title}`}
                     ref={containerRef}>
                     <input className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
-                           id={presentation.id}
+                           id={presentationId}
                            type="text"
                            value={title}
                            ref={inputRef}

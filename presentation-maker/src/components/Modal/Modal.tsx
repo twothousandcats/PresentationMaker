@@ -1,7 +1,13 @@
 import style from './Modal.module.css';
-import {JSX, ReactNode, useEffect, useRef} from "react";
+import {
+    type JSX,
+    type ReactNode,
+    useEffect,
+    useRef
+} from "react";
 import {createPortal} from "react-dom";
 import {getPortal} from "../../store/utils/config.ts";
+import * as React from "react";
 
 interface ModalProps {
     isOpen: boolean;
@@ -10,26 +16,29 @@ interface ModalProps {
     title?: string;
 }
 
-export function Modal({isOpen, onClose, children, title}: ModalProps): JSX.Element {
+export function Modal({isOpen, onClose, children, title}: ModalProps): JSX.Element | null {
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
+    const handleKeyDown = (evt: KeyboardEvent) => {
+        if (evt.key === 'Escape') {
             onClose();
         }
     }
 
-    const handleOverlayClick = (e: MouseEvent) => {
-        e.stopPropagation();
+    const handleOverlayClick = (evt: React.MouseEvent<HTMLDivElement>) => {
+        evt.stopPropagation();
+        if (evt.target !== modalRef.current) {
+            onClose();
+        }
     }
 
     useEffect(() => {
         if (isOpen) {
-            document.addEventListener("keydown", handleKeyDown);
+            window.addEventListener("keydown", handleKeyDown);
         }
 
         return () => {
-            document.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keydown", handleKeyDown);
         }
     }, [isOpen, onClose]);
 
@@ -44,7 +53,9 @@ export function Modal({isOpen, onClose, children, title}: ModalProps): JSX.Eleme
              aria-modal="true">
             <div className={style.modal}
                  ref={modalRef}
-                 onClick={(evt) => evt.stopPropagation()}>
+                 onClick={
+                     (evt) => evt.stopPropagation()
+                 }>
                 {title && <p className={style.title}>{title}</p>}
                 {children}
             </div>

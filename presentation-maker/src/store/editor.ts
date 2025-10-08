@@ -6,14 +6,14 @@ let presentation: Presentation = {
     title: 'new presentation',
     slides: [
         {
-            id: getRandomId(), // TODO: getRandomId()
+            id: getRandomId(),
             background: {
                 type: 'solid',
                 color: '#000',
             },
             elements: [
                 {
-                    id: getRandomId(), // TODO: getRandomId()
+                    id: getRandomId(),
                     position: {
                         x: 400,
                         y: 400
@@ -74,7 +74,7 @@ let presentation: Presentation = {
                         height: 200
                     },
                     type: 'image',
-                    data: 'https://images.unsplash.com/photo-1757865579164-23ff0b8e3e5f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    data: 'https://cf.youtravel.me/tr:w-1500/upload/tours/36765/media/a5d/j1t3o122iitxam7xknbcmi2f1uw5q586.jpg',
                     background: null
                 }
             ]
@@ -83,7 +83,7 @@ let presentation: Presentation = {
             id: getRandomId(),
             background: {
                 type: 'image',
-                data: 'https://images.unsplash.com/photo-1731370963892-32c7347cd2d8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                data: 'https://hdpic.club/photo/uploads/posts/2023-03/thumbs/1679371066_hdpic-club-p-nissan-skailain-37.jpg'
             },
             elements: []
         },
@@ -91,15 +91,7 @@ let presentation: Presentation = {
             id: getRandomId(),
             background: {
                 type: 'image',
-                data: 'https://images.unsplash.com/photo-1758380389082-8a417db34c72?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-            },
-            elements: []
-        },
-        {
-            id: getRandomId(),
-            background: {
-                type: 'image',
-                data: 'https://images.unsplash.com/photo-1758380389302-b7f0ec59cf88?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                data: 'https://allbasketball.org/uploads/posts/2024-08/1722713229_qxxlefycdedjrsjdihmj.jpg'
             },
             elements: []
         },

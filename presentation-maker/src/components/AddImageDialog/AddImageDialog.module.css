@@ -1,11 +1,40 @@
 .holder {
-
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .field {
+    padding: 5px;
 
+    font-family: var(--base-font);
+
+    border: 1px solid var(--default-border-color);
 }
 
 .holder__btns {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
+.btn {
+    width: 100%;
+    padding: 5px;
+
+    font-family: var(--base-font);
+    font-size: 14px;
+    line-height: 1;
+
+    border: 1px solid var(--default-border-color);
+    border-radius: 5px;
+    background-color: transparent;
+
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--accent-bg-color2);
+    }
 }

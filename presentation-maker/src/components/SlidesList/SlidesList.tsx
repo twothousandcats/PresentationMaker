@@ -1,13 +1,29 @@
 import style from './SlidesList.module.css';
-import type {Presentation} from "../../store/types/types.ts";
+import type {
+    Slide as SlideType,
+    Size,
+    Selection
+} from "../../store/types/types.ts";
 import Slide from "../Slide/Slide.tsx";
 import {dispatch} from "../../store/editor.ts";
 import {setSelectedSlides} from "../../store/functions/functions.ts";
 
-export default function SlidesList(pres: Presentation) {
+interface SlidesListProps {
+    slides: SlideType[];
+    size: Size;
+    selection: Selection;
+}
+
+export default function SlidesList(
+    {
+        slides,
+        size,
+        selection
+    }: SlidesListProps
+) {
     return (
         <ul className={style.container}>
-            {pres.slides.length > 0 && pres.slides.map((slide, index) =>
+            {slides.length > 0 && slides.map((slide, index) =>
                 <li className={style.holder}
                     key={slide.id}
                     onClick={
@@ -22,10 +38,10 @@ export default function SlidesList(pres: Presentation) {
                     </p>
                     <Slide
                         slide={slide}
-                        slideSize={pres.size}
+                        slideSize={size}
                         isEditable={false}
-                        isActive={pres.selection.selectedSlideIds.includes(slide.id)}
-                        activeElements={pres.selection.selectedSlideIds}
+                        isActive={selection.selectedSlideIds.includes(slide.id)}
+                        activeElements={selection.selectedSlideIds}
                     />
                 </li>
             )}

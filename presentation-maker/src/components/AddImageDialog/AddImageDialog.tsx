@@ -2,6 +2,7 @@ import style from './AddImageDialog.module.css';
 import {useEffect, useRef, useState} from "react";
 import {Modal} from "../Modal/Modal.tsx";
 import {langs} from "../../store/utils/langs.ts";
+import * as React from "react";
 
 interface DialogProps {
     isOpen: boolean;
@@ -52,8 +53,14 @@ export function AddImageDialog({isOpen, onClose, onAdd}: DialogProps) {
                        onKeyDown={handleKeyDown}
                        placeholder='https://example.com/image.jpg'/>
                 <div className={style.holder__btns}>
-                    <button onClick={handleSubmit}>{langs.imageDialogSubmit}</button>
-                    <button onClick={onClose}>{langs.imageDialogCancel}</button>
+                    <button onClick={handleSubmit}
+                            className={style.btn}>
+                        {langs.imageDialogSubmit}
+                    </button>
+                    <button onClick={onClose}
+                            className={style.btn}>
+                        {langs.imageDialogCancel}
+                    </button>
                 </div>
             </div>
         </Modal>

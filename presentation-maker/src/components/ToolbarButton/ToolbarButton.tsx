@@ -1,8 +1,8 @@
 import style from "../ToolbarButton/ToolbarButton.module.css";
-import {useState} from "react";
+import {type ReactNode, useState} from "react";
 
 interface ToolbarButtonProps {
-    icon: Element;
+    icon: ReactNode;
     onClickFn: () => void;
     ariaLabel?: string;
 }

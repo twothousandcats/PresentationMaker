@@ -29,7 +29,7 @@ export default function App(presentation: Presentation) {
                 dispatch(removeSlide, {slideIdsToRemove: presentation.selection.selectedSlideIds});
             }
         } else if (evt.key === 'Escape') {
-            dispatch(clearSelection); // clear elements before slides
+            dispatch(clearSelection);
         }
     }
 
@@ -40,10 +40,21 @@ export default function App(presentation: Presentation) {
 
     return (
         <section className={AppStyle.presentation}>
-            <Toolbar {...presentation}/>
+            <Toolbar presentationId={presentation.id}
+                     presentationTitle={presentation.title}
+                     presentationSelection={presentation.selection}
+            />
             <div className={AppStyle.presentation__container}>
-                <SlidesList {...presentation}/>
-                <SlideEditor {...presentation}/>
+                <SlidesList
+                    slides={presentation.slides}
+                    size={presentation.size}
+                    selection={presentation.selection}
+                />
+                <SlideEditor
+                    slides={presentation.slides}
+                    size={presentation.size}
+                    selection={presentation.selection}
+                />
             </div>
         </section>
     )
