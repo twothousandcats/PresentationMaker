@@ -128,7 +128,7 @@ function addPresentationChangeHandler(handler: Function): void {
     presentationChangeHandler = handler;
 }
 
-function dispatch(modifiedFn: any, payload: any = {}): void {
+function dispatch(modifiedFn: any, payload: object = {}): void {
     let newPresentation;
     newPresentation = modifiedFn(presentation, payload);
 

@@ -25,11 +25,7 @@ import {
     renamePresentation
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
-import {
-    defaultSlide,
-    defaultTextElement,
-    defaultImgElement
-} from "../../store/utils/config.ts";
+import {createDefaultImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
 
 export default function Toolbar(presentation: Presentation) {
     const buttons = [
@@ -42,8 +38,7 @@ export default function Toolbar(presentation: Presentation) {
             icon: <IconPlus/>,
             fn: () => {
                 console.log('Добавить слайд');
-                console.log(defaultSlide);
-                dispatch(addSlide, {newSlide: defaultSlide});
+                dispatch(addSlide, {newSlide: createDefaultSlide()});
             },
             ariaLabel: 'Добавить слайд'
         },
@@ -61,7 +56,7 @@ export default function Toolbar(presentation: Presentation) {
                 console.log('Добавить текстовый элемент');
                 dispatch(addElementToSlide, {
                         slideId: presentation.selection.selectedSlideIds[0],
-                        newElement: defaultTextElement
+                        newElement: createDefaultTextEl()
                     }
                 );
             },
@@ -73,7 +68,7 @@ export default function Toolbar(presentation: Presentation) {
                 console.log('Добавить элемент изображение');
                 dispatch(addElementToSlide, {
                         slideId: presentation.selection.selectedSlideIds[0],
-                        newElement: defaultImgElement
+                        newElement: createDefaultImageEl()
                     }
                 );
             },
@@ -104,7 +99,7 @@ export default function Toolbar(presentation: Presentation) {
         const newTitle = evt.target.value;
         setTitle(newTitle);
         console.log('Новое название: ', newTitle);
-        dispatch(renamePresentation, newTitle);
+        dispatch(renamePresentation, {newName: newTitle});
     }
 
     const handleInputClick = () => {

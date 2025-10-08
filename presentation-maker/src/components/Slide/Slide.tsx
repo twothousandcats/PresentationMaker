@@ -5,8 +5,6 @@ import type {
 } from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
 import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
-import {dispatch} from "../../store/editor.ts";
-import {setSelectedElements} from "../../store/functions/functions.ts";
 
 type SlideProps = {
     slide: Slide;
@@ -63,6 +61,7 @@ export default function Slide(
                     key={element.id}
                     element={element}
                     slideSize={slideSize}
+                    slideId={slide.id}
                     isEditable={isEditable}
                     isActive={isEditable && activeElements?.includes(element.id)}
                 />

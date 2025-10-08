@@ -1,15 +1,18 @@
 import style from './SlideElement.module.css';
 import type {
-    Size, SlideElement
+    Size,
+    SlideElement
 } from "../../store/types/types.ts";
 import {getPercentValue} from "../../store/functions/untils/utils.ts";
 import {defaultSlideWidth} from "../../store/utils/config.ts";
-import {dispatch, getPresentation} from "../../store/editor.ts";
-import {setSelectedElements} from "../../store/functions/functions.ts";
+import {dispatch} from "../../store/editor.ts";
+import {changeTextElContent, setSelectedElements} from "../../store/functions/functions.ts";
+import {type SyntheticEvent, useEffect, useRef} from "react";
 
 type ElementProps = {
     element: SlideElement;
     slideSize: Size;
+    slideId: string;
     isEditable?: boolean;
     isActive?: boolean;
     onClickFn?: (index: string) => void;
@@ -19,9 +22,12 @@ export default function SlideElement(
     {
         element,
         slideSize,
+        slideId,
         isEditable,
         isActive
     }: ElementProps) {
+    const textRef = useRef<HTMLDivElement>(null);
+
     let fontSize = element.type === 'text'
         ? element.fontSize
         : null;
@@ -46,6 +52,28 @@ export default function SlideElement(
     const widthPercent = getPercentValue(element.size.width, slideSize.width);
     const heightPercent = getPercentValue(element.size.height, slideSize.height);
 
+    function handleElementClick() {
+        console.log(element.id);
+        console.log(element.background ?? 'transparent');
+        dispatch(setSelectedElements, {elementsIds: [element.id]});
+    }
+
+    function handleTextChange(evt: SyntheticEvent<HTMLDivElement>) {
+        const newContent = evt.currentTarget.innerHTML;
+        console.log('newContent: ', newContent);
+        dispatch(changeTextElContent, {
+            slideId: slideId,
+            elementId: element.id,
+            newContent: newContent
+        });
+    }
+
+    useEffect(() => {
+        if (isEditable && isActive && element.type === 'text' && textRef.current) {
+            textRef.current?.focus();
+        }
+    }, [isEditable, isActive]);
+
     return (
         <div
             className={`${style.element} ${isActive ? style.element_active : ''} ${!isEditable ? style.element_disabled : ''}`}
@@ -55,26 +83,26 @@ export default function SlideElement(
                 width: `${widthPercent}%`,
                 height: `${heightPercent}%`,
             }}
-            onClick={() => {
-                console.log(element.id);
-                console.log(element.background ?? 'transparent');
-                dispatch(setSelectedElements, {elementsIds: [element.id]});
-            }}>
+            onClick={handleElementClick}>
             {element.type === 'image'
                 ? <img className={style.image}
                        src={element.data}
                        alt={element.id + 'slide element'}/>
-                : <p className={style.text}
-                     style={{
-                         fontFamily: `${element.fontFamily}`,
-                         fontSize: `${fontSize}px`,
-                         fontWeight: `${element.fontWeight}`,
-                         color: `${element.color}`,
-                         backgroundColor: `${bgColor}`,
-                         backgroundImage: `${bgImg}`,
-                     }}>
+                : <div className={style.text}
+                       ref={textRef}
+                       contentEditable={isEditable}
+                       suppressContentEditableWarning={true}
+                       onBlur={handleTextChange}
+                       style={{
+                           fontFamily: `${element.fontFamily}`,
+                           fontSize: `${fontSize}px`,
+                           fontWeight: `${element.fontWeight}`,
+                           color: `${element.color}`,
+                           backgroundColor: `${bgColor}`,
+                           backgroundImage: `${bgImg}`,
+                       }}>
                     {element.content}
-                </p>
+                </div>
             }
         </div>
     );
