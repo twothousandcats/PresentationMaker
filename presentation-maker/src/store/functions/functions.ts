@@ -232,7 +232,6 @@ export function changeSlideBg(
     return updateSlide(updatedSlide, pres);
 }
 
-/* на будущее */
 export function setSelectedSlides(
     pres: Presentation,
     payload: {

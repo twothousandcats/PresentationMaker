@@ -1,13 +1,14 @@
 import style from './Toolbar.module.css';
 import type {
-    Presentation,
+    HEXColor,
+    Presentation, SolidColorBackground,
 } from "../../store/types/types.ts";
 import {
     type ChangeEvent,
     type KeyboardEvent,
     useState,
     useRef,
-    useEffect
+    useEffect, JSX
 } from 'react';
 import IconPlus from "../Icons/IconPlus.tsx";
 import IconUndo from "../Icons/IconUndo.tsx";
@@ -20,12 +21,14 @@ import IconAddImage from "../Icons/IconAddImage.tsx";
 import IconBrush from "../Icons/IconBrush.tsx";
 import {
     addElementToSlide,
-    addSlide,
+    addSlide, changeSlideBg,
     removeSlide,
     renamePresentation
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
-import {createDefaultImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
+import {createImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
+import * as React from "react";
+import {AddImageDialog} from "../AddImageDialog/AddImageDialog.tsx";
 
 export default function Toolbar(presentation: Presentation) {
     const buttons = [
@@ -42,7 +45,7 @@ export default function Toolbar(presentation: Presentation) {
             },
             ariaLabel: 'Добавить слайд'
         },
-        { // TODO: delete by btn
+        {
             icon: <IconRemove/>,
             fn: () => {
                 console.log('Удалить активный слайд');
@@ -66,11 +69,7 @@ export default function Toolbar(presentation: Presentation) {
             icon: <IconAddImage/>,
             fn: () => {
                 console.log('Добавить элемент изображение');
-                dispatch(addElementToSlide, {
-                        slideId: presentation.selection.selectedSlideIds[0],
-                        newElement: createDefaultImageEl()
-                    }
-                );
+                setIsAddImageDialogOpen(true);
             },
             ariaLabel: 'Добавить элемент изображение'
         },
@@ -86,14 +85,39 @@ export default function Toolbar(presentation: Presentation) {
         },
         {
             icon: <IconBrush/>,
-            fn: () => console.log('Палитра/выбор цвета'),
+            fn: () => {
+                console.log('Палитра/выбор цвета');
+                document.getElementById('color-picker')?.click();
+            },
             ariaLabel: 'Палитра/выбор цвета'
         },
-    ]
+    ];
     const [isExpanded, setExpanded] = useState(false);
     const [title, setTitle] = useState(presentation.title);
+    const [isAddImageDialogOpen, setIsAddImageDialogOpen] = useState(false);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const containerRef = useRef<HTMLLIElement>(null);
+
+    const handleAddImage = (url: string) => {
+        dispatch(addElementToSlide, {
+                slideId: presentation.selection.selectedSlideIds[0],
+                newElement: createImageEl(url)
+            }
+        );
+        setIsAddImageDialogOpen(false);
+    }
+
+    const handelChangeColor = (evt: ChangeEvent<HTMLInputElement>) => {
+        const newBg: SolidColorBackground = {
+            type: 'solid',
+            color: evt.currentTarget.value as HEXColor
+        };
+        dispatch(changeSlideBg, {
+            slideId: presentation.selection.selectedSlideIds[0],
+            newBg: newBg
+        });
+    }
 
     const handleTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
         const newTitle = evt.target.value;
@@ -135,27 +159,42 @@ export default function Toolbar(presentation: Presentation) {
     }, [isExpanded]);
 
     return (
-        <ul className={style.toolbar}>
-            <li className={`${style.toolbar__item} ${style.toolbar__item_title}`}
-                ref={containerRef}>
-                <input className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
-                       id={presentation.id}
-                       type="text"
-                       value={title}
-                       ref={inputRef}
-                       onClick={handleInputClick}
-                       onKeyDown={handleKeyDown}
-                       onChange={handleTitleChange}
-                       readOnly={!isExpanded}/>
-            </li>
-            {buttons.map((btn, index) =>
-                <ToolbarButton
-                    key={index}
-                    icon={btn.icon}
-                    onClickFn={btn.fn}
-                    ariaLabel={btn.ariaLabel}
-                />
-            )}
-        </ul>
+        <>
+            <ul className={style.toolbar}>
+                <li className={`${style.toolbar__item} ${style.toolbar__item_title}`}
+                    ref={containerRef}>
+                    <input className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
+                           id={presentation.id}
+                           type="text"
+                           value={title}
+                           ref={inputRef}
+                           onClick={handleInputClick}
+                           onKeyDown={handleKeyDown}
+                           onChange={handleTitleChange}
+                           readOnly={!isExpanded}/>
+                </li>
+                {buttons.map((btn, index) =>
+                    <ToolbarButton
+                        key={index}
+                        icon={btn.icon}
+                        onClickFn={btn.fn}
+                        ariaLabel={btn.ariaLabel}
+                    />
+                )}
+            </ul>
+            <input
+                type="color"
+                id="color-picker"
+                className={style.toolbar__colorpicker}
+                onChange={handelChangeColor}
+                defaultValue="#000000"
+                aria-label="Выбор цвета"
+            />
+            <AddImageDialog
+                isOpen={isAddImageDialogOpen}
+                onClose={() => setIsAddImageDialogOpen(false)}
+                onAdd={handleAddImage}
+            />
+        </>
     )
 }

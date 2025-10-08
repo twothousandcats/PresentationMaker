@@ -9,7 +9,7 @@ import {useEffect} from "react";
 import {clearSelection} from "../../store/functions/untils/utils.ts";
 
 export default function App(presentation: Presentation) {
-    function handleDelete(evt: KeyboardEvent) {
+    const handleDelete = (evt: KeyboardEvent) => {
         if (
             evt.target instanceof HTMLElement &&
             (evt.target.tagName === 'INPUT' ||

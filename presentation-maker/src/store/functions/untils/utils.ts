@@ -110,7 +110,7 @@ export function createDefaultTextEl(): TextElement {
     };
 }
 
-export function createDefaultImageEl(): ImageElement {
+export function createImageEl(data: string): ImageElement {
     return {
         id: getRandomId(),
         position: {

@@ -5,7 +5,7 @@ import {dispatch} from "../../store/editor.ts";
 import {setSelectedSlides} from "../../store/functions/functions.ts";
 
 export default function SlidesList(pres: Presentation) {
-        return (
+    return (
         <ul className={style.container}>
             {pres.slides.length > 0 && pres.slides.map((slide, index) =>
                 <li className={style.holder}

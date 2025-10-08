@@ -52,13 +52,13 @@ export default function SlideElement(
     const widthPercent = getPercentValue(element.size.width, slideSize.width);
     const heightPercent = getPercentValue(element.size.height, slideSize.height);
 
-    function handleElementClick() {
+    const handleElementClick = () => {
         console.log(element.id);
         console.log(element.background ?? 'transparent');
         dispatch(setSelectedElements, {elementsIds: [element.id]});
     }
 
-    function handleTextChange(evt: SyntheticEvent<HTMLDivElement>) {
+    const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
         const newContent = evt.currentTarget.innerHTML;
         console.log('newContent: ', newContent);
         dispatch(changeTextElContent, {
