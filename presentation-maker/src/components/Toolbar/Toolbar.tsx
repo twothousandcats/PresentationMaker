@@ -29,7 +29,7 @@ import {
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
 import {createImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
-import {AddImageDialog} from "../AddImageDialog/AddImageDialog.tsx";
+import {AddElementBgDialog} from "../AddElementBgDialog/AddElementBgDialog.tsx";
 
 interface ToolbarProps {
     presentationId: string;
@@ -82,7 +82,7 @@ export default function Toolbar(
             icon: <IconAddImage/>,
             fn: () => {
                 console.log('Добавить элемент изображение');
-                setIsAddImageDialogOpen(true);
+                setIsAddElementBgDialogOpen(true);
             },
             ariaLabel: 'Добавить элемент изображение'
         },
@@ -107,7 +107,7 @@ export default function Toolbar(
     ];
     const [isExpanded, setExpanded] = useState(false);
     const [title, setTitle] = useState(presentationTitle);
-    const [isAddImageDialogOpen, setIsAddImageDialogOpen] = useState(false);
+    const [isAddElementBgDialogOpen, setIsAddElementBgDialogOpen] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
     const containerRef = useRef<HTMLLIElement>(null);
@@ -118,7 +118,7 @@ export default function Toolbar(
                 newElement: createImageEl(url)
             }
         );
-        setIsAddImageDialogOpen(false);
+        setIsAddElementBgDialogOpen(false);
     }
 
     const handelChangeColor = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -202,9 +202,9 @@ export default function Toolbar(
                 defaultValue="#000000"
                 aria-label="Выбор цвета"
             />
-            <AddImageDialog
-                isOpen={isAddImageDialogOpen}
-                onClose={() => setIsAddImageDialogOpen(false)}
+            <AddElementBgDialog
+                isOpen={isAddElementBgDialogOpen}
+                onClose={() => setIsAddElementBgDialogOpen(false)}
                 onAdd={handleAddImage}
             />
         </>

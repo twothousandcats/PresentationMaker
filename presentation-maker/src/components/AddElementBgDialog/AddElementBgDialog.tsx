@@ -1,4 +1,4 @@
-import style from './AddImageDialog.module.css';
+import style from './AddElementBgDialog.module.css';
 import {useEffect, useRef, useState} from "react";
 import {Modal} from "../Modal/Modal.tsx";
 import {langs} from "../../store/utils/langs.ts";
@@ -10,7 +10,7 @@ interface DialogProps {
     onAdd: (url: string) => void;
 }
 
-export function AddImageDialog({isOpen, onClose, onAdd}: DialogProps) {
+export function AddElementBgDialog({isOpen, onClose, onAdd}: DialogProps) {
     const [url, setUrl] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
