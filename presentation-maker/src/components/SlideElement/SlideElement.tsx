@@ -84,10 +84,19 @@ export default function SlideElement(
                 height: `${heightPercent}%`,
             }}
             onClick={handleElementClick}>
-            {element.type === 'image'
-                ? <img className={style.image}
-                       src={element.data}
-                       alt={element.id + 'slide element'}/>
+            {element.type === 'rectangle'
+                ? <div className={style.image}
+                       style={{
+                           ...(element.background?.type === 'image' && {
+                               backgroundImage: `url(${element.background.data}`,
+                               backgroundRepeat: 'no-repeat',
+                               backgroundSize: 'cover',
+                               backgroundPosition: 'left top',
+                           }),
+                           ...(element.background?.type === 'solid' && {
+                               backgroundColor: element.background.color
+                           })
+                       }}/>
                 : <div className={style.text}
                        ref={textRef}
                        contentEditable={isEditable}

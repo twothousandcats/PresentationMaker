@@ -1,5 +1,5 @@
 import type {
-    ImageElement,
+    RectangleElement,
     Presentation,
     Slide,
     SlideElement, TextElement
@@ -36,6 +36,8 @@ export function updateElementInSlide(
                 : element
         )
     };
+
+    console.log(updatedSlide.elements);
 
     return updateSlide(updatedSlide, pres);
 }
@@ -110,7 +112,7 @@ export function createDefaultTextEl(): TextElement {
     };
 }
 
-export function createImageEl(data: string): ImageElement {
+export function createRectangleEl(): RectangleElement {
     return {
         id: getRandomId(),
         position: {
@@ -122,7 +124,6 @@ export function createImageEl(data: string): ImageElement {
             height: 200
         },
         background: null,
-        type: 'image',
-        data: data
+        type: 'rectangle'
     };
 }

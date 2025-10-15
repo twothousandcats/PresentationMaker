@@ -73,9 +73,11 @@ let presentation: Presentation = {
                         width: 200,
                         height: 200
                     },
-                    type: 'image',
-                    data: 'https://cf.youtravel.me/tr:w-1500/upload/tours/36765/media/a5d/j1t3o122iitxam7xknbcmi2f1uw5q586.jpg',
-                    background: null
+                    type: 'rectangle',
+                    background: {
+                        type: 'image',
+                        data: 'https://cf.youtravel.me/tr:w-1500/upload/tours/36765/media/a5d/j1t3o122iitxam7xknbcmi2f1uw5q586.jpg'
+                    }
                 }
             ]
         },

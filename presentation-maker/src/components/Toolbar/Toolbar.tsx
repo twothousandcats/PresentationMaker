@@ -12,10 +12,9 @@ import IconPlus from '../Icons/IconPlus.tsx';
 import IconUndo from '../Icons/IconUndo.tsx';
 import IconRedo from '../Icons/IconRedo.tsx';
 import IconDownload from '../Icons/IconDownload.tsx';
-import ToolbarButton from '../ToolbarButton/ToolbarButton.tsx';
 import IconRemove from '../Icons/IconRemove.tsx';
 import IconAddText from '../Icons/IconAddText.tsx';
-import IconSetBackground from '../Icons/IconSetBackground.tsx';
+import IconDrop from '../Icons/IconDrop.tsx';
 import {
     addElementToSlide,
     addSlide,
@@ -27,6 +26,7 @@ import {
 import {dispatch} from '../../store/editor.ts';
 import {createDefaultSlide, createDefaultTextEl} from '../../store/functions/untils/utils.ts';
 import {AddBgDialog} from '../AddBgDialog/AddBgDialog.tsx';
+import IconButton from "../IconButton/IconButton.tsx";
 
 interface ToolbarProps {
     presentationId: string;
@@ -34,11 +34,13 @@ interface ToolbarProps {
     presentationSelection: Selection;
 }
 
-export default function Toolbar({
-                                    presentationId,
-                                    presentationTitle,
-                                    presentationSelection,
-                                }: ToolbarProps) {
+export default function Toolbar(
+    {
+        presentationId,
+        presentationTitle,
+        presentationSelection,
+    }: ToolbarProps
+) {
     const [isExpanded, setExpanded] = useState(false);
     const [title, setTitle] = useState(presentationTitle);
     const [isAddBgDialogOpen, setIsAddBgDialogOpen] = useState(false);
@@ -52,14 +54,19 @@ export default function Toolbar({
 
             const {selectedSlideIds, selectedElementIds} = presentationSelection;
             const slideId = selectedSlideIds[0];
+            const elementId = selectedElementIds[0];
 
-            if (selectedSlideIds.length > 0) {
-                dispatch(changeSlideBg, {slideId, newBg: content});
-            } else if (selectedElementIds.length > 0) {
-                dispatch(changeElementBg, {
+            if (selectedElementIds.length > 0) {
+                dispatch(changeElementBg,
+                    {
+                        slideId,
+                        elementId,
+                        newBg: content,
+                    });
+            } else if (selectedSlideIds.length > 0) {
+                dispatch(changeSlideBg, {
                     slideId,
-                    elementId: selectedElementIds[0],
-                    newBg: content,
+                    newBg: content
                 });
             }
 
@@ -138,11 +145,11 @@ export default function Toolbar({
             disabled: presentationSelection.selectedSlideIds.length === 0,
         },
         {
-            icon: <IconSetBackground/>,
+            icon: <IconDrop/>,
             fn: () => setIsAddBgDialogOpen(true),
             ariaLabel: 'Изменить фон',
             disabled: presentationSelection.selectedSlideIds.length === 0
-                || presentationSelection.selectedElementIds.length === 0,
+                && presentationSelection.selectedElementIds.length === 0,
         },
         {
             icon: <IconUndo/>,
@@ -173,7 +180,7 @@ export default function Toolbar({
                     />
                 </li>
                 {toolbarButtons.map((btn, index) => (
-                    <ToolbarButton
+                    <IconButton
                         key={index}
                         icon={btn.icon}
                         onClickFn={btn.fn}

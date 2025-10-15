@@ -27,15 +27,15 @@ type SolidColorBackground = {
     color: Color;
 };
 
-type GradientBackground = {
-    type: 'gradient';
-    gradient: Gradient;
-};
-
 type Background = ImageBackground
     | SolidColorBackground
     | GradientBackground
     | null;
+
+type GradientBackground = {
+    type: 'gradient';
+    gradient: Gradient;
+};
 
 type DefaultElementProps = {
     id: string;
@@ -44,9 +44,8 @@ type DefaultElementProps = {
     background: Background;
 }
 
-type ImageElement = DefaultElementProps & {
-    type: 'image';
-    data: string;
+type RectangleElement = DefaultElementProps & {
+    type: 'rectangle';
 }
 
 type TextElement = DefaultElementProps & {
@@ -58,7 +57,7 @@ type TextElement = DefaultElementProps & {
     color: Color;
 }
 
-type SlideElement = TextElement | ImageElement;
+type SlideElement = TextElement | RectangleElement;
 
 type Slide = {
     id: string;
@@ -96,7 +95,7 @@ export type {
     SolidColorBackground,
     GradientBackground,
     Background,
-    ImageElement,
+    RectangleElement,
     TextElement,
     SlideElement,
     Slide,

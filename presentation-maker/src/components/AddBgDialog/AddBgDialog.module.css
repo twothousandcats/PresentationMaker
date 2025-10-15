@@ -28,18 +28,6 @@
 .tabs {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 20px;
-
-    li {
-        width: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5px;
-
-        border: 1px solid var(--default-border-color);
-        border-radius: 5px;
-    }
+    gap: 10px;
 }

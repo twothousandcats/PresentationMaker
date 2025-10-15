@@ -7,7 +7,7 @@
 }
 
 .element_active {
-    border: 2px solid var(--selected-border-color);
+    border: 1px solid var(--selected-border-color);
 }
 
 .element_disabled {

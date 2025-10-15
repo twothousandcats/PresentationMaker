@@ -220,6 +220,7 @@ export function changeElementBg(
     }
 ): Presentation {
     const {slideId, elementId, newBg} = payload;
+    console.log(newBg);
     return updateElementInSlide(
         slideId,
         elementId,

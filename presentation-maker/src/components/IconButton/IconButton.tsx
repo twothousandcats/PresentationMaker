@@ -1,22 +1,31 @@
-import style from "../ToolbarButton/ToolbarButton.module.css";
+import style from "./IconButton.module.css";
 import {type ReactNode, useState} from "react";
+import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
 
-interface ToolbarButtonProps {
+interface IconButtonProps {
     icon: ReactNode;
     onClickFn: () => void;
     ariaLabel?: string;
     disabled?: boolean;
+    isActive?: boolean;
 }
 
-export default function ToolbarButton(
+export default function IconButton(
     {
         icon,
         onClickFn,
         ariaLabel,
         disabled = false,
-    }: ToolbarButtonProps
+        isActive = false,
+    }: IconButtonProps
 ) {
     const [isShowTooltip, setShowTooltip] = useState(false);
+
+    const classNames = concatModifiersByFlag([
+        style.toolbar__item,
+        isActive ? style.toolbar__item_active : '',
+        disabled ? style.toolbar__item_disabled : '',
+    ]);
 
     const handleClick = () => {
         if (!disabled) {
@@ -26,7 +35,7 @@ export default function ToolbarButton(
 
     return (
         <li
-            className={`${style.toolbar__item} ${disabled ? style.toolbar__item_disabled : ''}`}
+            className={classNames}
             onClick={handleClick}
             aria-label={ariaLabel}
             aria-disabled={disabled}
