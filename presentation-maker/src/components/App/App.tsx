@@ -1,61 +1,73 @@
-import AppStyle from "./App.module.css";
-import SlidesList from "../SlidesList/SlidesList.tsx";
-import type {Presentation} from "../../store/types/types.ts";
-import Toolbar from "../Toolbar/Toolbar.tsx";
-import SlideEditor from "../SlideEditor/SlideEditor.tsx";
-import {dispatch} from "../../store/editor.ts";
-import {removeElementsFromSlide, removeSlide} from "../../store/functions/functions.ts";
-import {useEffect} from "react";
-import {clearSelection} from "../../store/functions/untils/utils.ts";
+import AppStyle from './App.module.css';
+import SlidesList from '../SlidesList/SlidesList.tsx';
+import type {Presentation} from '../../store/types/types.ts';
+import Toolbar from '../Toolbar/Toolbar.tsx';
+import SlideEditor from '../SlideEditor/SlideEditor.tsx';
+import {dispatch} from '../../store/editor.ts';
+import {removeElementsFromSlide, removeSlide} from '../../store/functions/functions.ts';
+import {useEffect, useCallback} from 'react';
+import {clearSelection} from '../../store/functions/untils/utils.ts';
 
-export default function App(presentation: Presentation) {
-    const handleDelete = (evt: KeyboardEvent) => {
-        if (
-            evt.target instanceof HTMLElement &&
-            (evt.target.tagName === 'INPUT' ||
-                evt.target.tagName === 'TEXTAREA' ||
-                evt.target.isContentEditable)
-        ) {
-            return;
-        }
+interface AppProps extends Presentation {
+}
 
-        if (evt.key === 'Backspace' || evt.key === 'Delete') {
-            if (presentation.selection.selectedElementIds.length) {
-                dispatch(removeElementsFromSlide, {
-                    slideId: presentation.selection.selectedSlideIds[0],
-                    elementIds: presentation.selection.selectedElementIds,
-                });
-            } else if (presentation.selection.selectedSlideIds.length && !presentation.selection.selectedElementIds.length) {
-                dispatch(removeSlide, {slideIdsToRemove: presentation.selection.selectedSlideIds});
+export default function App(
+    {
+        id,
+        title,
+        slides,
+        size,
+        selection,
+    }: AppProps
+) {
+    const handleDelete = useCallback(
+        (evt: KeyboardEvent) => {
+            const target = evt.target;
+            if (
+                target instanceof HTMLElement &&
+                (target.tagName === 'INPUT' ||
+                    target.tagName === 'TEXTAREA' ||
+                    target.isContentEditable)
+            ) {
+                return;
             }
-        } else if (evt.key === 'Escape') {
-            dispatch(clearSelection);
-        }
-    }
+
+            if (evt.key === 'Backspace' || evt.key === 'Delete') {
+                if (selection.selectedElementIds.length > 0) {
+                    dispatch(removeElementsFromSlide, {
+                        slideId: selection.selectedSlideIds[0],
+                        elementIds: selection.selectedElementIds,
+                    });
+                } else if (selection.selectedSlideIds.length > 0) {
+                    dispatch(removeSlide, {
+                        slideIdsToRemove: selection.selectedSlideIds,
+                    });
+                }
+            } else if (evt.key === 'Escape') {
+                dispatch(clearSelection);
+            }
+        },
+        [selection.selectedSlideIds, selection.selectedElementIds]
+    );
 
     useEffect(() => {
-        document.addEventListener('keydown', handleDelete);
-        return () => document.removeEventListener('keydown', handleDelete);
-    }, [presentation.selection.selectedSlideIds, presentation.selection.selectedElementIds]);
+        document.addEventListener('keydown', handleDelete as EventListener);
+        return () => {
+            document.removeEventListener('keydown', handleDelete as EventListener);
+        };
+    }, [handleDelete]);
 
     return (
         <section className={AppStyle.presentation}>
-            <Toolbar presentationId={presentation.id}
-                     presentationTitle={presentation.title}
-                     presentationSelection={presentation.selection}
+            <Toolbar
+                presentationId={id}
+                presentationTitle={title}
+                presentationSelection={selection}
             />
             <div className={AppStyle.presentation__container}>
-                <SlidesList
-                    slides={presentation.slides}
-                    size={presentation.size}
-                    selection={presentation.selection}
-                />
-                <SlideEditor
-                    slides={presentation.slides}
-                    size={presentation.size}
-                    selection={presentation.selection}
-                />
+                <SlidesList slides={slides} size={size} selection={selection}/>
+                <SlideEditor slides={slides} size={size} selection={selection}/>
             </div>
         </section>
-    )
+    );
 }

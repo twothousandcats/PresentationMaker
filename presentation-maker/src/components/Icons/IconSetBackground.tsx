@@ -1,6 +1,6 @@
 import style from './Icons.module.css';
 
-export default function IconAddImage() {
+export default function IconSetBackground() {
     return (
         <svg className={style.icon}
              width="24"

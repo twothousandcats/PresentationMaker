@@ -20,6 +20,15 @@
     }
 }
 
+.toolbar__item_disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    
+    &:hover {
+        background-color: transparent;
+    }
+}
+
 .toolbar__hint {
     position: absolute;
     top: calc(100% + 10px);

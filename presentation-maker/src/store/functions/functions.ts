@@ -211,6 +211,23 @@ export function changeFontFamily(
     );
 }
 
+export function changeElementBg(
+    pres: Presentation,
+    payload: {
+        slideId: string,
+        elementId: string,
+        newBg: Background
+    }
+): Presentation {
+    const {slideId, elementId, newBg} = payload;
+    return updateElementInSlide(
+        slideId,
+        elementId,
+        (el) => ({...el, background: newBg}) as SlideElement,
+        pres
+    );
+}
+
 export function changeSlideBg(
     pres: Presentation,
     payload: {

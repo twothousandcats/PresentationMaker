@@ -1,52 +1,40 @@
 import style from './AddBgDialog.module.css';
-import {type ChangeEvent, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Modal} from "../Modal/Modal.tsx";
 import {langs} from "../../store/utils/langs.ts";
 import * as React from "react";
 import {ModalButton} from "../ModalButton/ModalButton.tsx";
-import type {HEXColor, SolidColorBackground} from "../../store/types/types.ts";
-import {dispatch} from "../../store/editor.ts";
-import {changeSlideBg} from "../../store/functions/functions.ts";
+import type {Background, Color} from "../../store/types/types.ts";
 
 interface DialogProps {
     isOpen: boolean;
     onClose: () => void;
-    onAdd: (
-        url: string,
-        type: string
-    ) => void;
+    onAdd: (background: Background) => void;
 }
 
 export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
-    const [url, setUrl] = useState('');
+    const [content, setContent] = useState('');
     const [type, setType] = useState('image');
     const [title, setTitle] = useState(langs.imageDialogHeading);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleSubmit = () => {
-        const trimmed = url.trim();
-        if (trimmed) {
-            onAdd(url)
+        const trimmedContent = content.trim();
+        if (trimmedContent) {
+            if (type === 'image') {
+                onAdd({type: 'image', data: trimmedContent});
+            } else if (type === 'color') {
+                onAdd({type: 'solid', color: trimmedContent as Color});
+            }
         } else {
             onClose();
         }
-    }
+    };
 
     const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
         if (evt.key === 'Enter') {
             handleSubmit();
         }
-    }
-
-    const handelChangeColor = (evt: ChangeEvent<HTMLInputElement>) => {
-        const newBg: SolidColorBackground = {
-            type: 'solid',
-            color: evt.currentTarget.value as HEXColor
-        };
-        dispatch(changeSlideBg, {
-            slideId: presentationSelection.selectedSlideIds[0],
-            newBg: newBg
-        });
     }
 
     const changeBgState = (curState: string) => {
@@ -61,7 +49,7 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
 
     useEffect(() => {
         if (isOpen) {
-            setUrl('');
+            setContent('');
         }
         if (isOpen && inputRef.current) {
             inputRef.current.focus();
@@ -89,23 +77,23 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
                         <input className={style.field}
                                ref={inputRef}
                                type="text"
-                               value={url}
-                               onChange={evt => setUrl(evt.target.value)}
+                               value={content}
+                               onChange={evt => setContent(evt.target.value)}
                                onKeyDown={handleKeyDown}
                                placeholder='https://example.com/image.jpg'/>
-                        <div className={style.holder__btns}>
-                            <ModalButton
-                                fn={handleSubmit}
-                                placeHolder={langs.dialogSubmit}
-                            />
-                            <ModalButton
-                                fn={onClose}
-                                placeHolder={langs.dialogCancel}
-                            />
-                        </div>
                     </div>
                     : <div className={style.holder_color}></div>
                 }
+                <div className={style.holder__btns}>
+                    <ModalButton
+                        fn={handleSubmit}
+                        placeHolder={langs.dialogSubmit}
+                    />
+                    <ModalButton
+                        fn={onClose}
+                        placeHolder={langs.dialogCancel}
+                    />
+                </div>
             </div>
         </Modal>
     );
