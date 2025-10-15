@@ -1,8 +1,6 @@
 import style from './Toolbar.module.css';
 import type {
-    HEXColor,
     Selection,
-    SolidColorBackground,
 } from "../../store/types/types.ts";
 import {
     type ChangeEvent,
@@ -19,17 +17,15 @@ import ToolbarButton from "../ToolbarButton/ToolbarButton.tsx";
 import IconRemove from "../Icons/IconRemove.tsx";
 import IconAddText from "../Icons/IconAddText.tsx";
 import IconAddImage from "../Icons/IconAddImage.tsx";
-import IconBrush from "../Icons/IconBrush.tsx";
 import {
     addElementToSlide,
     addSlide,
-    changeSlideBg,
     removeSlide,
     renamePresentation
 } from "../../store/functions/functions.ts";
 import {dispatch} from "../../store/editor.ts";
 import {createImageEl, createDefaultSlide, createDefaultTextEl} from "../../store/functions/untils/utils.ts";
-import {AddElementBgDialog} from "../AddElementBgDialog/AddElementBgDialog.tsx";
+import {AddBgDialog} from "../AddBgDialog/AddBgDialog.tsx";
 
 interface ToolbarProps {
     presentationId: string;
@@ -81,10 +77,9 @@ export default function Toolbar(
         {
             icon: <IconAddImage/>,
             fn: () => {
-                console.log('Добавить элемент изображение');
-                setIsAddElementBgDialogOpen(true);
+                setIsAddBgDialogOpen(true);
             },
-            ariaLabel: 'Добавить элемент изображение'
+            ariaLabel: 'Изменить фон'
         },
         {
             icon: <IconUndo/>,
@@ -96,40 +91,24 @@ export default function Toolbar(
             fn: () => console.log('redo'),
             ariaLabel: 'redo'
         },
-        {
-            icon: <IconBrush/>,
-            fn: () => {
-                console.log('Палитра/выбор цвета');
-                document.getElementById('color-picker')?.click();
-            },
-            ariaLabel: 'Палитра/выбор цвета'
-        },
     ];
     const [isExpanded, setExpanded] = useState(false);
     const [title, setTitle] = useState(presentationTitle);
-    const [isAddElementBgDialogOpen, setIsAddElementBgDialogOpen] = useState(false);
-
+    const [isAddBgDialogOpen, setIsAddBgDialogOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const containerRef = useRef<HTMLLIElement>(null);
 
-    const handleAddImage = (url: string) => {
+    const handleChangeBg = (url: string, type: string) => {
+        // TODO: Для добавляемого изображения на фон
+        //  Проверка на Selection,
+        //  если есть выбранный элемент -> changeElementBg
+        //  иначе changeSlideBg
         dispatch(addElementToSlide, {
                 slideId: presentationSelection.selectedSlideIds[0],
                 newElement: createImageEl(url)
             }
         );
-        setIsAddElementBgDialogOpen(false);
-    }
-
-    const handelChangeColor = (evt: ChangeEvent<HTMLInputElement>) => {
-        const newBg: SolidColorBackground = {
-            type: 'solid',
-            color: evt.currentTarget.value as HEXColor
-        };
-        dispatch(changeSlideBg, {
-            slideId: presentationSelection.selectedSlideIds[0],
-            newBg: newBg
-        });
+        setIsAddBgDialogOpen(false);
     }
 
     const handleTitleChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -194,18 +173,10 @@ export default function Toolbar(
                     />
                 )}
             </ul>
-            <input
-                type="color"
-                id="color-picker"
-                className={style.toolbar__colorpicker}
-                onChange={handelChangeColor}
-                defaultValue="#000000"
-                aria-label="Выбор цвета"
-            />
-            <AddElementBgDialog
-                isOpen={isAddElementBgDialogOpen}
-                onClose={() => setIsAddElementBgDialogOpen(false)}
-                onAdd={handleAddImage}
+            <AddBgDialog
+                isOpen={isAddBgDialogOpen}
+                onClose={() => setIsAddBgDialogOpen(false)}
+                onAdd={handleChangeBg}
             />
         </>
     )

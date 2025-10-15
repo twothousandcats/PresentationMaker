@@ -21,4 +21,6 @@
 
 .text {
     width: -webkit-fill-available;
+
+    outline: none;
 }

@@ -1,7 +1,11 @@
 const langs = {
     imageDialogHeading: 'Укажите ссылку',
-    imageDialogCancel: 'Отмена',
-    imageDialogSubmit: 'Добавить',
+    dialogCancel: 'Отмена',
+    dialogSubmit: 'Добавить',
+
+    colorDialogHeading: 'Выберите цвет',
+    dialogImageTab: 'Изображение',
+    dialogColorTab: 'Цвет'
 }
 
 export {
