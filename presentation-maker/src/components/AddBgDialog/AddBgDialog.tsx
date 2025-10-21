@@ -76,7 +76,9 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
     }, [isOpen, type]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={title}>
+        <Modal isOpen={isOpen}
+               onClose={onClose}
+               title={title}>
             <div className={style.holder}>
                 <ul className={style.tabs}>
                     {TABS.map((tab) => (

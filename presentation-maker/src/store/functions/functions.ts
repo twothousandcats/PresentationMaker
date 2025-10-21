@@ -62,26 +62,44 @@ export function removeSlide(
     }
 }
 
-export function moveSlide(
+export function moveSlides(
     pres: Presentation,
     payload: {
-        slideId: string,
-        newIndex: number
+        slideIds: string[];
+        newIndex: number;
     }
 ): Presentation {
-    const {slideId, newIndex} = payload;
+    const { slideIds, newIndex } = payload;
+
+    // Убираем дубликаты и сохраняем порядок
+    const uniqueSlideIds = Array.from(new Set(slideIds));
+
     const slides = [...pres.slides];
-    const curIndex = slides.findIndex(slide => slide.id === slideId);
-    if (curIndex === -1 || curIndex === newIndex) {
+
+    // Находим текущие индексы перемещаемых слайдов
+    const movedSlides: Slide[] = [];
+    const remainingSlides: Slide[] = [];
+
+    for (const slide of slides) {
+        if (uniqueSlideIds.includes(slide.id)) {
+            movedSlides.push(slide);
+        } else {
+            remainingSlides.push(slide);
+        }
+    }
+
+    // Если ни один из слайдов не найден или newIndex не требует изменений
+    if (movedSlides.length === 0) {
         return pres;
     }
 
-    const movedSlide = slides.find(slide => slide.id === slideId)!;
-    const filteredSlides = slides.filter(slide => slide.id !== slideId);
+    // Не выходим за 0 и максимальный индекс
+    const clampedNewIndex = Math.max(0, Math.min(newIndex, remainingSlides.length));
+
     const newSlides = [
-        ...filteredSlides.slice(0, newIndex),
-        movedSlide,
-        ...filteredSlides.slice(newIndex)
+        ...remainingSlides.slice(0, clampedNewIndex),
+        ...movedSlides,
+        ...remainingSlides.slice(clampedNewIndex)
     ];
 
     return {
@@ -257,6 +275,7 @@ export function setSelectedSlides(
     }
 ): Presentation {
     const {slideIds} = payload;
+    console.log(slideIds);
     return {
         ...pres,
         selection: {

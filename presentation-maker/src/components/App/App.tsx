@@ -65,8 +65,16 @@ export default function App(
                 presentationSelection={selection}
             />
             <div className={AppStyle.presentation__container}>
-                <SlidesList slides={slides} size={size} selection={selection}/>
-                <SlideEditor slides={slides} size={size} selection={selection}/>
+                <SlidesList
+                    slides={slides}
+                    size={size}
+                    selection={selection}
+                />
+                <SlideEditor
+                    slides={slides}
+                    size={size}
+                    selection={selection}
+                />
             </div>
         </section>
     );

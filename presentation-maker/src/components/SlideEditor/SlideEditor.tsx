@@ -20,7 +20,8 @@ export default function SlideEditor(
     }: EditorProps
 ) {
     const activeSlide = slides.find(slide =>
-        selection.selectedSlideIds.includes(slide.id));
+        selection.selectedSlideIds[selection.selectedSlideIds.length - 1] === slide.id
+    );
 
     return (
         <div className={style.editor}>
