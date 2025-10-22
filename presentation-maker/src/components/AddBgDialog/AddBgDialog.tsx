@@ -37,11 +37,16 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
 
     const changeBgType = useCallback((newType: 'image' | 'color') => {
         setType(newType);
-        setContent('');
-    }, []);
+        if (newType === 'color') {
+            setContent(currentColor);
+        } else {
+            setContent('');
+        }
+    }, [currentColor]);
 
     const handleSubmit = useCallback(() => {
         const trimmedContent = content.trim();
+
         if (!trimmedContent) {
             onClose();
             return;
@@ -63,7 +68,10 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
     // Управление фокусом и сбросом содержимого при открытии
     useEffect(() => {
         if (isOpen) {
+            setType('image');
             setContent('');
+            setCurrentColor('#000000');
+
             setTimeout(() => {
                 if (inputRef.current) {
                     inputRef.current.focus();
@@ -73,7 +81,7 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
                 }
             }, 0);
         }
-    }, [isOpen, type]);
+    }, [isOpen]);
 
     return (
         <Modal isOpen={isOpen}
@@ -82,14 +90,13 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
             <div className={style.holder}>
                 <ul className={style.tabs}>
                     {TABS.map((tab) => (
-                        <li key={tab.type}>
-                            <IconButton
-                                icon={tab.icon}
-                                onClickFn={() => changeBgType(tab.type)}
-                                ariaLabel={tab.ariaLabel}
-                                isActive={type === tab.type}
-                            />
-                        </li>
+                        <IconButton
+                            key={tab.type}
+                            icon={tab.icon}
+                            onClickFn={() => changeBgType(tab.type)}
+                            ariaLabel={tab.ariaLabel}
+                            isActive={type === tab.type}
+                        />
                     ))}
                 </ul>
 
@@ -111,11 +118,11 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
                             ref={inputRef}
                             type="color"
                             className={style.toolbar__colorpicker}
+                            value={content || currentColor}
                             onChange={(e) => {
                                 setContent(e.target.value);
                                 setCurrentColor(e.target.value);
                             }}
-                            defaultValue={currentColor}
                         />
                     </div>
                 )}
