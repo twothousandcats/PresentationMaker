@@ -50,7 +50,9 @@ export default function Toolbar(
 
     const handleChangeBg = useCallback(
         (content: Background | null) => {
-            if (!content) return;
+            if (!content) {
+                return;
+            }
 
             const {selectedSlideIds, selectedElementIds} = presentationSelection;
             const slideId = selectedSlideIds[0];

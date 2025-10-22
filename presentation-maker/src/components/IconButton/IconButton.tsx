@@ -46,10 +46,9 @@ export default function IconButton(
             <span
                 className={`${style.toolbar__hint} ${
                     isShowTooltip ? style.toolbar__hint_show : ''
-                }`}
-            >
-        {ariaLabel}
-      </span>
+                }`}>
+                {ariaLabel}
+            </span>
         </li>
     );
 }

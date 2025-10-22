@@ -34,6 +34,7 @@ export default function SlideEditor(
                     <Slide
                         slide={activeSlide}
                         slideSize={size}
+                        selection={selection}
                         isEditable={true}
                         activeElements={selection.selectedElementIds}
                     />

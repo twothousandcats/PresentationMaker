@@ -3,11 +3,11 @@
 
     display: flex;
 
-    border: 1px solid rgba(var(--accent-border-color-rgb), 0.5);
+    border: 2px solid transparent;
 }
 
 .element_active {
-    border: 1px solid var(--selected-border-color);
+    border: 2px solid var(--selected-border-color);
 }
 
 .element_disabled {

@@ -1,7 +1,8 @@
 import style from './Slide.module.css';
 import type {
     Size,
-    Slide
+    Slide,
+    Selection,
 } from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
 import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
@@ -9,6 +10,7 @@ import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
 type SlideProps = {
     slide: Slide;
     slideSize: Size;
+    selection: Selection;
     isEditable?: boolean;
     isActive?: boolean;
     activeElements?: string[];
@@ -18,6 +20,7 @@ export default function Slide(
     {
         slide,
         slideSize,
+        selection,
         isEditable,
         isActive,
         activeElements
@@ -25,7 +28,7 @@ export default function Slide(
     const classNames = concatModifiersByFlag([
         style.slide,
         isEditable ? style.slide_editable : style.slide_preview,
-        isActive && style.slide_active,
+        isActive ? style.slide_active : '',
     ]);
     const bgColor = slide.background && slide.background.type === 'solid'
         ? slide.background.color
@@ -62,6 +65,8 @@ export default function Slide(
                     element={element}
                     slideSize={slideSize}
                     slideId={slide.id}
+                    slideElements={slide.elements}
+                    selectedElementsIds={selection.selectedElementIds}
                     isEditable={isEditable}
                     isActive={isEditable && activeElements?.includes(element.id)}
                 />

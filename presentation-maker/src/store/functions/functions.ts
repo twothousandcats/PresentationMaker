@@ -170,6 +170,7 @@ export function changeElPosition(
     }
 ): Presentation {
     const {slideId, elementId, newPosition} = payload;
+    console.log(newPosition);
     return updateElementInSlide(
         slideId,
         elementId,
@@ -238,7 +239,6 @@ export function changeElementBg(
     }
 ): Presentation {
     const {slideId, elementId, newBg} = payload;
-    console.log(newBg);
     return updateElementInSlide(
         slideId,
         elementId,
