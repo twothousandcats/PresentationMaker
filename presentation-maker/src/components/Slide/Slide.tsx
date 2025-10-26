@@ -6,6 +6,9 @@ import type {
 } from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
 import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
+import {SelectionOverlay} from "../SelectionOverlay/SelectionOverlay.tsx";
+import {useDragAndDrop} from "../../store/hooks/useDragAndDrop.ts";
+import {useResize} from "../../store/hooks/useResize.ts";
 
 type SlideProps = {
     slide: Slide;
@@ -36,6 +39,11 @@ export default function Slide(
     const bgImg = slide.background && slide.background.type === 'image'
         ? slide.background.data
         : '';
+
+    //dnd
+    const {dragOffsets, handleDragStart} = useDragAndDrop(slide, selection, isEditable);
+    // resize
+    const {startResizing} = useResize(slide, isEditable);
 
     return (
         <div
@@ -69,8 +77,20 @@ export default function Slide(
                     selectedElementsIds={selection.selectedElementIds}
                     isEditable={isEditable}
                     isActive={isEditable && activeElements?.includes(element.id)}
+                    onDragStart={(clientX, clientY) => handleDragStart(clientX, clientY)}
+                    dragOffset={dragOffsets[element.id] || {x: 0, y: 0}}
                 />
             )}
+            {isEditable && (
+                <SelectionOverlay
+                    selectedElementIds={selection.selectedElementIds}
+                    slideElements={slide.elements}
+                    slideSize={slideSize}
+                    dragOffsets={dragOffsets}
+                    onStartResizing={startResizing}
+                />
+            )
+            }
         </div>
     );
 }

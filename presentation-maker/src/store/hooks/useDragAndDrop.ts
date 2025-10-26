@@ -1,0 +1,81 @@
+import {
+    useState,
+    useCallback
+} from "react";
+import type {
+    Position,
+    Selection,
+    Slide
+} from "../types/types.ts";
+import {dispatch} from "../editor.ts";
+import {changeElPosition} from "../functions/functions.ts";
+
+export const useDragAndDrop = (
+    slide: Slide,
+    selection: Selection, isEditable?: boolean) => {
+    const [dragOffsets, setDragOffsets] = useState<Record<string, Position>>({});
+
+    const handleDragStart = useCallback((
+            clientX: number,
+            clientY: number
+        ) => {
+            if (!isEditable) {
+                return;
+            }
+
+            const startPositions: Record<string, Position> = {};
+            selection.selectedElementIds.forEach(id => {
+                const element = slide.elements.find(el => el.id === id);
+                if (element) {
+                    startPositions[id] = {...element.position}
+                }
+            });
+
+            const dragData = {
+                startMouse: {x: clientX, y: clientY},
+                startPositions
+            };
+
+            const handleMouseMove = (event: MouseEvent) => {
+                const deltaX = event.clientX - dragData.startMouse.x;
+                const deltaY = event.clientY - dragData.startMouse.y;
+                const newOffsets: Record<string, Position> = {};
+                selection.selectedElementIds.forEach(id => {
+                    newOffsets[id] = {x: deltaX, y: deltaY};
+                });
+                setDragOffsets(newOffsets);
+            };
+
+            const handleMouseUp = (event: MouseEvent) => {
+                const finalDeltaX = event.clientX - dragData.startMouse.x;
+                const finalDeltaY = event.clientY - dragData.startMouse.y;
+                selection.selectedElementIds.forEach(id => {
+                    const startPosition = dragData.startPositions[id];
+                    if (!startPosition) {
+                        return;
+                    }
+
+                    const newPosition = {
+                        x: startPosition.x + finalDeltaX,
+                        y: startPosition.y + finalDeltaY,
+                    };
+                    dispatch(changeElPosition, {
+                        slideId: slide.id,
+                        elementId: id,
+                        newPosition
+                    });
+                });
+
+                setDragOffsets({});
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        },
+        [slide, selection, isEditable]
+    );
+
+    return {dragOffsets, handleDragStart};
+};

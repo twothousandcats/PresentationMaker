@@ -1,0 +1,117 @@
+.overlayContainer {
+}
+
+.selectionBox {
+}
+
+.border {
+    width: 100%;
+    height: 100%;
+
+    border: 2px solid var(--selected-border-color);
+}
+
+.resizeHandler {
+    position: absolute;
+
+    display: flex;
+
+    border: 2px solid var(--selected-border-color);
+    background-color: #fff;
+
+    transition: background-color 0.3s;
+
+    pointer-events: auto;
+
+    &:hover {
+        background-color: var(--selected-border-color);
+    }
+}
+
+.resizeHandler_side {
+    width: 30px;
+    height: 10px;
+
+    border-radius: 20px;
+}
+
+.resizeHandler_corner {
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+}
+
+.resizeHandler_topLeft {
+    top: 0;
+    left: 0;
+
+    transform: translate(-50%, -50%);
+
+    cursor: nw-resize;
+}
+
+.resizeHandler_topRight {
+    top: 0;
+    right: 0;
+
+    transform: translate(50%, -50%);
+
+    cursor: ne-resize;
+}
+
+.resizeHandler_botRight {
+    bottom: 0;
+    right: 0;
+
+    transform: translate(50%, 50%);
+
+    cursor: nw-resize;
+}
+
+.resizeHandler_botLeft {
+    bottom: 0;
+    left: 0;
+
+    transform: translate(-50%, 50%);
+
+    cursor: ne-resize;
+}
+
+.resizeHandler_top {
+    top: 0;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    cursor: n-resize;
+}
+
+.resizeHandler_right {
+    top: 50%;
+    right: 0;
+
+    transform-origin: center;
+    transform: translate(50%, -50%) rotate(90deg);
+
+    cursor: w-resize;
+}
+
+.resizeHandler_bottom {
+    bottom: 0;
+    left: 50%;
+
+    transform: translate(-50%, 50%);
+
+    cursor: n-resize;
+}
+
+.resizeHandler_left {
+    top: 50%;
+    left: 0;
+
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(90deg);
+
+    cursor: w-resize;
+}

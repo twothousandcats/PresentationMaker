@@ -36,8 +36,7 @@ export default function SlideEditor(
                         slideSize={size}
                         selection={selection}
                         isEditable={true}
-                        activeElements={selection.selectedElementIds}
-                    />
+                        activeElements={selection.selectedElementIds}/>
                 )}
             </div>
         </div>

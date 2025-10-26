@@ -6,10 +6,6 @@
     border: 2px solid transparent;
 }
 
-.element_active {
-    border: 2px solid var(--selected-border-color);
-}
-
 .element_disabled {
     pointer-events: none;
 }
