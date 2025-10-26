@@ -10,9 +10,11 @@ import type {
 import {dispatch} from "../editor.ts";
 import {changeElPosition} from "../functions/functions.ts";
 
-export const useDragAndDrop = (
+export const useElementDND = (
     slide: Slide,
-    selection: Selection, isEditable?: boolean) => {
+    selection: Selection,
+    isEditable?: boolean
+) => {
     const [dragOffsets, setDragOffsets] = useState<Record<string, Position>>({});
 
     const handleDragStart = useCallback((

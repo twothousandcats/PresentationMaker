@@ -7,7 +7,7 @@ import type {
 import SlideElement from "../SlideElement/SlideElement.tsx";
 import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
 import {SelectionOverlay} from "../SelectionOverlay/SelectionOverlay.tsx";
-import {useDragAndDrop} from "../../store/hooks/useDragAndDrop.ts";
+import {useElementDND} from "../../store/hooks/useElementDND.ts";
 import {useResize} from "../../store/hooks/useResize.ts";
 
 type SlideProps = {
@@ -41,7 +41,7 @@ export default function Slide(
         : '';
 
     //dnd
-    const {dragOffsets, handleDragStart} = useDragAndDrop(slide, selection, isEditable);
+    const {dragOffsets, handleDragStart} = useElementDND(slide, selection, isEditable);
     // resize
     const {startResizing} = useResize(slide, isEditable);
 
