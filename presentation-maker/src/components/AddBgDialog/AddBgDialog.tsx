@@ -123,6 +123,7 @@ export function AddBgDialog({isOpen, onClose, onAdd}: DialogProps) {
                                 setContent(e.target.value);
                                 setCurrentColor(e.target.value);
                             }}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                 )}

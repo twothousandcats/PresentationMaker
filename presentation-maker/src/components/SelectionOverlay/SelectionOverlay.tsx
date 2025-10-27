@@ -6,7 +6,7 @@ import type {
 } from "../../store/types/types.ts";
 import {
     concatModifiersByFlag,
-    getPercentValue
+    getPercentValue, getRandomId
 } from "../../store/functions/untils/utils.ts";
 import type {ResizeItem} from "../../store/types/utility-types.ts";
 
@@ -19,36 +19,50 @@ interface SelectionOverlayProps {
     onStartResizing?: (id: string, item: ResizeItem, x: number, y: number) => void;
 }
 
-const RESIZE_HANDLERS: { pos: ResizeItem, className: string }[] = [
+type Handler = {
+    key: string;
+    pos: ResizeItem;
+    className: string;
+}
+
+const RESIZE_HANDLERS: Handler[] = [
     {
+        key: getRandomId(),
         pos: 'top',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_top])
     },
     {
+        key: '2',
         pos: 'right',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_right])
     },
     {
+        key: '3',
         pos: 'bottom',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_bottom])
     },
     {
+        key: '4',
         pos: 'left',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_left])
     },
     {
+        key: '5',
         pos: 'topLeft',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topLeft])
     },
     {
+        key: '6',
         pos: 'topRight',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topRight])
     },
     {
+        key: '7',
         pos: 'bottomRight',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botRight])
     },
     {
+        key: '8',
         pos: 'bottomLeft',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botLeft])
     },
@@ -103,8 +117,9 @@ export const SelectionOverlay = (
             >
                 <div className={styles.border}></div>
                 {onStartResizing && (
-                    RESIZE_HANDLERS.map(({pos, className}) => (
+                    RESIZE_HANDLERS.map(({key, pos, className}) => (
                         <div
+                            key={key}
                             className={className}
                             onMouseDown={
                                 evt =>

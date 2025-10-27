@@ -7,6 +7,8 @@ import type {
 import Slide from "../Slide/Slide.tsx";
 import {useSelectSlides} from "../../store/hooks/useSelectSlides.ts";
 import {useSlidesDND} from "../../store/hooks/useSlidesDND.ts";
+import {dispatch} from "../../store/editor.ts";
+import {clearSelection} from "../../store/functions/untils/utils.ts";
 
 interface SlidesListProps {
     slides: SlideType[];
@@ -21,7 +23,7 @@ export default function SlidesList(
         selection
     }: SlidesListProps
 ) {
-    const {handleSelectSlide} = useSelectSlides({slides, selectedSlideIds: selection.selectedSlideIds});
+    const {handleSelectSlide} = useSelectSlides({slides, selectedSlideIds: selection.selectedSlideIds,});
     const {handleMouseDown} = useSlidesDND({slides, selectedSlideIds: selection.selectedSlideIds,});
 
     return (
@@ -32,9 +34,14 @@ export default function SlidesList(
                     className={style.holder}
                     data-slide-id={slide.id}
                     onClick={
-                        (event) => handleSelectSlide(event, slide)
+                        (event) => {
+                            handleSelectSlide(event, slide);
+                            if (selection.selectedElementIds.length > 0) {
+                                dispatch(clearSelection);
+                            }
+                        }
                     }
-                onMouseDown={(event) => handleMouseDown(event, slide.id)}
+                    onMouseDown={(event) => handleMouseDown(event, slide.id)}
                 >
                     <p className={style.holder__num}>
                         {index + 1}

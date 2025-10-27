@@ -275,7 +275,6 @@ export function setSelectedSlides(
     }
 ): Presentation {
     const {slideIds} = payload;
-    console.log(slideIds);
     return {
         ...pres,
         selection: {
