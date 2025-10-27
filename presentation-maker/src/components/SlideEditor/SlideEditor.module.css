@@ -10,6 +10,7 @@
     border: 1px solid var(--default-border-color);
 
     overflow: hidden;
+    user-select: none;
 }
 
 .editor__container {

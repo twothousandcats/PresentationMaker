@@ -15,6 +15,7 @@ interface SelectionOverlayProps {
     slideElements: SlideElement[];
     slideSize: Size;
     dragOffsets?: Record<string, Position>;
+    resizePreview?: Record<string, { size: Size, position: Position }> | null;
     onStartResizing?: (id: string, item: ResizeItem, x: number, y: number) => void;
 }
 
@@ -59,6 +60,7 @@ export const SelectionOverlay = (
         slideElements,
         slideSize,
         onStartResizing,
+        resizePreview,
         dragOffsets = {},
     }
     : SelectionOverlayProps) => {
@@ -68,8 +70,12 @@ export const SelectionOverlay = (
             return null;
         }
 
-        let x = element.position.x;
-        let y = element.position.y;
+        const preview = resizePreview?.[id];
+        const displayPosition = preview?.position || element.position;
+        const displaySize = preview?.size || element.size;
+
+        let x = displayPosition.x;
+        let y = displayPosition.y;
 
         if (dragOffsets[id]) {
             x += dragOffsets[id].x;
@@ -78,8 +84,8 @@ export const SelectionOverlay = (
 
         const xPercent = getPercentValue(x, slideSize.width);
         const yPercent = getPercentValue(y, slideSize.height);
-        const widthPercent = getPercentValue(element.size.width, slideSize.width);
-        const heightPercent = getPercentValue(element.size.height, slideSize.height);
+        const widthPercent = getPercentValue(displaySize.width, slideSize.width);
+        const heightPercent = getPercentValue(displaySize.height, slideSize.height);
 
         return (
             <div

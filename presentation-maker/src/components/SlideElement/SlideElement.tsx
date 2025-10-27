@@ -31,6 +31,7 @@ type ElementProps = {
     isActive?: boolean;
     onDragStart?: (clientX: number, clientY: number) => void;
     dragOffset?: Position;
+    resizePreview?: { size: Size, position: Position } | null;
 }
 
 export default function SlideElement(
@@ -41,7 +42,8 @@ export default function SlideElement(
         isEditable,
         isActive,
         onDragStart,
-        dragOffset
+        dragOffset,
+        resizePreview
     }: ElementProps) {
     const textRef = useRef<HTMLDivElement>(null);
 
@@ -73,10 +75,14 @@ export default function SlideElement(
     /* const bgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
         ? element.background.gradient
         : null */
-    const xPercent = getPercentValue(element.position.x, slideSize.width);
-    const yPercent = getPercentValue(element.position.y, slideSize.height);
-    const widthPercent = getPercentValue(element.size.width, slideSize.width);
-    const heightPercent = getPercentValue(element.size.height, slideSize.height);
+
+    const displaySize = resizePreview?.size || element.size;
+    const displayPosition = resizePreview?.position || element.position;
+
+    const xPercent = getPercentValue(displayPosition.x, slideSize.width);
+    const yPercent = getPercentValue(displayPosition.y, slideSize.height);
+    const widthPercent = getPercentValue(displaySize.width, slideSize.width);
+    const heightPercent = getPercentValue(displaySize.height, slideSize.height);
 
     const handleElementClick = () => {
         dispatch(setSelectedElements, {elementsIds: [element.id]});

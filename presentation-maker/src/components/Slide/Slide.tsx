@@ -40,10 +40,8 @@ export default function Slide(
         ? slide.background.data
         : '';
 
-    //dnd
     const {dragOffsets, handleDragStart} = useElementDND(slide, selection, isEditable);
-    // resize
-    const {startResizing} = useResize(slide, isEditable);
+    const {startResizing, resizePreview} = useResize(slide, isEditable);
 
     return (
         <div
@@ -79,6 +77,7 @@ export default function Slide(
                     isActive={isEditable && activeElements?.includes(element.id)}
                     onDragStart={(clientX, clientY) => handleDragStart(clientX, clientY)}
                     dragOffset={dragOffsets[element.id] || {x: 0, y: 0}}
+                    resizePreview={resizePreview?.[element.id]}
                 />
             )}
             {isEditable && (
@@ -87,6 +86,7 @@ export default function Slide(
                     slideElements={slide.elements}
                     slideSize={slideSize}
                     dragOffsets={dragOffsets}
+                    resizePreview={resizePreview}
                     onStartResizing={startResizing}
                 />
             )
