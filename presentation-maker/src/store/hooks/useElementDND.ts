@@ -10,6 +10,10 @@ import type {
 import {dispatch} from "../editor.ts";
 import {changeElPosition} from "../functions/functions.ts";
 
+const calculateDelta = (clientPos: number, startMousePos: number) => {
+    return clientPos - startMousePos;
+}
+
 export const useElementDND = (
     slide: Slide,
     selection: Selection,
@@ -17,7 +21,8 @@ export const useElementDND = (
 ) => {
     const [dragOffsets, setDragOffsets] = useState<Record<string, Position>>({});
 
-    const handleDragStart = useCallback((
+    const handleDragStart = useCallback(
+        (
             clientX: number,
             clientY: number
         ) => {
@@ -39,18 +44,21 @@ export const useElementDND = (
             };
 
             const handleMouseMove = (event: MouseEvent) => {
-                const deltaX = event.clientX - dragData.startMouse.x;
-                const deltaY = event.clientY - dragData.startMouse.y;
+                const deltaX = calculateDelta(event.clientX, dragData.startMouse.x);
+                const deltaY = calculateDelta(event.clientY, dragData.startMouse.y);
                 const newOffsets: Record<string, Position> = {};
                 selection.selectedElementIds.forEach(id => {
-                    newOffsets[id] = {x: deltaX, y: deltaY};
+                    newOffsets[id] = {
+                        x: deltaX,
+                        y: deltaY
+                    };
                 });
                 setDragOffsets(newOffsets);
             };
 
             const handleMouseUp = (event: MouseEvent) => {
-                const finalDeltaX = event.clientX - dragData.startMouse.x;
-                const finalDeltaY = event.clientY - dragData.startMouse.y;
+                const finalDeltaX = calculateDelta(event.clientX, dragData.startMouse.x);
+                const finalDeltaY = calculateDelta(event.clientY, dragData.startMouse.y);
                 selection.selectedElementIds.forEach(id => {
                     const startPosition = dragData.startPositions[id];
                     if (!startPosition) {

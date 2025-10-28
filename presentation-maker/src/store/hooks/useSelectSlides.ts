@@ -36,7 +36,7 @@ export const useSelectSlides = (
                 const currentIndex = slides.findIndex(slide => slide.id === curSlide.id);
 
                 if (lastSelectedIndex !== -1 && currentIndex !== -1) {
-                    // сортировка по возрастанию
+                    // сортировка по возрастанию (slide -> start <= end)
                     const [start, end] = [lastSelectedIndex, currentIndex].sort((a, b) => a - b);
                     let rangeIds = slides.slice(start, end + 1).map(slide => slide.id);
 

@@ -24,7 +24,7 @@ export const useSlidesDND = (
             if (event.button !== 0) {
                 return;
             }
-            // либо вся выборка, либо слайд
+
             draggedSlideIdsRef.current = selectedSlideIds.includes(slideId)
                 ? [...selectedSlideIds]
                 : [slideId];
