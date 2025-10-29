@@ -27,6 +27,7 @@ import {dispatch} from '../../store/editor.ts';
 import {createDefaultSlide, createDefaultTextEl} from '../../store/functions/untils/utils.ts';
 import {AddBgDialog} from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from "../IconButton/IconButton.tsx";
+import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher.tsx";
 
 interface ToolbarProps {
     presentationId: string;
@@ -167,30 +168,33 @@ export default function Toolbar(
 
     return (
         <>
-            <ul className={style.toolbar}>
-                <li className={`${style.toolbar__item} ${style.toolbar__item_title}`} ref={containerRef}>
-                    <input
-                        className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
-                        id={presentationId}
-                        type="text"
-                        value={title}
-                        ref={inputRef}
-                        onClick={() => setExpanded(true)}
-                        onKeyDown={handleKeyDown}
-                        onChange={handleTitleChange}
-                        readOnly={!isExpanded}
-                    />
-                </li>
-                {toolbarButtons.map((btn, index) => (
-                    <IconButton
-                        key={index}
-                        icon={btn.icon}
-                        onClickFn={btn.fn}
-                        ariaLabel={btn.ariaLabel}
-                        disabled={btn.disabled}
-                    />
-                ))}
-            </ul>
+            <div className={style.toolbar}>
+                <ul className={style.toolbar__wrapper}>
+                    <li className={`${style.toolbar__item} ${style.toolbar__item_title}`} ref={containerRef}>
+                        <input
+                            className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
+                            id={presentationId}
+                            type="text"
+                            value={title}
+                            ref={inputRef}
+                            onClick={() => setExpanded(true)}
+                            onKeyDown={handleKeyDown}
+                            onChange={handleTitleChange}
+                            readOnly={!isExpanded}
+                        />
+                    </li>
+                    {toolbarButtons.map((btn, index) => (
+                        <IconButton
+                            key={index}
+                            icon={btn.icon}
+                            onClickFn={btn.fn}
+                            ariaLabel={btn.ariaLabel}
+                            disabled={btn.disabled}
+                        />
+                    ))}
+                </ul>
+                <ThemeSwitcher />
+            </div>
 
             <AddBgDialog
                 isOpen={isAddBgDialogOpen}
