@@ -53,7 +53,7 @@ export const useSelectSlides = (
                     slideIds: [curSlide.id],
                 });
             }
-        }, [slides, selectedSlideIds, dispatch]);
+        }, [slides, selectedSlideIds]);
 
 
     return {handleSelectSlide}

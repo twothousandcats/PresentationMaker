@@ -12,7 +12,6 @@ import {defaultSlideWidth} from "../../store/utils/config.ts";
 import {dispatch} from "../../store/editor.ts";
 import {
     changeTextElContent,
-    setSelectedElements,
 } from "../../store/functions/functions.ts";
 import {
     type SyntheticEvent,
@@ -20,6 +19,7 @@ import {
     useRef
 } from "react";
 import * as React from "react";
+import {useSelectElements} from "../../store/hooks/useSelectElements.ts";
 
 type ElementProps = {
     element: SlideElement;
@@ -39,6 +39,8 @@ export default function SlideElement(
         element,
         slideSize,
         slideId,
+        slideElements,
+        selectedElementsIds,
         isEditable,
         isActive,
         onDragStart,
@@ -84,9 +86,10 @@ export default function SlideElement(
     const widthPercent = getPercentValue(displaySize.width, slideSize.width);
     const heightPercent = getPercentValue(displaySize.height, slideSize.height);
 
-    const handleElementClick = () => {
-        dispatch(setSelectedElements, {elementsIds: [element.id]});
-    }
+    const {handleSelectElement} = useSelectElements({
+        elements: slideElements,
+        selection: selectedElementsIds
+    });
 
     const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
         const newContent = evt.currentTarget.innerHTML;
@@ -120,7 +123,9 @@ export default function SlideElement(
                 transform: dragOffset ? `translate(${dragOffset.x}px, ${dragOffset.y}px)` : 'none',
                 cursor: isEditable && isActive ? 'move' : 'default',
             }}
-            onClick={handleElementClick}
+            onClick={(event) => {
+                handleSelectElement(event, element);
+            }}
             onMouseDown={handleDragStart}>
             {element.type === 'rectangle'
                 ? <div className={style.image}
