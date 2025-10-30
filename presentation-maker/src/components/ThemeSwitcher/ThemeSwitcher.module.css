@@ -1,5 +1,14 @@
 .themeSwitcher {
+    min-width: 50px;
+    max-height: 30px;
     display: flex;
+    align-items: center;
+    padding: 5px;
+    margin-left: 20px;
 
+    list-style: none;
 
+    li {
+
+    }
 }

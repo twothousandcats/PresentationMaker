@@ -8,6 +8,11 @@ type ResizeItem =
     | 'bottomRight'
     | 'bottomLeft';
 
+type Theme =
+    | 'light'
+    | 'dark';
+
 export type {
-    ResizeItem
+    ResizeItem,
+    Theme,
 };

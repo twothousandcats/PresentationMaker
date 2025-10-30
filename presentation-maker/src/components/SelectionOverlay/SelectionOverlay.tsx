@@ -32,37 +32,37 @@ const RESIZE_HANDLERS: Handler[] = [
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_top])
     },
     {
-        key: '2',
+        key: getRandomId(),
         pos: 'right',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_right])
     },
     {
-        key: '3',
+        key: getRandomId(),
         pos: 'bottom',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_bottom])
     },
     {
-        key: '4',
+        key: getRandomId(),
         pos: 'left',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_left])
     },
     {
-        key: '5',
+        key: getRandomId(),
         pos: 'topLeft',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topLeft])
     },
     {
-        key: '6',
+        key: getRandomId(),
         pos: 'topRight',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topRight])
     },
     {
-        key: '7',
+        key: getRandomId(),
         pos: 'bottomRight',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botRight])
     },
     {
-        key: '8',
+        key: getRandomId(),
         pos: 'bottomLeft',
         className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botLeft])
     },
