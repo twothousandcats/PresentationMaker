@@ -7,8 +7,16 @@
     margin-left: 20px;
 
     list-style: none;
-
-    li {
-
-    }
 }
+
+/*.theme {*/
+/*    transition: margin 0.3s ease;*/
+/*}*/
+
+/*.light {*/
+/*    margin-right: auto;*/
+/*}*/
+
+/*.dark {*/
+/*    margin-left: auto;*/
+/*}*/

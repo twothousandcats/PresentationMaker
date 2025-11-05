@@ -1,3 +1,4 @@
+/* default light theme */
 :root {
     /* FONT */
     --base-font: 'Golos UI', sans-serif;
@@ -27,6 +28,33 @@
     --scroll-thumb-color: #888888;
 }
 
+/* dark theme */
+[data-theme='dark'] {
+    /* BACKGROUND */
+    --default-bg-color: #12181d;
+    --accent-bg-color: #1a222b;
+    --accent-bg-color2: #5a5a5a;
+    --modal-overlay-bg: #bcbfc0;
+
+    /* BORDER */
+    --default-border-color: #5a5d5b;
+    --accent-border-color: #a1a1a1;
+    --selected-border-color: #4a8c9e;
+
+    /* TEXT */
+    --default-text-color: #fbfcfd;
+
+    /* RGB (для прозрачности и градиентов) */
+    --accent-border-color-rgb: 161, 161, 161;
+
+    /* ICONS */
+    --default-icon-stroke: #fff;
+
+    /* SCROLLBAR */
+    --scroll-track-color: #1e1e1e;
+    --scroll-thumb-color: #aaaaaa;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -34,9 +62,11 @@
 
     font-family: var(--base-font);
     line-height: 1;
+
+    outline: none;
 }
 
-ul,ol {
+ul, ol {
     list-style: none;
 }
 

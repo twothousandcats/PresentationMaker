@@ -1,12 +1,19 @@
-const defaultSlideWidth = 240;
-const selectors = {
+const DEFAULT_SLIDE_WIDTH = 240;
+
+const SELECTORS = {
     portalRoot: 'portal-root',
 };
+
+const LOCAL_STORAGE_NAMES = {
+    theme: 'app-theme',
+}
+
 const getPortal = () => {
-    return document.getElementById(selectors.portalRoot);
+    return document.getElementById(SELECTORS.portalRoot);
 }
 
 export {
-    defaultSlideWidth,
+    DEFAULT_SLIDE_WIDTH,
+    LOCAL_STORAGE_NAMES,
     getPortal
 }

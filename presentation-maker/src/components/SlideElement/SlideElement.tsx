@@ -8,7 +8,7 @@ import {
     concatModifiersByFlag,
     getPercentValue
 } from "../../store/functions/untils/utils.ts";
-import {defaultSlideWidth} from "../../store/utils/config.ts";
+import {DEFAULT_SLIDE_WIDTH} from "../../store/utils/config.ts";
 import {dispatch} from "../../store/editor.ts";
 import {
     changeTextElContent,
@@ -62,7 +62,7 @@ export default function SlideElement(
         ? element.fontSize
         : null;
     if (!isEditable) {
-        const scale = defaultSlideWidth / slideSize.width;
+        const scale = DEFAULT_SLIDE_WIDTH / slideSize.width;
         fontSize = fontSize
             ? Math.max(1, Math.round(fontSize * scale))
             : 1;
@@ -133,8 +133,7 @@ export default function SlideElement(
                            ...(element.background?.type === 'image' && {
                                backgroundImage: `url(${element.background.data}`,
                                backgroundRepeat: 'no-repeat',
-                               backgroundSize: 'cover',
-                               backgroundPosition: 'left top',
+                               backgroundSize: '100% 100%',
                            }),
                            ...(element.background?.type === 'solid' && {
                                backgroundColor: element.background.color

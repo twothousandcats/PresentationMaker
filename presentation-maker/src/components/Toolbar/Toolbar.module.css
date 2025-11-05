@@ -12,6 +12,8 @@
 
     background-color: var(--accent-bg-color);
     border-radius: 30px;
+
+    transition: background-color 0.3s ease;
 }
 
 .toolbar__item {
@@ -43,6 +45,18 @@
 
     &:hover {
         background-color: var(--default-bg-color);
+    }
+
+    .toolbar__input {
+        padding: 2px 3px;
+    }
+
+    [data-theme='dark'] & {
+        background-color: #f9fbfd;
+
+        .toolbar__input {
+            color: #444746;
+        }
     }
 }
 

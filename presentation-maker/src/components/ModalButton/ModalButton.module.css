@@ -5,6 +5,7 @@
     font-family: var(--base-font);
     font-size: 14px;
     line-height: 1;
+    color: var(--default-text-color);
 
     border: 1px solid var(--default-border-color);
     border-radius: 5px;

@@ -170,7 +170,7 @@ export default function Toolbar(
         <>
             <div className={style.toolbar}>
                 <ul className={style.toolbar__wrapper}>
-                    <li className={`${style.toolbar__item} ${style.toolbar__item_title}`} ref={containerRef}>
+                    <li className={`${style.toolbar__item} ${style.toolbar__item_title} ${style.toolbar__item_title}`} ref={containerRef}>
                         <input
                             className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
                             id={presentationId}
