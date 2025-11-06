@@ -15,68 +15,6 @@ type ResizePreview = {
 
 const MIN_SIZE = 10;
 
-/* const calculateResize = (
-    resizeItem: ResizeItem,
-    delta: ResizeDelta,
-    initialWidth: number,
-    initialHeight: number,
-    initialX: number,
-    initialY: number
-): ResizePreview => {
-    const {deltaX, deltaY} = delta;
-    switch (resizeItem) {
-        case 'top':
-            return {
-                height: initialHeight - deltaY,
-                y: initialY + deltaY,
-            };
-        case 'right':
-            return {
-                width: initialWidth + deltaX,
-            };
-        case 'bottom':
-            return {
-                height: initialHeight + deltaY,
-            };
-        case 'left':
-            return {
-                width: initialWidth - deltaX,
-                x: initialX + deltaX,
-            };
-        case 'topLeft':
-            return {
-                width: initialWidth - deltaX,
-                height: initialHeight - deltaY,
-                x: initialX + deltaX,
-                y: initialY + deltaY,
-            };
-        case 'topRight':
-            return {
-                width: initialWidth + deltaX,
-                height: initialHeight - deltaY,
-                y: initialY + deltaY,
-            };
-        case 'bottomLeft':
-            return {
-                width: initialWidth - deltaX,
-                height: initialHeight + deltaY,
-                x: initialX + deltaX,
-            };
-        case 'bottomRight':
-            return {
-                width: initialWidth + deltaX,
-                height: initialHeight + deltaY,
-            };
-        default:
-            return {
-                width: initialWidth,
-                height: initialHeight,
-                x: initialX,
-                y: initialY,
-            }
-    }
-}; */
-
 const computeFinalResize = (
     resizeItem: ResizeItem,
     deltaX: number,
