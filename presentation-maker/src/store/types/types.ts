@@ -75,8 +75,22 @@ type Presentation = {
     title: string;
     slides: Slide[];
     size: Size;
-    selection: Selection
+    selection: Selection;
+    mode: EditorMode;
 }
+
+type Idle = {
+    type: 'idle';
+}
+
+type Placing = {
+    type: 'placing';
+    elementType: 'rectangle' | 'text';
+}
+
+type EditorMode =
+    | Idle
+    | Placing;
 
 // type History = {
 //     past: Presentation[];
@@ -101,4 +115,5 @@ export type {
     Slide,
     Selection,
     Presentation,
+    EditorMode,
 }

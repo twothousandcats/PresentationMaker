@@ -6,7 +6,7 @@ import SlideEditor from '../SlideEditor/SlideEditor.tsx';
 import {dispatch} from '../../store/editor.ts';
 import {removeElementsFromSlide, removeSlide} from '../../store/functions/functions.ts';
 import {useEffect, useCallback} from 'react';
-import {clearSelection} from '../../store/functions/untils/utils.ts';
+import {clearSelection} from '../../store/functions/utils/utils.ts';
 
 interface AppProps extends Presentation {
 }
@@ -18,6 +18,7 @@ export default function App(
         slides,
         size,
         selection,
+        mode
     }: AppProps
 ) {
     const handleDelete = useCallback(
@@ -74,6 +75,7 @@ export default function App(
                     slides={slides}
                     size={size}
                     selection={selection}
+                    mode={mode}
                 />
             </div>
         </section>

@@ -8,7 +8,7 @@ import Slide from "../Slide/Slide.tsx";
 import {useSelectSlides} from "../../store/hooks/useSelectSlides.ts";
 import {useSlidesDND} from "../../store/hooks/useSlidesDND.ts";
 import {dispatch} from "../../store/editor.ts";
-import {clearSelection} from "../../store/functions/untils/utils.ts";
+import {clearSelection} from "../../store/functions/utils/utils.ts";
 
 interface SlidesListProps {
     slides: SlideType[];
@@ -20,7 +20,7 @@ export default function SlidesList(
     {
         slides,
         size,
-        selection
+        selection,
     }: SlidesListProps
 ) {
     const {handleSelectSlide} = useSelectSlides({slides, selectedSlideIds: selection.selectedSlideIds,});

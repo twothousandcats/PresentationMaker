@@ -3,7 +3,7 @@ import IconSun from "../Icons/IconSun.tsx";
 import IconMoon from "../Icons/IconMoon.tsx";
 import {useContext} from "react";
 import {ThemeContext} from "../../main.tsx";
-import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
+import {concatModifiersByFlag} from "../../store/functions/utils/utils.ts";
 
 export default function ThemeSwitcher() {
     const {theme, toggleTheme} = useContext(ThemeContext);

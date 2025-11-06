@@ -4,12 +4,12 @@ import type {
     Background,
     SlideElement,
     Slide,
-    Presentation,
+    Presentation, EditorMode,
 } from "../types/types";
 import {
     updateElementInSlide,
     updateSlide
-} from "./untils/utils";
+} from "./utils/utils";
 
 export function renamePresentation(
     pres: Presentation,
@@ -69,7 +69,7 @@ export function moveSlides(
         newIndex: number;
     }
 ): Presentation {
-    const { slideIds, newIndex } = payload;
+    const {slideIds, newIndex} = payload;
 
     // Убираем дубликаты и сохраняем порядок
     const uniqueSlideIds = Array.from(new Set(slideIds));
@@ -297,4 +297,15 @@ export function setSelectedElements(
             selectedElementIds: elementsIds
         }
     };
+}
+
+export function setEditorMode(
+    pres: Presentation,
+    payload: { mode: EditorMode }
+): Presentation {
+    const {mode} = payload;
+    return {
+        ...pres,
+        mode,
+    }
 }

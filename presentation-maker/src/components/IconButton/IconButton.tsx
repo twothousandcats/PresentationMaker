@@ -1,6 +1,6 @@
 import style from "./IconButton.module.css";
 import {type ReactNode, useState} from "react";
-import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
+import {concatModifiersByFlag} from "../../store/functions/utils/utils.ts";
 
 interface IconButtonProps {
     icon: ReactNode;

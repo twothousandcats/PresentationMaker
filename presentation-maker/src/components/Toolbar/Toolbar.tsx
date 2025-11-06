@@ -21,13 +21,14 @@ import {
     changeElementBg,
     changeSlideBg,
     removeSlide,
-    renamePresentation,
+    renamePresentation, setEditorMode,
 } from '../../store/functions/functions.ts';
 import {dispatch} from '../../store/editor.ts';
-import {createDefaultSlide, createDefaultTextEl} from '../../store/functions/untils/utils.ts';
+import {createDefaultSlide} from '../../store/functions/utils/utils.ts';
 import {AddBgDialog} from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from "../IconButton/IconButton.tsx";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher.tsx";
+import IconRectangle from "../Icons/IconRectangle.tsx";
 
 interface ToolbarProps {
     presentationId: string;
@@ -120,30 +121,24 @@ export default function Toolbar(
         },
         {
             icon: <IconPlus/>,
-            fn: () => {
-                dispatch(addSlide, {newSlide: createDefaultSlide()});
-            },
+            fn: () => dispatch(addSlide, {newSlide: createDefaultSlide()}),
             ariaLabel: 'Добавить слайд',
         },
         {
             icon: <IconRemove/>,
-            fn: () => {
-                dispatch(removeSlide, {slideIdsToRemove: presentationSelection.selectedSlideIds});
-            },
+            fn: () => dispatch(removeSlide, {slideIdsToRemove: presentationSelection.selectedSlideIds}),
             ariaLabel: 'Удалить активный слайд',
             disabled: presentationSelection.selectedSlideIds.length === 0,
         },
         {
+            icon: <IconRectangle/>,
+            fn: () => dispatch(setEditorMode, {mode: {type: 'placing', elementType: 'rectangle'}}),
+            ariaLabel: 'Добавить прямоугольник',
+            disabled: presentationSelection.selectedSlideIds.length === 0,
+        },
+        {
             icon: <IconAddText/>,
-            fn: () => {
-                const slideId = presentationSelection.selectedSlideIds[0];
-                if (slideId) {
-                    dispatch(addElementToSlide, {
-                        slideId,
-                        newElement: createDefaultTextEl(),
-                    });
-                }
-            },
+            fn: () => dispatch(setEditorMode, {mode: {type: 'placing', elementType: 'text'}}),
             ariaLabel: 'Добавить текстовый элемент',
             disabled: presentationSelection.selectedSlideIds.length === 0,
         },
@@ -170,7 +165,8 @@ export default function Toolbar(
         <>
             <div className={style.toolbar}>
                 <ul className={style.toolbar__wrapper}>
-                    <li className={`${style.toolbar__item} ${style.toolbar__item_title} ${style.toolbar__item_title}`} ref={containerRef}>
+                    <li className={`${style.toolbar__item} ${style.toolbar__item_title} ${style.toolbar__item_title}`}
+                        ref={containerRef}>
                         <input
                             className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
                             id={presentationId}
@@ -193,7 +189,7 @@ export default function Toolbar(
                         />
                     ))}
                 </ul>
-                <ThemeSwitcher />
+                <ThemeSwitcher/>
             </div>
 
             <AddBgDialog

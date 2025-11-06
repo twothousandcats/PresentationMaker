@@ -7,7 +7,7 @@ import type {
 import {
     concatModifiersByFlag,
     getPercentValue, getRandomId
-} from "../../store/functions/untils/utils.ts";
+} from "../../store/functions/utils/utils.ts";
 import type {ResizeItem} from "../../store/types/utility-types.ts";
 
 interface SelectionOverlayProps {

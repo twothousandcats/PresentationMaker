@@ -91,7 +91,7 @@ export function createDefaultSlide(): Slide {
     }
 }
 
-export function createDefaultTextEl(): TextElement {
+export function createTextEl(): TextElement {
     return {
         id: getRandomId(),
         position: {

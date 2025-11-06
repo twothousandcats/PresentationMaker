@@ -3,12 +3,14 @@ import type {
     Size,
     Slide,
     Selection,
+    EditorMode,
 } from "../../store/types/types.ts";
 import SlideElement from "../SlideElement/SlideElement.tsx";
-import {concatModifiersByFlag} from "../../store/functions/untils/utils.ts";
+import {concatModifiersByFlag} from "../../store/functions/utils/utils.ts";
 import {SelectionOverlay} from "../SelectionOverlay/SelectionOverlay.tsx";
 import {useElementDND} from "../../store/hooks/useElementDND.ts";
 import {useResize} from "../../store/hooks/useResize.ts";
+import {usePlacementMode} from "../../store/hooks/usePlacementMode.ts";
 
 type SlideProps = {
     slide: Slide;
@@ -17,6 +19,7 @@ type SlideProps = {
     isEditable?: boolean;
     isActive?: boolean;
     activeElements?: string[];
+    mode?: EditorMode;
 };
 
 export default function Slide(
@@ -26,7 +29,8 @@ export default function Slide(
         selection,
         isEditable,
         isActive,
-        activeElements
+        activeElements,
+        mode
     }: SlideProps) {
     const classNames = concatModifiersByFlag([
         style.slide,
@@ -40,11 +44,23 @@ export default function Slide(
         ? slide.background.data
         : '';
 
-    const {dragOffsets, handleDragStart} = useElementDND(slide, selection, isEditable);
-    const {startResizing, resizePreview} = useResize(slide, isEditable);
+    const {
+        containerRef,
+        placementPreview,
+        handlePlacementStart,
+        isPlacing,
+    } = usePlacementMode({
+        mode,
+        slide,
+        isEditable: !!isEditable,
+    });
+    const isInteractive = isEditable && !isPlacing;
+    const {dragOffsets, handleDragStart} = useElementDND(slide, selection, isInteractive);
+    const {startResizing, resizePreview} = useResize(slide, isInteractive);
 
     return (
         <div
+            ref={containerRef}
             className={classNames}
             style={{
                 backgroundColor: `${bgColor}`,
@@ -57,14 +73,16 @@ export default function Slide(
                 ...(isEditable
                     ? {
                         width: `${isEditable ? slideSize.width : ''}px`,
-                        height: `${isEditable ? slideSize.height : ''}px`
+                        height: `${isEditable ? slideSize.height : ''}px`,
+                        cursor: isPlacing ? 'crosshair' : 'default',
                     }
                     : {
                         width: '100%',
                         height: 'auto',
                         aspectRatio: `${slideSize.width} / ${slideSize.height}`,
                     }),
-            }}>
+            }}
+            onMouseDown={handlePlacementStart}>
             {slide.elements.map((element) =>
                 <SlideElement
                     key={element.id}
@@ -73,7 +91,9 @@ export default function Slide(
                     slideId={slide.id}
                     slideElements={slide.elements}
                     selectedElementsIds={selection.selectedElementIds}
-                    isEditable={isEditable}
+                    isEditable={!!isEditable}
+                    isInteractive={isInteractive}
+                    isPlacing={isPlacing}
                     isActive={isEditable && activeElements?.includes(element.id)}
                     onDragStart={(clientX, clientY) => handleDragStart(clientX, clientY)}
                     dragOffset={dragOffsets[element.id] || {x: 0, y: 0}}
@@ -91,6 +111,21 @@ export default function Slide(
                 />
             )
             }
+            {placementPreview && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: placementPreview.y,
+                        left: placementPreview.x,
+                        width: placementPreview.width,
+                        height: placementPreview.height,
+                        border: '1px dashed #0078d4',
+                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                        pointerEvents: 'none',
+                        zIndex: 1000,
+                    }}
+                />
+            )}
         </div>
     );
 }

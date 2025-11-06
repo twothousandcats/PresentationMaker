@@ -1,5 +1,5 @@
 import type {Presentation} from "./types/types.ts";
-import {getRandomId} from "./functions/untils/utils.ts";
+import {getRandomId} from "./functions/utils/utils.ts";
 
 let presentation: Presentation = {
     id: getRandomId(),
@@ -105,7 +105,8 @@ let presentation: Presentation = {
     selection: {
         selectedSlideIds: [],
         selectedElementIds: []
-    }
+    },
+    mode: {type: 'idle'}
 };
 let presentationChangeHandler: Function = () => {
 };

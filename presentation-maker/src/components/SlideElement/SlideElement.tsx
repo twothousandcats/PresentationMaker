@@ -7,7 +7,7 @@ import type {
 import {
     concatModifiersByFlag,
     getPercentValue
-} from "../../store/functions/untils/utils.ts";
+} from "../../store/functions/utils/utils.ts";
 import {DEFAULT_SLIDE_WIDTH} from "../../store/utils/config.ts";
 import {dispatch} from "../../store/editor.ts";
 import {
@@ -28,6 +28,8 @@ type ElementProps = {
     slideElements: SlideElement[];
     selectedElementsIds: string[];
     isEditable?: boolean;
+    isInteractive?: boolean;
+    isPlacing?: boolean;
     isActive?: boolean;
     onDragStart?: (clientX: number, clientY: number) => void;
     dragOffset?: Position;
@@ -42,6 +44,8 @@ export default function SlideElement(
         slideElements,
         selectedElementsIds,
         isEditable,
+        isInteractive,
+        isPlacing,
         isActive,
         onDragStart,
         dragOffset,
@@ -50,10 +54,10 @@ export default function SlideElement(
     const textRef = useRef<HTMLDivElement>(null);
 
     const handleDragStart = (evt: React.MouseEvent) => {
-        if (!isActive || !isEditable) {
+        if (!isActive || !isInteractive) {
             return;
         }
-        evt.preventDefault(); // !!!
+        evt.preventDefault();
 
         onDragStart?.(evt.clientX, evt.clientY);
     }
@@ -121,10 +125,14 @@ export default function SlideElement(
 
                 // drag styles
                 transform: dragOffset ? `translate(${dragOffset.x}px, ${dragOffset.y}px)` : 'none',
-                cursor: isEditable && isActive ? 'move' : 'default',
+                cursor: isPlacing
+                    ? 'inherit'
+                    : isEditable && isActive ? 'move' : 'default',
             }}
             onClick={(event) => {
-                handleSelectElement(event, element);
+                if (isInteractive) {
+                    handleSelectElement(event, element);
+                }
             }}
             onMouseDown={handleDragStart}>
             {element.type === 'rectangle'
