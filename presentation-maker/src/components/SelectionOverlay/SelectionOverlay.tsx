@@ -1,140 +1,166 @@
 import styles from './SelectionOverlay.module.css';
-import type {
-    Size,
-    SlideElement,
-    Position
-} from "../../store/types/types.ts";
+import type { Size, SlideElement, Position } from '../../store/types/types.ts';
 import {
-    concatModifiersByFlag,
-    getPercentValue, getRandomId
-} from "../../store/functions/utils/utils.ts";
-import type {ResizeItem} from "../../store/types/utility-types.ts";
+  concatModifiersByFlag,
+  getPercentValue,
+  getRandomId,
+} from '../../store/functions/utils/utils.ts';
+import type { ResizeItem } from '../../store/types/utility-types.ts';
 
 interface SelectionOverlayProps {
-    selectedElementIds: string[];
-    slideElements: SlideElement[];
-    slideSize: Size;
-    dragOffsets?: Record<string, Position>;
-    resizePreview?: Record<string, { size: Size, position: Position }> | null;
-    onStartResizing?: (id: string, item: ResizeItem, x: number, y: number) => void;
+  selectedElementIds: string[];
+  slideElements: SlideElement[];
+  slideSize: Size;
+  dragOffsets?: Record<string, Position>;
+  resizePreview?: Record<string, { size: Size; position: Position }> | null;
+  onStartResizing?: (
+    id: string,
+    item: ResizeItem,
+    x: number,
+    y: number
+  ) => void;
 }
 
 type Handler = {
-    key: string;
-    pos: ResizeItem;
-    className: string;
-}
+  key: string;
+  pos: ResizeItem;
+  className: string;
+};
 
 const RESIZE_HANDLERS: Handler[] = [
-    {
-        key: getRandomId(),
-        pos: 'top',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_top])
-    },
-    {
-        key: getRandomId(),
-        pos: 'right',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_right])
-    },
-    {
-        key: getRandomId(),
-        pos: 'bottom',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_bottom])
-    },
-    {
-        key: getRandomId(),
-        pos: 'left',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_side, styles.resizeHandler_left])
-    },
-    {
-        key: getRandomId(),
-        pos: 'topLeft',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topLeft])
-    },
-    {
-        key: getRandomId(),
-        pos: 'topRight',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_topRight])
-    },
-    {
-        key: getRandomId(),
-        pos: 'bottomRight',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botRight])
-    },
-    {
-        key: getRandomId(),
-        pos: 'bottomLeft',
-        className: concatModifiersByFlag([styles.resizeHandler, styles.resizeHandler_corner, styles.resizeHandler_botLeft])
-    },
+  {
+    key: getRandomId(),
+    pos: 'top',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_side,
+      styles.resizeHandler_top,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'right',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_side,
+      styles.resizeHandler_right,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'bottom',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_side,
+      styles.resizeHandler_bottom,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'left',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_side,
+      styles.resizeHandler_left,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'topLeft',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_corner,
+      styles.resizeHandler_topLeft,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'topRight',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_corner,
+      styles.resizeHandler_topRight,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'bottomRight',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_corner,
+      styles.resizeHandler_botRight,
+    ]),
+  },
+  {
+    key: getRandomId(),
+    pos: 'bottomLeft',
+    className: concatModifiersByFlag([
+      styles.resizeHandler,
+      styles.resizeHandler_corner,
+      styles.resizeHandler_botLeft,
+    ]),
+  },
 ];
 
-export const SelectionOverlay = (
-    {
-        selectedElementIds,
-        slideElements,
-        slideSize,
-        onStartResizing,
-        resizePreview,
-        dragOffsets = {},
+export const SelectionOverlay = ({
+  selectedElementIds,
+  slideElements,
+  slideSize,
+  onStartResizing,
+  resizePreview,
+  dragOffsets = {},
+}: SelectionOverlayProps) => {
+  const overlays = selectedElementIds.map((id) => {
+    const element = slideElements.find((el) => el.id === id);
+    if (!element) {
+      return null;
     }
-    : SelectionOverlayProps) => {
-    const overlays = selectedElementIds.map(id => {
-        const element = slideElements.find(el => el.id === id);
-        if (!element) {
-            return null;
-        }
 
-        const preview = resizePreview?.[id];
-        const displayPosition = preview?.position || element.position;
-        const displaySize = preview?.size || element.size;
+    const preview = resizePreview?.[id];
+    const displayPosition = preview?.position || element.position;
+    const displaySize = preview?.size || element.size;
 
-        let x = displayPosition.x;
-        let y = displayPosition.y;
+    let x = displayPosition.x;
+    let y = displayPosition.y;
 
-        if (dragOffsets[id]) {
-            x += dragOffsets[id].x;
-            y += dragOffsets[id].y;
-        }
+    if (dragOffsets[id]) {
+      x += dragOffsets[id].x;
+      y += dragOffsets[id].y;
+    }
 
-        const xPercent = getPercentValue(x, slideSize.width);
-        const yPercent = getPercentValue(y, slideSize.height);
-        const widthPercent = getPercentValue(displaySize.width, slideSize.width);
-        const heightPercent = getPercentValue(displaySize.height, slideSize.height);
-
-        return (
-            <div
-                key={id}
-                className={styles.selectionBox}
-                style={{
-                    position: 'absolute',
-                    top: `${yPercent}%`,
-                    left: `${xPercent}%`,
-                    width: `${widthPercent}%`,
-                    height: `${heightPercent}%`,
-                    pointerEvents: 'none',
-                    zIndex: 100,
-                }}
-            >
-                <div className={styles.border}></div>
-                {onStartResizing && (
-                    RESIZE_HANDLERS.map(({key, pos, className}) => (
-                        <div
-                            key={key}
-                            className={className}
-                            onMouseDown={
-                                evt =>
-                                    onStartResizing(id, pos, evt.clientX, evt.clientY)
-                            }
-                        ></div>
-                    ))
-                )}
-            </div>
-        );
-    });
+    const xPercent = getPercentValue(x, slideSize.width);
+    const yPercent = getPercentValue(y, slideSize.height);
+    const widthPercent = getPercentValue(displaySize.width, slideSize.width);
+    const heightPercent = getPercentValue(displaySize.height, slideSize.height);
 
     return (
-        <div className={styles.overlayContainer}>
-            {overlays}
-        </div>
+      <div
+        key={id}
+        className={styles.selectionBox}
+        style={{
+          position: 'absolute',
+          top: `${yPercent}%`,
+          left: `${xPercent}%`,
+          width: `${widthPercent}%`,
+          height: `${heightPercent}%`,
+          pointerEvents: 'none',
+          zIndex: 100,
+        }}
+      >
+        <div className={styles.border}></div>
+        {onStartResizing &&
+          RESIZE_HANDLERS.map(({ key, pos, className }) => (
+            <div
+              key={key}
+              className={className}
+              onMouseDown={(evt) =>
+                onStartResizing(id, pos, evt.clientX, evt.clientY)
+              }
+            ></div>
+          ))}
+      </div>
     );
+  });
+
+  return <div className={styles.overlayContainer}>{overlays}</div>;
 };

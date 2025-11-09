@@ -5,113 +5,113 @@
 }
 
 .border {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    border: 2px solid var(--selected-border-color);
+  border: 2px solid var(--selected-border-color);
 }
 
 .resizeHandler {
-    position: absolute;
+  position: absolute;
 
-    display: flex;
+  display: flex;
 
-    border: 2px solid var(--selected-border-color);
-    background-color: #fff;
+  border: 2px solid var(--selected-border-color);
+  background-color: #fff;
 
-    transition: background-color 0.3s;
+  transition: background-color 0.3s;
 
-    pointer-events: auto;
+  pointer-events: auto;
 
-    &:hover {
-        background-color: var(--selected-border-color);
-    }
+  &:hover {
+    background-color: var(--selected-border-color);
+  }
 }
 
 .resizeHandler_side {
-    width: 30px;
-    height: 10px;
+  width: 30px;
+  height: 10px;
 
-    border-radius: 20px;
+  border-radius: 20px;
 }
 
 .resizeHandler_corner {
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 .resizeHandler_topLeft {
-    top: 0;
-    left: 0;
+  top: 0;
+  left: 0;
 
-    transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
-    cursor: nw-resize;
+  cursor: nw-resize;
 }
 
 .resizeHandler_topRight {
-    top: 0;
-    right: 0;
+  top: 0;
+  right: 0;
 
-    transform: translate(50%, -50%);
+  transform: translate(50%, -50%);
 
-    cursor: ne-resize;
+  cursor: ne-resize;
 }
 
 .resizeHandler_botRight {
-    bottom: 0;
-    right: 0;
+  bottom: 0;
+  right: 0;
 
-    transform: translate(50%, 50%);
+  transform: translate(50%, 50%);
 
-    cursor: se-resize;
+  cursor: se-resize;
 }
 
 .resizeHandler_botLeft {
-    bottom: 0;
-    left: 0;
+  bottom: 0;
+  left: 0;
 
-    transform: translate(-50%, 50%);
+  transform: translate(-50%, 50%);
 
-    cursor: sw-resize;
+  cursor: sw-resize;
 }
 
 .resizeHandler_top {
-    top: 0;
-    left: 50%;
+  top: 0;
+  left: 50%;
 
-    transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
-    cursor: n-resize;
+  cursor: n-resize;
 }
 
 .resizeHandler_right {
-    top: 50%;
-    right: 0;
+  top: 50%;
+  right: 0;
 
-    transform-origin: center;
-    transform: translate(50%, -50%) rotate(90deg);
+  transform-origin: center;
+  transform: translate(50%, -50%) rotate(90deg);
 
-    cursor: e-resize;
+  cursor: e-resize;
 }
 
 .resizeHandler_bottom {
-    bottom: 0;
-    left: 50%;
+  bottom: 0;
+  left: 50%;
 
-    transform: translate(-50%, 50%);
+  transform: translate(-50%, 50%);
 
-    cursor: s-resize;
+  cursor: s-resize;
 }
 
 .resizeHandler_left {
-    top: 50%;
-    left: 0;
+  top: 50%;
+  left: 0;
 
-    transform-origin: center;
-    transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
+  transform: translate(-50%, -50%) rotate(90deg);
 
-    cursor: w-resize;
+  cursor: w-resize;
 }

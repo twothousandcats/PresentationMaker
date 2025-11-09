@@ -1,19 +1,19 @@
 .presentation {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
 
-    background-color: var(--default-bg-color);
+  background-color: var(--default-bg-color);
 
-    transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .presentation__container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    gap: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 10px;
 }

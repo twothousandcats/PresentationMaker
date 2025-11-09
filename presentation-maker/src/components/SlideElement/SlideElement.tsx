@@ -1,168 +1,165 @@
 import style from './SlideElement.module.css';
-import type {
-    Position,
-    Size,
-    SlideElement
-} from "../../store/types/types.ts";
+import type { Position, Size, SlideElement } from '../../store/types/types.ts';
 import {
-    concatModifiersByFlag,
-    getPercentValue
-} from "../../store/functions/utils/utils.ts";
-import {DEFAULT_SLIDE_WIDTH} from "../../store/utils/config.ts";
-import {dispatch} from "../../store/editor.ts";
-import {
-    changeTextElContent,
-} from "../../store/functions/functions.ts";
-import {
-    type SyntheticEvent,
-    useEffect,
-    useRef
-} from "react";
-import * as React from "react";
-import {useSelectElements} from "../../store/hooks/useSelectElements.ts";
+  concatModifiersByFlag,
+  getPercentValue,
+} from '../../store/functions/utils/utils.ts';
+import { DEFAULT_SLIDE_WIDTH } from '../../store/utils/config.ts';
+import { dispatch } from '../../store/editor.ts';
+import { changeTextElContent } from '../../store/functions/functions.ts';
+import { type SyntheticEvent, useEffect, useRef } from 'react';
+import * as React from 'react';
+import { useSelectElements } from '../../store/hooks/useSelectElements.ts';
 
 type ElementProps = {
-    element: SlideElement;
-    slideSize: Size;
-    slideId: string;
-    slideElements: SlideElement[];
-    selectedElementsIds: string[];
-    isEditable?: boolean;
-    isInteractive?: boolean;
-    isPlacing?: boolean;
-    isActive?: boolean;
-    onDragStart?: (clientX: number, clientY: number) => void;
-    dragOffset?: Position;
-    resizePreview?: { size: Size, position: Position } | null;
-}
+  element: SlideElement;
+  slideSize: Size;
+  slideId: string;
+  slideElements: SlideElement[];
+  selectedElementsIds: string[];
+  isEditable?: boolean;
+  isInteractive?: boolean;
+  isPlacing?: boolean;
+  isActive?: boolean;
+  onDragStart?: (clientX: number, clientY: number) => void;
+  dragOffset?: Position;
+  resizePreview?: { size: Size; position: Position } | null;
+};
 
-export default function SlideElement(
-    {
-        element,
-        slideSize,
-        slideId,
-        slideElements,
-        selectedElementsIds,
-        isEditable,
-        isInteractive,
-        isPlacing,
-        isActive,
-        onDragStart,
-        dragOffset,
-        resizePreview
-    }: ElementProps) {
-    const textRef = useRef<HTMLDivElement>(null);
+export default function SlideElement({
+  element,
+  slideSize,
+  slideId,
+  slideElements,
+  selectedElementsIds,
+  isEditable,
+  isInteractive,
+  isPlacing,
+  isActive,
+  onDragStart,
+  dragOffset,
+  resizePreview,
+}: ElementProps) {
+  const textRef = useRef<HTMLDivElement>(null);
 
-    const handleDragStart = (evt: React.MouseEvent) => {
-        if (!isActive || !isInteractive) {
-            return;
-        }
-        evt.preventDefault();
-
-        onDragStart?.(evt.clientX, evt.clientY);
+  const handleDragStart = (evt: React.MouseEvent) => {
+    if (!isActive || !isInteractive) {
+      return;
     }
+    evt.preventDefault();
 
-    let fontSize = element.type === 'text'
-        ? element.fontSize
-        : null;
-    if (!isEditable) {
-        const scale = DEFAULT_SLIDE_WIDTH / slideSize.width;
-        fontSize = fontSize
-            ? Math.max(1, Math.round(fontSize * scale))
-            : 1;
-    }
+    onDragStart?.(evt.clientX, evt.clientY);
+  };
 
-    const bgColor = element.background?.type === 'solid' && element.background.color
-        ? element.background.color
-        : null;
-    const bgImg = element.background?.type === 'image' && element.background.data
-        ? element.background.data
-        : null;
-    /* const bgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
+  let fontSize = element.type === 'text' ? element.fontSize : null;
+  if (!isEditable) {
+    const scale = DEFAULT_SLIDE_WIDTH / slideSize.width;
+    fontSize = fontSize ? Math.max(1, Math.round(fontSize * scale)) : 1;
+  }
+
+  const bgColor =
+    element.background?.type === 'solid' && element.background.color
+      ? element.background.color
+      : null;
+  const bgImg =
+    element.background?.type === 'image' && element.background.data
+      ? element.background.data
+      : null;
+  /* const bgGradient = element.background && element.background.type === 'gradient' && element.background.gradient
         ? element.background.gradient
         : null */
 
-    const displaySize = resizePreview?.size || element.size;
-    const displayPosition = resizePreview?.position || element.position;
+  const displaySize = resizePreview?.size || element.size;
+  const displayPosition = resizePreview?.position || element.position;
 
-    const xPercent = getPercentValue(displayPosition.x, slideSize.width);
-    const yPercent = getPercentValue(displayPosition.y, slideSize.height);
-    const widthPercent = getPercentValue(displaySize.width, slideSize.width);
-    const heightPercent = getPercentValue(displaySize.height, slideSize.height);
+  const xPercent = getPercentValue(displayPosition.x, slideSize.width);
+  const yPercent = getPercentValue(displayPosition.y, slideSize.height);
+  const widthPercent = getPercentValue(displaySize.width, slideSize.width);
+  const heightPercent = getPercentValue(displaySize.height, slideSize.height);
 
-    const {handleSelectElement} = useSelectElements({
-        elements: slideElements,
-        selection: selectedElementsIds
+  const { handleSelectElement } = useSelectElements({
+    elements: slideElements,
+    selection: selectedElementsIds,
+  });
+
+  const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
+    const newContent = evt.currentTarget.innerHTML;
+    dispatch(changeTextElContent, {
+      slideId: slideId,
+      elementId: element.id,
+      newContent: newContent,
     });
+  };
+  const classNames = concatModifiersByFlag([
+    style.element,
+    !isEditable ? style.element_disabled : '',
+  ]);
 
-    const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
-        const newContent = evt.currentTarget.innerHTML;
-        dispatch(changeTextElContent, {
-            slideId: slideId,
-            elementId: element.id,
-            newContent: newContent
-        });
+  useEffect(() => {
+    if (isEditable && isActive && element.type === 'text' && textRef.current) {
+      textRef.current?.focus();
     }
-    const classNames = concatModifiersByFlag([
-        style.element,
-        !isEditable ? style.element_disabled : '',
-    ]);
+  }, [isEditable, isActive]);
 
-    useEffect(() => {
-        if (isEditable && isActive && element.type === 'text' && textRef.current) {
-            textRef.current?.focus();
+  return (
+    <div
+      className={classNames}
+      style={{
+        top: `${yPercent}%`,
+        left: `${xPercent}%`,
+        width: `${widthPercent}%`,
+        height: `${heightPercent}%`,
+
+        // drag styles
+        transform: dragOffset
+          ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
+          : 'none',
+        cursor: isPlacing
+          ? 'inherit'
+          : isEditable && isActive
+            ? 'move'
+            : 'default',
+      }}
+      onClick={(event) => {
+        if (isInteractive) {
+          handleSelectElement(event, element);
         }
-    }, [isEditable, isActive]);
-
-    return (
+      }}
+      onMouseDown={handleDragStart}
+    >
+      {element.type === 'rectangle' ? (
         <div
-            className={classNames}
-            style={{
-                top: `${yPercent}%`,
-                left: `${xPercent}%`,
-                width: `${widthPercent}%`,
-                height: `${heightPercent}%`,
-
-                // drag styles
-                transform: dragOffset ? `translate(${dragOffset.x}px, ${dragOffset.y}px)` : 'none',
-                cursor: isPlacing
-                    ? 'inherit'
-                    : isEditable && isActive ? 'move' : 'default',
-            }}
-            onClick={(event) => {
-                if (isInteractive) {
-                    handleSelectElement(event, element);
-                }
-            }}
-            onMouseDown={handleDragStart}>
-            {element.type === 'rectangle'
-                ? <div className={style.image}
-                       style={{
-                           ...(element.background?.type === 'image' && {
-                               backgroundImage: `url(${element.background.data}`,
-                               backgroundRepeat: 'no-repeat',
-                               backgroundSize: '100% 100%',
-                           }),
-                           ...(element.background?.type === 'solid' && {
-                               backgroundColor: element.background.color
-                           })
-                       }}/>
-                : <div className={style.text}
-                       ref={textRef}
-                       contentEditable={isEditable}
-                       suppressContentEditableWarning={true}
-                       onBlur={handleTextChange}
-                       style={{
-                           fontFamily: `${element.fontFamily}`,
-                           fontSize: `${fontSize}px`,
-                           fontWeight: `${element.fontWeight}`,
-                           color: `${element.color}`,
-                           backgroundColor: `${bgColor}`,
-                           backgroundImage: `${bgImg}`,
-                       }}>
-                    {element.content}
-                </div>
-            }
+          className={style.image}
+          style={{
+            ...(element.background?.type === 'image' && {
+              backgroundImage: `url(${element.background.data}`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '100% 100%',
+            }),
+            ...(element.background?.type === 'solid' && {
+              backgroundColor: element.background.color,
+            }),
+          }}
+        />
+      ) : (
+        <div
+          className={style.text}
+          ref={textRef}
+          contentEditable={isEditable}
+          suppressContentEditableWarning={true}
+          onBlur={handleTextChange}
+          style={{
+            fontFamily: `${element.fontFamily}`,
+            fontSize: `${fontSize}px`,
+            fontWeight: `${element.fontWeight}`,
+            color: `${element.color}`,
+            backgroundColor: `${bgColor}`,
+            backgroundImage: `${bgImg}`,
+          }}
+        >
+          {element.content}
         </div>
-    );
+      )}
+    </div>
+  );
 }

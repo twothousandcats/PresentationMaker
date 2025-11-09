@@ -1,44 +1,44 @@
 .container {
-    min-width: 260px;
-    max-height: calc(100vh - 104px);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-right: 10px;
+  min-width: 260px;
+  max-height: calc(100vh - 104px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 10px;
 
-    overflow-y: scroll;
+  overflow-y: scroll;
 
-    /* Для WebKit */
-    &::-webkit-scrollbar {
-        width: 8px;
-        scroll-behavior: smooth;
-    }
-    &::-webkit-scrollbar-track {
-        background: var(--scroll-track-color);
-    }
-    &::-webkit-scrollbar-thumb {
-        background: var(--scroll-thumb-color);
-        border-radius: 6px;
-    }
+  /* Для WebKit */
+  &::-webkit-scrollbar {
+    width: 8px;
+    scroll-behavior: smooth;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scroll-track-color);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb-color);
+    border-radius: 6px;
+  }
 }
 
 .holder {
-    width: 240px;
-    display: flex;
-    gap: 10px;
+  width: 240px;
+  display: flex;
+  gap: 10px;
 
-    font-family: var(--base-font);
-    color: var(--default-text-color);
+  font-family: var(--base-font);
+  color: var(--default-text-color);
 
-    user-select: none;
+  user-select: none;
 }
 
 .holder__num {
-    font-family: inherit;
-    color: inherit;
+  font-family: inherit;
+  color: inherit;
 }
 
 .dragging {
-    opacity: 0.5;
-    scale: 0.8;
+  opacity: 0.5;
+  scale: 0.8;
 }

@@ -1,10 +1,8 @@
-import type {Theme} from "./utility-types.ts";
+import type { Theme } from './utility-types.ts';
 
 interface ThemeInterface {
-    theme: Theme;
-    toggleTheme(): void;
+  theme: Theme;
+  toggleTheme(): void;
 }
 
-export type {
-    ThemeInterface,
-}
+export type { ThemeInterface };

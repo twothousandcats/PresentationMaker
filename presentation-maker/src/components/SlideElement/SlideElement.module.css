@@ -1,22 +1,22 @@
 .element {
-    position: absolute;
+  position: absolute;
 
-    display: flex;
+  display: flex;
 
-    border: 2px solid transparent;
+  border: 2px solid transparent;
 }
 
 .element_disabled {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .image {
-    width: -webkit-fill-available;
-    object-fit: cover;
+  width: -webkit-fill-available;
+  object-fit: cover;
 }
 
 .text {
-    width: -webkit-fill-available;
+  width: -webkit-fill-available;
 
-    outline: none;
+  outline: none;
 }

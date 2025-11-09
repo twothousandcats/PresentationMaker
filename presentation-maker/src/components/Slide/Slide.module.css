@@ -1,24 +1,24 @@
 .slide {
-    position: relative;
+  position: relative;
 
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .slide_editable {
-    border: 1px solid var(--default-border-color);
+  border: 1px solid var(--default-border-color);
 }
 
 .slide_preview {
-    border: 3px solid var(--default-border-color);
-    border-radius: 5px;
+  border: 3px solid var(--default-border-color);
+  border-radius: 5px;
 
-    transition: border 0.3s ease;
+  transition: border 0.3s ease;
 
-    &:hover {
-        border: 3px solid var(--accent-border-color);
-    }
+  &:hover {
+    border: 3px solid var(--accent-border-color);
+  }
 }
 
 .slide_active {
-    border-color: var(--selected-border-color);
+  border-color: var(--selected-border-color);
 }

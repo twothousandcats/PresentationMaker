@@ -1,6 +1,6 @@
 .icon {
-    path {
-        fill: none;
-        stroke: var(--default-icon-stroke);
-    }
+  path {
+    fill: none;
+    stroke: var(--default-icon-stroke);
+  }
 }

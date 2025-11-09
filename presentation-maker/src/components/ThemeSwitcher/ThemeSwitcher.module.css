@@ -1,25 +1,25 @@
 .themeSwitcher {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    margin-left: 20px;
-    
-    border-radius: 50%;
-    background-color: var(--accent-bg-color2);
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  margin-left: 20px;
 
-    list-style: none;
+  border-radius: 50%;
+  background-color: var(--accent-bg-color2);
 
-    transition: background-color 0.3s ease;
+  list-style: none;
 
-    cursor: pointer;
+  transition: background-color 0.3s ease;
 
-    &:hover {
-        background-color: var(--accent-border-color);
-    }
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--accent-border-color);
+  }
 }
 
 .theme {
-    display: flex;
+  display: flex;
 }
 
 .light {

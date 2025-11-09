@@ -1,64 +1,64 @@
 .toolbar__item {
-    position: relative;
+  position: relative;
 
-    display: flex;
-    padding: 5px;
+  display: flex;
+  padding: 5px;
 
-    font-family: var(--base-font);
-    font-size: 24px;
-    color: var(--default-text-color);
+  font-family: var(--base-font);
+  font-size: 24px;
+  color: var(--default-text-color);
 
-    border-radius: 50%;
-    background-color: transparent;
+  border-radius: 50%;
+  background-color: transparent;
 
-    transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    &:hover {
-        background-color: var(--accent-border-color);
-    }
+  &:hover {
+    background-color: var(--accent-border-color);
+  }
 }
 
 .toolbar__item_disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    
-    &:hover {
-        background-color: transparent;
-    }
+  opacity: 0.4;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: transparent;
+  }
 }
 
 .toolbar__item_active {
-    background-color: var(--accent-bg-color2);
+  background-color: var(--accent-bg-color2);
 }
 
 .toolbar__hint {
-    position: absolute;
-    top: calc(100% + 10px);
-    z-index: 1;
+  position: absolute;
+  top: calc(100% + 10px);
+  z-index: 1;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 
-    font-family: var(--base-font);
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 1;
-    color: var(--default-text-color);
+  font-family: var(--base-font);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--default-text-color);
 
-    border-radius: 5px;
-    background-color: var(--accent-bg-color2);
+  border-radius: 5px;
+  background-color: var(--accent-bg-color2);
 
-    transition: opacity 0.3s ease;
-    opacity: 0;
+  transition: opacity 0.3s ease;
+  opacity: 0;
 
-    pointer-events: none;
-    user-select: none;
+  pointer-events: none;
+  user-select: none;
 }
 
 .toolbar__hint_show {
-    opacity: 1;
+  opacity: 1;
 }
