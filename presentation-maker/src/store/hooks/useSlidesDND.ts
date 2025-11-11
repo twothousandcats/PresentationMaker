@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { useCallback, useRef } from 'react';
-import { dispatch } from '../editor.ts';
-import { moveSlides } from '../functions/functions.ts';
+import {
+  useCallback,
+  useRef
+} from 'react';
+import { moveSlides } from '../editorSlice.ts';
 import type { Slide } from '../types/types.ts';
+import { useDispatch } from 'react-redux';
 
 interface SlidesDNDProps {
   slides: Slide[];
@@ -10,6 +13,8 @@ interface SlidesDNDProps {
 }
 
 export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
+  const dispatch = useDispatch();
+
   const draggedSlideIdsRef = useRef<string[]>([]);
   const dragTargetIdRef = useRef<string | null>(null);
   const insertAfterRef = useRef<boolean>(false);
@@ -77,10 +82,12 @@ export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
         const newIndex = insertAfterRef.current
           ? targetIndexInRemaining + 1
           : targetIndexInRemaining;
-        dispatch(moveSlides, {
-          slideIds: draggedIds,
-          newIndex,
-        });
+        dispatch(
+          moveSlides({
+            slideIds: draggedIds,
+            newIndex,
+          })
+        );
       };
 
       const cleanup = () => {
@@ -94,7 +101,7 @@ export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     },
-    [selectedSlideIds]
+    [dispatch, selectedSlideIds, slides]
   );
 
   return { handleMouseDown };

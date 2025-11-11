@@ -16,34 +16,37 @@ import IconRemove from '../Icons/IconRemove.tsx';
 import IconAddText from '../Icons/IconAddText.tsx';
 import IconDrop from '../Icons/IconDrop.tsx';
 import {
-  addElementToSlide,
   addSlide,
   changeElementBg,
   changeSlideBg,
   removeSlide,
   renamePresentation,
   setEditorMode,
-} from '../../store/functions/functions.ts';
-import { dispatch } from '../../store/editor.ts';
-import { createDefaultSlide } from '../../store/functions/utils/utils.ts';
+} from '../../store/editorSlice.ts';
+import { createDefaultSlide } from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
 import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
 
 interface ToolbarProps {
-  presentationId: string;
-  presentationTitle: string;
-  presentationSelection: Selection;
+  id: string;
+  title: string;
+  selection: Selection;
 }
 
-export default function Toolbar({
-  presentationId,
-  presentationTitle,
-  presentationSelection,
-}: ToolbarProps) {
+export default function Toolbar() {
+  const {
+    id,
+    title,
+    selection,
+  }: ToolbarProps = useSelector((state: RootState) => state.editor);
+  const dispatch = useDispatch();
+
   const [isExpanded, setExpanded] = useState(false);
-  const [title, setTitle] = useState(presentationTitle);
+  const [newTitle, setNewTitle] = useState(title);
   const [isAddBgDialogOpen, setIsAddBgDialogOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,35 +58,39 @@ export default function Toolbar({
         return;
       }
 
-      const { selectedSlideIds, selectedElementIds } = presentationSelection;
+      const { selectedSlideIds, selectedElementIds } = selection;
       const slideId = selectedSlideIds[0];
       const elementId = selectedElementIds[0];
 
       if (selectedElementIds.length > 0) {
-        dispatch(changeElementBg, {
-          slideId,
-          elementId,
-          newBg: content,
-        });
+        dispatch(
+          changeElementBg({
+            slideId,
+            elementId,
+            newBg: content,
+          })
+        );
       } else if (selectedSlideIds.length > 0) {
-        dispatch(changeSlideBg, {
-          slideId,
-          newBg: content,
-        });
+        dispatch(
+          changeSlideBg({
+            slideId,
+            newBg: content,
+          })
+        );
       }
 
       setIsAddBgDialogOpen(false);
     },
-    [presentationSelection]
+    [dispatch, selection]
   );
 
   const handleTitleChange = useCallback(
     (evt: ChangeEvent<HTMLInputElement>) => {
-      const newTitle = evt.target.value;
-      setTitle(newTitle);
-      dispatch(renamePresentation, { newName: newTitle });
+      const newName = evt.target.value;
+      setNewTitle(newName);
+      dispatch(renamePresentation({ newName }));
     },
-    []
+    [dispatch]
   );
 
   const handleKeyDown = useCallback(
@@ -92,12 +99,12 @@ export default function Toolbar({
         setExpanded(false);
         inputRef.current?.blur();
       } else if (evt.key === 'Escape') {
-        setTitle(presentationTitle);
+        setNewTitle(title);
         setExpanded(false);
         inputRef.current?.blur();
       }
     },
-    [presentationTitle]
+    [title]
   );
 
   const handleClickOutside = useCallback((evt: MouseEvent) => {
@@ -128,43 +135,47 @@ export default function Toolbar({
     },
     {
       icon: <IconPlus />,
-      fn: () => dispatch(addSlide, { newSlide: createDefaultSlide() }),
+      fn: () => dispatch(addSlide({ newSlide: createDefaultSlide() })),
       ariaLabel: 'Добавить слайд',
     },
     {
       icon: <IconRemove />,
       fn: () =>
-        dispatch(removeSlide, {
-          slideIdsToRemove: presentationSelection.selectedSlideIds,
-        }),
+        dispatch(
+          removeSlide({
+            slideIdsToRemove: selection.selectedSlideIds,
+          })
+        ),
       ariaLabel: 'Удалить активный слайд',
-      disabled: presentationSelection.selectedSlideIds.length === 0,
+      disabled: selection.selectedSlideIds.length === 0,
     },
     {
       icon: <IconRectangle />,
       fn: () =>
-        dispatch(setEditorMode, {
-          mode: { type: 'placing', elementType: 'rectangle' },
-        }),
+        dispatch(
+          setEditorMode({
+            mode: { type: 'placing', elementType: 'rectangle' },
+          })
+        ),
       ariaLabel: 'Добавить прямоугольник',
-      disabled: presentationSelection.selectedSlideIds.length === 0,
+      disabled: selection.selectedSlideIds.length === 0,
     },
     {
       icon: <IconAddText />,
       fn: () =>
-        dispatch(setEditorMode, {
+        dispatch(setEditorMode({
           mode: { type: 'placing', elementType: 'text' },
-        }),
+        })),
       ariaLabel: 'Добавить текстовый элемент',
-      disabled: presentationSelection.selectedSlideIds.length === 0,
+      disabled: selection.selectedSlideIds.length === 0,
     },
     {
       icon: <IconDrop />,
       fn: () => setIsAddBgDialogOpen(true),
       ariaLabel: 'Изменить фон',
       disabled:
-        presentationSelection.selectedSlideIds.length === 0 &&
-        presentationSelection.selectedElementIds.length === 0,
+        selection.selectedSlideIds.length === 0 &&
+        selection.selectedElementIds.length === 0,
     },
     {
       icon: <IconUndo />,
@@ -188,9 +199,9 @@ export default function Toolbar({
           >
             <input
               className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
-              id={presentationId}
+              id={id}
               type="text"
-              value={title}
+              value={newTitle}
               ref={inputRef}
               onClick={() => setExpanded(true)}
               onKeyDown={handleKeyDown}

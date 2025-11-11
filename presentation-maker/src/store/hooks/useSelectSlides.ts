@@ -1,8 +1,8 @@
 import type { Slide } from '../types/types.ts';
 import { useCallback } from 'react';
-import { dispatch } from '../editor.ts';
-import { setSelectedSlides } from '../functions/functions.ts';
+import { setSelectedSlides } from '../editorSlice.ts';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 
 interface SelectSlides {
   slides: Slide[];
@@ -10,6 +10,8 @@ interface SelectSlides {
 }
 
 export const useSelectSlides = ({ slides, selectedSlideIds }: SelectSlides) => {
+  const dispatch = useDispatch();
+
   const handleSelectSlide = useCallback(
     (event: React.MouseEvent, curSlide: Slide) => {
       if (event.ctrlKey || event.metaKey) {
@@ -18,9 +20,9 @@ export const useSelectSlides = ({ slides, selectedSlideIds }: SelectSlides) => {
           ? selectedSlideIds.filter((id) => id !== curSlide.id)
           : [...selectedSlideIds, curSlide.id];
 
-        dispatch(setSelectedSlides, {
+        dispatch(setSelectedSlides({
           slideIds: newSelection,
-        });
+        }));
       } else if (event.shiftKey && selectedSlideIds.length > 0) {
         const lastSelectedSlide = selectedSlideIds[selectedSlideIds.length - 1];
         const lastSelectedIndex = slides.findIndex(
@@ -41,17 +43,17 @@ export const useSelectSlides = ({ slides, selectedSlideIds }: SelectSlides) => {
             rangeIds = rangeIds.reverse();
           }
 
-          dispatch(setSelectedSlides, {
+          dispatch(setSelectedSlides({
             slideIds: rangeIds,
-          });
+          }));
         }
       } else {
-        dispatch(setSelectedSlides, {
+        dispatch(setSelectedSlides({
           slideIds: [curSlide.id],
-        });
+        }));
       }
     },
-    [slides, selectedSlideIds]
+    [slides, selectedSlideIds, dispatch]
   );
 
   return { handleSelectSlide };

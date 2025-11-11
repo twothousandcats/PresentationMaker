@@ -1,8 +1,8 @@
 import type { Size, Slide, Position } from '../types/types.ts';
 import { useCallback, useState } from 'react';
-import { dispatch } from '../editor.ts';
-import { changeElPosition, changeElSize } from '../functions/functions.ts';
+import { changeElPosition, changeElSize } from '../editorSlice.ts';
 import type { ResizeItem } from '../types/utility-types.ts';
+import { useDispatch } from 'react-redux';
 
 type ResizePreview = {
   size: Size;
@@ -81,6 +81,7 @@ const computeFinalResize = (
 };
 
 export const useResize = (slide: Slide, isEditable?: boolean) => {
+  const dispatch = useDispatch();
   const [resizePreview, setResizePreview] = useState<Record<
     string,
     ResizePreview
@@ -150,17 +151,21 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
           initialData.y
         );
 
-        dispatch(changeElSize, {
-          slideId: slide.id,
-          elementId,
-          newSize: finalPreview.size,
-        });
+        dispatch(
+          changeElSize({
+            slideId: slide.id,
+            elementId,
+            newSize: finalPreview.size,
+          })
+        );
 
-        dispatch(changeElPosition, {
-          slideId: slide.id,
-          elementId,
-          newPosition: finalPreview.position,
-        });
+        dispatch(
+          changeElPosition({
+            slideId: slide.id,
+            elementId,
+            newPosition: finalPreview.position,
+          })
+        );
 
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -169,7 +174,7 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [slide, isEditable]
+    [isEditable, slide.elements, slide.id, dispatch]
   );
 
   return { startResizing, resizePreview };

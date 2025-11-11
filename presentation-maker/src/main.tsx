@@ -9,13 +9,11 @@ import {
 import { createRoot, type Root } from 'react-dom/client';
 import './index.css';
 import App from './components/App/App.tsx';
-import {
-  addPresentationChangeHandler,
-  getPresentation,
-} from './store/editor.ts';
 import type { ThemeInterface } from './store/types/utility-interfaces.ts';
 import type { Theme } from './store/types/utility-types.ts';
 import { LOCAL_STORAGE_NAMES } from './store/utils/config.ts';
+import { store } from './store/store.ts';
+import {Provider} from 'react-redux';
 
 const container = document.getElementById('root')!;
 const root: Root = createRoot(container);
@@ -51,12 +49,13 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 function processRender() {
   root.render(
     <StrictMode>
-      <ThemeProvider>
-        <App {...getPresentation()} />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </Provider>
     </StrictMode>
   );
 }
 
-addPresentationChangeHandler(processRender);
 processRender();

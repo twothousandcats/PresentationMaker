@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { Position, Selection, Slide } from '../types/types.ts';
-import { dispatch } from '../editor.ts';
-import { changeElPosition } from '../functions/functions.ts';
+import { changeElPosition } from '../editorSlice.ts';
+import { useDispatch } from 'react-redux';
 
 const calculateDelta = (clientPos: number, startMousePos: number) => {
   return clientPos - startMousePos;
@@ -12,6 +12,7 @@ export const useElementDND = (
   selection: Selection,
   isEditable?: boolean
 ) => {
+  const dispatch = useDispatch();
   const [dragOffsets, setDragOffsets] = useState<Record<string, Position>>({});
 
   const handleDragStart = useCallback(
@@ -65,11 +66,13 @@ export const useElementDND = (
             x: startPosition.x + finalDeltaX,
             y: startPosition.y + finalDeltaY,
           };
-          dispatch(changeElPosition, {
-            slideId: slide.id,
-            elementId: id,
-            newPosition,
-          });
+          dispatch(
+            changeElPosition({
+              slideId: slide.id,
+              elementId: id,
+              newPosition,
+            })
+          );
         });
 
         setDragOffsets({});
@@ -80,7 +83,7 @@ export const useElementDND = (
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [slide, selection, isEditable]
+    [isEditable, selection.selectedElementIds, slide.elements, slide.id, dispatch]
   );
 
   return { dragOffsets, handleDragStart };

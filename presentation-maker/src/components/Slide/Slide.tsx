@@ -1,43 +1,46 @@
 import style from './Slide.module.css';
-import type {
-  Size,
-  Slide,
-  Selection,
-  EditorMode,
-} from '../../store/types/types.ts';
+import type { EditorMode, Slide } from '../../store/types/types.ts';
 import SlideElement from '../SlideElement/SlideElement.tsx';
-import { concatModifiersByFlag } from '../../store/functions/utils/utils.ts';
+import { concatModifiersByFlag } from '../../store/utils/functions.ts';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay.tsx';
 import { useElementDND } from '../../store/hooks/useElementDND.ts';
 import { useResize } from '../../store/hooks/useResize.ts';
 import { usePlacementMode } from '../../store/hooks/usePlacementMode.ts';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
+import { LANGUAGES } from '../../store/utils/langs.ts';
 
 type SlideProps = {
-  slide: Slide;
-  slideSize: Size;
-  selection: Selection;
+  slideId: string;
   isEditable?: boolean;
-  isActive?: boolean;
-  activeElements?: string[];
   mode?: EditorMode;
 };
 
 export default function Slide({
-  slide,
-  slideSize,
-  selection,
-  isEditable,
-  isActive,
-  activeElements,
+  slideId,
+  isEditable = false,
   mode,
 }: SlideProps) {
+  const {
+    slides,
+    size,
+    selection,
+  } = useSelector((state: RootState) => state.editor);
+  const slide = slides.find((slide) => slide.id === slideId);
+  // if(!slide) {
+  //   return (<div>{LANGUAGES.noSlides}</div>);
+  // }
+
+  const isActive = selection.selectedSlideIds.includes(slideId);
+  const activeElements = isActive && isEditable ? selection.selectedElementIds : [];
+
   const classNames = concatModifiersByFlag([
     style.slide,
     isEditable ? style.slide_editable : style.slide_preview,
     isActive ? style.slide_active : '',
   ]);
   const bgColor =
-    slide.background && slide.background.type === 'solid'
+    slide.background?.type === 'solid'
       ? slide.background.color
       : '';
   const bgImg =
@@ -73,14 +76,14 @@ export default function Slide({
         }),
         ...(isEditable
           ? {
-              width: `${isEditable ? slideSize.width : ''}px`,
-              height: `${isEditable ? slideSize.height : ''}px`,
+              width: `${isEditable ? size.width : ''}px`,
+              height: `${isEditable ? size.height : ''}px`,
               cursor: isPlacing ? 'crosshair' : 'default',
             }
           : {
               width: '100%',
               height: 'auto',
-              aspectRatio: `${slideSize.width} / ${slideSize.height}`,
+              aspectRatio: `${size.width} / ${size.height}`,
             }),
       }}
       onMouseDown={handlePlacementStart}
@@ -89,7 +92,7 @@ export default function Slide({
         <SlideElement
           key={element.id}
           element={element}
-          slideSize={slideSize}
+          slideSize={size}
           slideId={slide.id}
           slideElements={slide.elements}
           selectedElementsIds={selection.selectedElementIds}
@@ -106,7 +109,7 @@ export default function Slide({
         <SelectionOverlay
           selectedElementIds={selection.selectedElementIds}
           slideElements={slide.elements}
-          slideSize={slideSize}
+          slideSize={size}
           dragOffsets={dragOffsets}
           resizePreview={resizePreview}
           onStartResizing={startResizing}

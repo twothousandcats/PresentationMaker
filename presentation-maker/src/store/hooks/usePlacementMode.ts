@@ -1,13 +1,18 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import type { EditorMode, Slide, Position } from '../types/types.ts';
-import { createTextEl, createRectangleEl } from '../functions/utils/utils.ts';
-import { dispatch } from '../editor.ts';
+import type {
+  EditorMode,
+  Slide,
+  Position,
+  SlideElement,
+} from '../types/types.ts';
+import { createTextEl, createRectangleEl } from '../utils/functions.ts';
 import {
   addElementToSlide,
   setEditorMode,
   setSelectedElements,
-} from '../functions/functions.ts';
+} from '../editorSlice.ts';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 
 const threshold = 5;
 
@@ -22,6 +27,7 @@ export function usePlacementMode({
   isEditable,
   mode,
 }: UsePlacementModeProps) {
+  const dispatch = useDispatch();
   const safeMode: EditorMode = mode ?? { type: 'idle' };
   const containerRef = useRef<HTMLDivElement>(null);
   const placementPreviewRef = useRef<{
@@ -50,13 +56,13 @@ export function usePlacementMode({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && safeMode.type === 'placing') {
-        dispatch(setEditorMode, { mode: { type: 'idle' } });
+        dispatch(setEditorMode({ mode: { type: 'idle' } }));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [safeMode]);
+  }, [dispatch, safeMode]);
 
   const handlePlacementStart = useCallback(
     (event: React.MouseEvent) => {
@@ -102,10 +108,10 @@ export function usePlacementMode({
           currentPreview.width >= threshold &&
           currentPreview.height >= threshold
         ) {
-          let newElement;
+          let newElement: SlideElement;
           if (safeMode.elementType === 'rectangle') {
             newElement = createRectangleEl();
-          } else if (safeMode.elementType === 'text') {
+          } else {
             newElement = createTextEl();
           }
 
@@ -121,15 +127,25 @@ export function usePlacementMode({
             },
           };
 
-          dispatch(addElementToSlide, {
-            slideId: slide.id,
-            newElement,
-          });
-          dispatch(setSelectedElements, {
-            elementsIds: [newElement.id],
-          });
+          dispatch(
+            addElementToSlide({
+              slideId: slide.id,
+              newElement,
+            })
+          );
+          dispatch(
+            setSelectedElements({
+              elementsIds: [newElement.id],
+            })
+          );
 
-          dispatch(setEditorMode, { mode: { type: 'idle' } });
+          dispatch(
+            setEditorMode({
+              mode: {
+                type: 'idle',
+              },
+            })
+          );
         }
 
         setPlacementPreview(null);
@@ -138,7 +154,7 @@ export function usePlacementMode({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [safeMode, isEditable, slide.id]
+    [isEditable, safeMode, dispatch, slide.id]
   );
 
   return {

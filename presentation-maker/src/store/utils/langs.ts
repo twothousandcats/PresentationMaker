@@ -1,4 +1,4 @@
-const langs = {
+const LANGUAGES = {
   imageDialogHeading: 'Укажите ссылку',
   dialogCancel: 'Отмена',
   dialogSubmit: 'Добавить',
@@ -6,6 +6,8 @@ const langs = {
   colorDialogHeading: 'Выберите цвет',
   dialogImageTab: 'Изображение',
   dialogColorTab: 'Цвет',
+
+  noSlides: 'Слайдов нет'
 };
 
-export { langs };
+export { LANGUAGES };

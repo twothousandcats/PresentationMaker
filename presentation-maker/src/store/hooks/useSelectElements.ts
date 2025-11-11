@@ -1,15 +1,17 @@
 import { useCallback } from 'react';
-import { dispatch } from '../editor.ts';
-import { setSelectedElements } from '../functions/functions.ts';
+import { setSelectedElements } from '../editorSlice.ts';
 import type { SlideElement } from '../types/types.ts';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 
 interface SelectElements {
   elements: SlideElement[];
   selection: string[];
 }
 
-export const useSelectElements = ({ elements, selection }: SelectElements) => {
+export const useSelectElements = ({ selection }: SelectElements) => {
+  const dispatch = useDispatch();
+
   const handleSelectElement = useCallback(
     (event: React.MouseEvent, curElement: SlideElement) => {
       if (event.ctrlKey || event.metaKey) {
@@ -18,16 +20,20 @@ export const useSelectElements = ({ elements, selection }: SelectElements) => {
           ? selection.filter((id) => id !== curElement.id)
           : [...selection, curElement.id];
 
-        dispatch(setSelectedElements, {
-          elementsIds: newSelection,
-        });
+        dispatch(
+          setSelectedElements({
+            elementsIds: newSelection,
+          })
+        );
       } else {
-        dispatch(setSelectedElements, {
-          elementsIds: [curElement.id],
-        });
+        dispatch(
+          setSelectedElements({
+            elementsIds: [curElement.id],
+          })
+        );
       }
     },
-    [elements, selection]
+    [dispatch, selection]
   );
 
   return { handleSelectElement };

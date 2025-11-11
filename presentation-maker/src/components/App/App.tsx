@@ -3,24 +3,21 @@ import SlidesList from '../SlidesList/SlidesList.tsx';
 import type { Presentation } from '../../store/types/types.ts';
 import Toolbar from '../Toolbar/Toolbar.tsx';
 import SlideEditor from '../SlideEditor/SlideEditor.tsx';
-import { dispatch } from '../../store/editor.ts';
 import {
   removeElementsFromSlide,
   removeSlide,
-} from '../../store/functions/functions.ts';
+} from '../../store/editorSlice.ts';
 import { useEffect, useCallback } from 'react';
-import { clearSelection } from '../../store/functions/utils/utils.ts';
+import { clearSelection } from '../../store/editorSlice.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
 
-interface AppProps extends Presentation {}
+export default function App() {
+  const { selection }: Presentation = useSelector(
+    (state: RootState) => state.editor
+  );
+  const dispatch = useDispatch();
 
-export default function App({
-  id,
-  title,
-  slides,
-  size,
-  selection,
-  mode,
-}: AppProps) {
   const handleDelete = useCallback(
     (evt: KeyboardEvent) => {
       const target = evt.target;
@@ -35,20 +32,24 @@ export default function App({
 
       if (evt.key === 'Backspace' || evt.key === 'Delete') {
         if (selection.selectedElementIds.length > 0) {
-          dispatch(removeElementsFromSlide, {
-            slideId: selection.selectedSlideIds[0],
-            elementIds: selection.selectedElementIds,
-          });
+          dispatch(
+            removeElementsFromSlide({
+              slideId: selection.selectedSlideIds[0],
+              elementIds: selection.selectedElementIds,
+            })
+          );
         } else if (selection.selectedSlideIds.length > 0) {
-          dispatch(removeSlide, {
-            slideIdsToRemove: selection.selectedSlideIds,
-          });
+          dispatch(
+            removeSlide({
+              slideIdsToRemove: selection.selectedSlideIds,
+            })
+          );
         }
       } else if (evt.key === 'Escape') {
-        dispatch(clearSelection);
+        dispatch(clearSelection());
       }
     },
-    [selection.selectedSlideIds, selection.selectedElementIds]
+    [selection.selectedElementIds, selection.selectedSlideIds, dispatch]
   );
 
   useEffect(() => {
@@ -60,19 +61,10 @@ export default function App({
 
   return (
     <section className={AppStyle.presentation}>
-      <Toolbar
-        presentationId={id}
-        presentationTitle={title}
-        presentationSelection={selection}
-      />
+      <Toolbar />
       <div className={AppStyle.presentation__container}>
-        <SlidesList slides={slides} size={size} selection={selection} />
-        <SlideEditor
-          slides={slides}
-          size={size}
-          selection={selection}
-          mode={mode}
-        />
+        <SlidesList />
+        <SlideEditor />
       </div>
     </section>
   );

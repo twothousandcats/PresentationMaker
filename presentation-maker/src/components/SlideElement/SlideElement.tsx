@@ -3,13 +3,13 @@ import type { Position, Size, SlideElement } from '../../store/types/types.ts';
 import {
   concatModifiersByFlag,
   getPercentValue,
-} from '../../store/functions/utils/utils.ts';
+} from '../../store/utils/functions.ts';
 import { DEFAULT_SLIDE_WIDTH } from '../../store/utils/config.ts';
-import { dispatch } from '../../store/editor.ts';
-import { changeTextElContent } from '../../store/functions/functions.ts';
+import { changeTextElContent } from '../../store/editorSlice.ts';
 import { type SyntheticEvent, useEffect, useRef } from 'react';
 import * as React from 'react';
 import { useSelectElements } from '../../store/hooks/useSelectElements.ts';
+import { useDispatch } from 'react-redux';
 
 type ElementProps = {
   element: SlideElement;
@@ -40,6 +40,8 @@ export default function SlideElement({
   dragOffset,
   resizePreview,
 }: ElementProps) {
+  const dispatch = useDispatch();
+
   const textRef = useRef<HTMLDivElement>(null);
 
   const handleDragStart = (evt: React.MouseEvent) => {
@@ -84,11 +86,11 @@ export default function SlideElement({
 
   const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
     const newContent = evt.currentTarget.innerHTML;
-    dispatch(changeTextElContent, {
+    dispatch(changeTextElContent({
       slideId: slideId,
       elementId: element.id,
       newContent: newContent,
-    });
+    }));
   };
   const classNames = concatModifiersByFlag([
     style.element,

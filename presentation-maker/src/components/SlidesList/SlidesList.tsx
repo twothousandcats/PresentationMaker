@@ -7,8 +7,9 @@ import type {
 import Slide from '../Slide/Slide.tsx';
 import { useSelectSlides } from '../../store/hooks/useSelectSlides.ts';
 import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
-import { dispatch } from '../../store/editor.ts';
-import { clearSelection } from '../../store/functions/utils/utils.ts';
+import { clearSelection } from '../../store/editorSlice.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
 
 interface SlidesListProps {
   slides: SlideType[];
@@ -16,11 +17,13 @@ interface SlidesListProps {
   selection: Selection;
 }
 
-export default function SlidesList({
-  slides,
-  size,
-  selection,
-}: SlidesListProps) {
+export default function SlidesList() {
+  const {
+    slides,
+    selection,
+  }: SlidesListProps = useSelector((state: RootState) => state.editor);
+  const dispatch = useDispatch();
+
   const { handleSelectSlide } = useSelectSlides({
     slides,
     selectedSlideIds: selection.selectedSlideIds,
@@ -41,19 +44,15 @@ export default function SlidesList({
             onClick={(event) => {
               handleSelectSlide(event, slide);
               if (selection.selectedElementIds.length > 0) {
-                dispatch(clearSelection);
+                dispatch(clearSelection());
               }
             }}
             onMouseDown={(event) => handleMouseDown(event, slide.id)}
           >
             <p className={style.holder__num}>{index + 1}</p>
             <Slide
-              slide={slide}
-              slideSize={size}
-              selection={selection}
+              slideId={slide.id}
               isEditable={false}
-              isActive={selection.selectedSlideIds.includes(slide.id)}
-              activeElements={selection.selectedSlideIds}
             />
           </li>
         ))}
