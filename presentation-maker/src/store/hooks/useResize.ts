@@ -1,13 +1,8 @@
-import type { Size, Slide, Position } from '../types/types.ts';
+import type { Slide, Position } from '../types/types.ts';
 import { useCallback, useState } from 'react';
 import { changeElPosition, changeElSize } from '../editorSlice.ts';
-import type { ResizeItem } from '../types/utility-types.ts';
+import type { ResizeItem, ResizePreview } from '../types/utility-types.ts';
 import { useDispatch } from 'react-redux';
-
-type ResizePreview = {
-  size: Size;
-  position: Position;
-};
 
 const MIN_SIZE = 10;
 

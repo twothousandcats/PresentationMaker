@@ -1,3 +1,5 @@
+import type { Position, Size } from './types.ts';
+
 type ResizeItem =
   | 'top'
   | 'right'
@@ -8,6 +10,11 @@ type ResizeItem =
   | 'bottomRight'
   | 'bottomLeft';
 
+type ResizePreview = {
+  size: Size;
+  position: Position;
+};
+
 type Theme = 'light' | 'dark';
 
-export type { ResizeItem, Theme };
+export type { ResizeItem, Theme, ResizePreview };
