@@ -1,4 +1,4 @@
-import type { EditorMode } from '../../store/types/types.ts';
+import type { EditorMode, Presentation } from '../../store/types/types.ts';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
@@ -15,8 +15,8 @@ export default function Slide({
   isEditable = false,
   mode,
 }: SlideProps) {
-  const { slides, size, selection } = useSelector(
-    (state: RootState) => state.editor
+  const { slides, size, selection }:Presentation = useSelector(
+    (state: RootState) => state.editor.present
   );
   const slide = slides.find((slide) => slide.id === slideId);
 

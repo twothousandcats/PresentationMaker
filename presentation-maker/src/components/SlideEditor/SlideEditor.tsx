@@ -1,24 +1,19 @@
 import style from './SlideEditor.module.css';
-import type {
-  Size,
-  Slide as SlideType,
-  Selection,
-  EditorMode,
-} from '../../store/types/types.ts';
+import type { Presentation } from '../../store/types/types.ts';
 import Slide from '../Slide/Slide.tsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 
-interface EditorProps {
-  slides: SlideType[];
-  size: Size;
-  selection: Selection;
-  mode: EditorMode;
-}
+// interface EditorProps {
+//   slides: SlideType[];
+//   size: Size;
+//   selection: Selection;
+//   mode: EditorMode;
+// }
 
 export default function SlideEditor() {
-  const { slides, size, selection, mode }: EditorProps = useSelector(
-    (state: RootState) => state.editor
+  const { slides, size, selection, mode }: Presentation = useSelector(
+    (state: RootState) => state.editor.present
   );
   const activeSlide = slides.find(
     (slide) =>
@@ -36,11 +31,7 @@ export default function SlideEditor() {
         }}
       >
         {activeSlide && (
-          <Slide
-            slideId={activeSlide.id}
-            isEditable={true}
-            mode={mode}
-          />
+          <Slide slideId={activeSlide.id} isEditable={true} mode={mode} />
         )}
       </div>
     </div>

@@ -1,9 +1,5 @@
 import style from './SlidesList.module.css';
-import type {
-  Slide as SlideType,
-  Size,
-  Selection,
-} from '../../store/types/types.ts';
+import type { Presentation } from '../../store/types/types.ts';
 import Slide from '../Slide/Slide.tsx';
 import { useSelectSlides } from '../../store/hooks/useSelectSlides.ts';
 import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
@@ -11,17 +7,10 @@ import { clearSelection } from '../../store/slices/editorSlice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 
-interface SlidesListProps {
-  slides: SlideType[];
-  size: Size;
-  selection: Selection;
-}
-
 export default function SlidesList() {
-  const {
-    slides,
-    selection,
-  }: SlidesListProps = useSelector((state: RootState) => state.editor);
+  const { slides, selection }: Presentation = useSelector(
+    (state: RootState) => state.editor.present
+  );
   const dispatch = useDispatch();
 
   const { handleSelectSlide } = useSelectSlides({
@@ -50,10 +39,7 @@ export default function SlidesList() {
             onMouseDown={(event) => handleMouseDown(event, slide.id)}
           >
             <p className={style.holder__num}>{index + 1}</p>
-            <Slide
-              slideId={slide.id}
-              isEditable={false}
-            />
+            <Slide slideId={slide.id} isEditable={false} />
           </li>
         ))}
     </ul>

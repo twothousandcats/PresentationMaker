@@ -39,10 +39,13 @@ export function createTextEl(): TextElement {
       y: 0,
     },
     size: {
-      width: 50,
-      height: 50,
+      width: 0,
+      height: 0,
     },
-    background: null,
+    background: {
+      type: 'solid',
+      color: '#f0f0f0',
+    },
     type: 'text',
     content: '',
     fontFamily: 'Arial',
@@ -60,10 +63,13 @@ export function createRectangleEl(): RectangleElement {
       y: 0,
     },
     size: {
-      width: 200,
-      height: 200,
+      width: 0,
+      height: 0,
     },
-    background: null,
+    background: {
+      type: 'solid',
+      color: '#f0f0f0',
+    },
     type: 'rectangle',
   };
 }

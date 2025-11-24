@@ -1,6 +1,5 @@
 import AppStyle from './App.module.css';
 import SlidesList from '../SlidesList/SlidesList.tsx';
-import type { Presentation } from '../../store/types/types.ts';
 import Toolbar from '../Toolbar/Toolbar.tsx';
 import SlideEditor from '../SlideEditor/SlideEditor.tsx';
 import {
@@ -13,8 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 
 export default function App() {
-  const { selection }: Presentation = useSelector(
-    (state: RootState) => state.editor
+  const { selection } = useSelector(
+    (state: RootState) => state.editor.present
   );
   const dispatch = useDispatch();
 

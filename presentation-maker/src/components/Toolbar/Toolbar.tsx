@@ -1,5 +1,9 @@
 import style from './Toolbar.module.css';
-import type { Background, Selection } from '../../store/types/types.ts';
+import type {
+  Background,
+  History,
+  Presentation,
+} from '../../store/types/types.ts';
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -19,9 +23,11 @@ import {
   addSlide,
   changeElementBg,
   changeSlideBg,
+  redo,
   removeSlide,
   renamePresentation,
   setEditorMode,
+  undo,
 } from '../../store/slices/editorSlice.ts';
 import { createDefaultSlide } from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
@@ -31,18 +37,13 @@ import IconRectangle from '../Icons/IconRectangle.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 
-interface ToolbarProps {
-  id: string;
-  title: string;
-  selection: Selection;
-}
-
 export default function Toolbar() {
-  const {
-    id,
-    title,
-    selection,
-  }: ToolbarProps = useSelector((state: RootState) => state.editor);
+  const { id, title, selection }: Presentation = useSelector(
+    (state: RootState) => state.editor.present
+  );
+  const { past, future }: History = useSelector(
+    (state: RootState) => state.editor
+  ); // TODO: написать вариативные селекторы
   const dispatch = useDispatch();
 
   const [isExpanded, setExpanded] = useState(false);
@@ -84,7 +85,7 @@ export default function Toolbar() {
     [dispatch, selection]
   );
 
-  const handleTitleChange = useCallback(
+  const handleChangeTitle = useCallback(
     (evt: ChangeEvent<HTMLInputElement>) => {
       const newName = evt.target.value;
       setNewTitle(newName);
@@ -163,9 +164,11 @@ export default function Toolbar() {
     {
       icon: <IconAddText />,
       fn: () =>
-        dispatch(setEditorMode({
-          mode: { type: 'placing', elementType: 'text' },
-        })),
+        dispatch(
+          setEditorMode({
+            mode: { type: 'placing', elementType: 'text' },
+          })
+        ),
       ariaLabel: 'Добавить текстовый элемент',
       disabled: selection.selectedSlideIds.length === 0,
     },
@@ -179,13 +182,21 @@ export default function Toolbar() {
     },
     {
       icon: <IconUndo />,
-      fn: () => console.log('undo'),
+      fn: () => {
+        console.log('undo');
+        dispatch(undo());
+      },
       ariaLabel: 'Отменить действие',
+      disabled: past.length === 0,
     },
     {
       icon: <IconRedo />,
-      fn: () => console.log('redo'),
+      fn: () => {
+        console.log('redo');
+        dispatch(redo());
+      },
       ariaLabel: 'Повторить действие',
+      disabled: future.length === 0,
     },
   ];
 
@@ -205,7 +216,7 @@ export default function Toolbar() {
               ref={inputRef}
               onClick={() => setExpanded(true)}
               onKeyDown={handleKeyDown}
-              onChange={handleTitleChange}
+              onChange={handleChangeTitle}
               readOnly={!isExpanded}
             />
           </li>

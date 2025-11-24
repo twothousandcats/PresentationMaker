@@ -2,23 +2,18 @@ import type {
   Background,
   EditorMode,
   Position,
-  Presentation,
   Size,
   Slide,
   SlideElement,
+  History,
 } from '../types/types.ts';
 import { mockPresentation } from '../utils/config.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
 
 const MAX_HISTORY_STACK_SIZE = 50;
-type HistoryState = {
-  past: Presentation[];
-  present: Presentation;
-  future: Presentation[];
-};
 
-const initialState: HistoryState = {
+const initialState: History = {
   past: [],
   present: mockPresentation,
   future: [],
@@ -55,7 +50,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -71,7 +68,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -88,7 +87,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -105,7 +106,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -122,7 +125,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -143,7 +148,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -161,7 +168,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -179,7 +188,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -197,7 +208,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -215,7 +228,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -232,7 +247,9 @@ const editorSlice = createSlice({
       }>
     ) => {
       const newPast = [...state.past, state.present];
-      checkPastOverflow(newPast);
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       return {
         past: newPast,
@@ -250,8 +267,8 @@ const editorSlice = createSlice({
     ) => {
       return {
         ...state,
-        present: pureActions.setSelectedSlides(state.present, action.payload)
-      }
+        present: pureActions.setSelectedSlides(state.present, action.payload),
+      };
     },
 
     setSelectedElements: (
@@ -262,8 +279,8 @@ const editorSlice = createSlice({
     ) => {
       return {
         ...state,
-        present: pureActions.setSelectedElements(state.present, action.payload)
-      }
+        present: pureActions.setSelectedElements(state.present, action.payload),
+      };
     },
 
     setEditorMode: (
@@ -274,15 +291,15 @@ const editorSlice = createSlice({
     ) => {
       return {
         ...state,
-        present: pureActions.setEditorMode(state.present, action.payload)
-      }
+        present: pureActions.setEditorMode(state.present, action.payload),
+      };
     },
 
     clearSelection: (state) => {
       return {
         ...state,
         present: pureActions.clearSelection(state.present),
-      }
+      };
     },
 
     undo: (state) => {
@@ -290,25 +307,33 @@ const editorSlice = createSlice({
         return;
       }
 
-      const previousState = state.past.pop()!;
-      state.future.unshift(state.present);
-      state.present = previousState;
-
-      if (state.future.length > MAX_HISTORY_STACK_SIZE) {
-        state.future.length = MAX_HISTORY_STACK_SIZE;
+      const newFuture = [state.present, ...state.future];
+      if (newFuture.length > MAX_HISTORY_STACK_SIZE) {
+        // сохранили размерность (конец)
+        newFuture.pop();
       }
+
+      return {
+        past: state.past.slice(0, -1), // удалили последний
+        present: state.past[state.past.length - 1], // теперь он текущий
+        future: newFuture,
+      };
     },
     redo: (state) => {
       if (!state.future.length) {
         return;
       }
 
-      const nextState = state.future.shift()!;
-      state.past.push(state.present);
-      state.present = nextState;
+      const newPast = [...state.past, state.present];
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        // сохранили размерность (начало)
+        newPast.shift();
+      }
 
-      if (state.past.length > MAX_HISTORY_STACK_SIZE) {
-        state.past.shift();
+      return {
+        past: newPast,
+        present: state.future[0], // берем сверху
+        future: state.future.slice(1), // вырезали взятый
       }
     },
   },
@@ -331,6 +356,8 @@ export const {
   setSelectedElements,
   setEditorMode,
   clearSelection,
+  undo,
+  redo,
 } = editorSlice.actions;
 
 export default editorSlice.reducer;
