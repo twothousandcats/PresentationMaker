@@ -1,8 +1,5 @@
-import type {
-  RectangleElement,
-  Slide,
-  TextElement,
-} from '../types/types';
+import type { RectangleElement, Slide, TextElement } from '../types/types';
+import type { RefObject } from 'react';
 
 export function getRandomId() {
   return crypto.randomUUID();
@@ -18,6 +15,16 @@ export function concatModifiersByFlag(classNames: string[]) {
 
 export function getPercentValue(v1: number, v2: number): number {
   return (v1 / v2) * 100;
+}
+
+export function deselectInputAndBlur(
+  input: RefObject<HTMLInputElement | null>
+) {
+  if (input.current) {
+    const len = input.current.value.length;
+    input.current.setSelectionRange(len, len);
+    input.current.blur();
+  }
 }
 
 export function createDefaultSlide(): Slide {
