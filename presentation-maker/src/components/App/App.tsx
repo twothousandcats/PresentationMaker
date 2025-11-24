@@ -6,9 +6,9 @@ import SlideEditor from '../SlideEditor/SlideEditor.tsx';
 import {
   removeElementsFromSlide,
   removeSlide,
-} from '../../store/editorSlice.ts';
+} from '../../store/slices/editorSlice.ts';
 import { useEffect, useCallback } from 'react';
-import { clearSelection } from '../../store/editorSlice.ts';
+import { clearSelection } from '../../store/slices/editorSlice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 

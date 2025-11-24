@@ -5,7 +5,7 @@ import {
   getPercentValue,
 } from '../../store/utils/functions.ts';
 import { DEFAULT_SLIDE_WIDTH } from '../../store/utils/config.ts';
-import { changeTextElContent } from '../../store/editorSlice.ts';
+import { changeTextElContent } from '../../store/slices/editorSlice.ts';
 import { type SyntheticEvent, useEffect, useRef } from 'react';
 import * as React from 'react';
 import { useSelectElements } from '../../store/hooks/useSelectElements.ts';

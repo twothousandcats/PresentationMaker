@@ -1,6 +1,6 @@
 import type { Slide } from '../types/types.ts';
 import { useCallback } from 'react';
-import { setSelectedSlides } from '../editorSlice.ts';
+import { setSelectedSlides } from '../slices/editorSlice.ts';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 

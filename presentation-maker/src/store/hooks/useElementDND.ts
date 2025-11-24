@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Position, Selection, Slide } from '../types/types.ts';
-import { changeElPosition } from '../editorSlice.ts';
+import { changeElPosition } from '../slices/editorSlice.ts';
 import { useDispatch } from 'react-redux';
 
 const calculateDelta = (clientPos: number, startMousePos: number) => {

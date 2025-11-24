@@ -1,6 +1,6 @@
 import type { Slide, Position } from '../types/types.ts';
 import { useCallback, useState } from 'react';
-import { changeElPosition, changeElSize } from '../editorSlice.ts';
+import { changeElPosition, changeElSize } from '../slices/editorSlice.ts';
 import type { ResizeItem, ResizePreview } from '../types/utility-types.ts';
 import { useDispatch } from 'react-redux';
 

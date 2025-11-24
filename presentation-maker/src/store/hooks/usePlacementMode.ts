@@ -10,7 +10,7 @@ import {
   addElementToSlide,
   setEditorMode,
   setSelectedElements,
-} from '../editorSlice.ts';
+} from '../slices/editorSlice.ts';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 

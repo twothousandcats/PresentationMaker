@@ -91,12 +91,6 @@ type Placing = {
 
 type EditorMode = Idle | Placing;
 
-type History = {
-    past: Presentation[];
-    present: Presentation;
-    future: Presentation[]
-}
-
 export type {
   Position,
   Size,
@@ -115,5 +109,4 @@ export type {
   Selection,
   Presentation,
   EditorMode,
-  History,
 };

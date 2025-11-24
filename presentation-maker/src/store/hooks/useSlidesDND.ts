@@ -3,7 +3,7 @@ import {
   useCallback,
   useRef
 } from 'react';
-import { moveSlides } from '../editorSlice.ts';
+import { moveSlides } from '../slices/editorSlice.ts';
 import type { Slide } from '../types/types.ts';
 import { useDispatch } from 'react-redux';
 

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { setSelectedElements } from '../editorSlice.ts';
+import { setSelectedElements } from '../slices/editorSlice.ts';
 import type { SlideElement } from '../types/types.ts';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';

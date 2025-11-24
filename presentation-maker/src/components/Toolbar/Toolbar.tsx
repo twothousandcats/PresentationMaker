@@ -22,7 +22,7 @@ import {
   removeSlide,
   renamePresentation,
   setEditorMode,
-} from '../../store/editorSlice.ts';
+} from '../../store/slices/editorSlice.ts';
 import { createDefaultSlide } from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
