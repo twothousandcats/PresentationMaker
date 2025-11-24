@@ -6,9 +6,9 @@ import type {
   Size,
   Slide,
   SlideElement, TextElement,
-} from './types/types.ts';
-import { getRandomId } from './utils/functions.ts';
-import { PRESENTATION_SIZE } from './utils/config.ts';
+} from '../types/types.ts';
+import { getRandomId } from '../utils/functions.ts';
+import { PRESENTATION_SIZE } from '../utils/config.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 // TODO: убрать mocks перед сдачей проекта
