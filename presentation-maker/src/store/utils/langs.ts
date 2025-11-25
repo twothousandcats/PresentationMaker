@@ -1,5 +1,7 @@
 const LANGUAGES = {
   ru: {
+    projectName: 'Presentation Maker',
+
     imageDialogHeading: 'Укажите ссылку',
     dialogCancel: 'Отмена',
     dialogSubmit: 'Добавить',
@@ -10,9 +12,11 @@ const LANGUAGES = {
 
     noSlides: 'Слайдов нет',
 
+    loginTitle: 'Авторизация',
     submitLogin: 'Войти',
-    registrationTitle: 'Зарегистрироваться',
+    registrationTitle: 'Регистрация',
     submitRegistration: 'Зарегистрироваться',
+    loginToRegistration: 'Не зарегистрированы?'
   },
 };
 
