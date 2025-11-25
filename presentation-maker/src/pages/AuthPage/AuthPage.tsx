@@ -68,6 +68,7 @@ export function AuthPage() {
       {
         // <ThemeSwitcher />
         // TODO: можно ли убрать ul из ThemeSwitcher?
+        // TODO: Добавить UserIcon на уровень ThemeSwitcher (hexBgByUserName)
         // TODO: Добавить LogoutBtn на уровень ThemeSwitcher
       }
       <form onSubmit={handleSubmit} className={style.form}>
