@@ -32,7 +32,6 @@ import {
 import { createDefaultSlide } from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
-import ThemeSwitcher from '../ThemeSwitcher/ThemeSwitcher.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
@@ -230,7 +229,6 @@ export default function Toolbar() {
             />
           ))}
         </ul>
-        <ThemeSwitcher />
       </div>
 
       <AddBgDialog

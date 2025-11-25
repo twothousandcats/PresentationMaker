@@ -13,16 +13,13 @@ import type { Theme } from './store/types/utility-types.ts';
 import { LOCAL_STORAGE_NAMES, PAGES_URL } from './store/utils/config.ts';
 import { store } from './store/store.ts';
 import { Provider } from 'react-redux';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from 'react-router-dom';
+import { NotFound } from './pages/NotFound/NotFound.tsx';
+import { EditorPage } from './pages/Editor/EditorPage.tsx';
+import { CollectionPage } from './pages/CollectionPage/CollectionPage.tsx';
+import { ProtectedLayout } from './components/ProtectedLayout/ProtectedLayout.tsx';
 import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
-import { CollectionPage } from './pages/CollectionPage.tsx';
-import * as React from 'react';
-import { isAuth } from './lib/authService.ts';
-import App from './components/App/App.tsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AppRoot } from './components/AppRoot/AppRoot.tsx';
 
 export const ThemeContext = createContext<ThemeInterface>({
   theme: 'light',
@@ -52,51 +49,16 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const auth = await isAuth();
-      setIsAuthenticated(auth);
-      setIsAuthChecked(true);
-    };
-
-    checkAuth();
-  }, []);
-
-  if (!isAuthChecked) {
-    return <div> Loading... </div>; // TODO: создать прелоудер
-  }
-
-  return isAuthenticated ? (
-    <>{children}</>
-  ) : (
-    <Navigate to={PAGES_URL.loginPage} replace />
-  );
-};
-
 const router = createBrowserRouter([
   { path: PAGES_URL.loginPage, element: <AuthPage /> },
   {
-    path: PAGES_URL.collectionPage,
-    element: (
-      <ProtectedRoute>
-        <CollectionPage />
-      </ProtectedRoute>
-    ),
+    element: <ProtectedLayout />,
+    children: [
+      { path: PAGES_URL.collectionPage, element: <CollectionPage /> },
+      { path: PAGES_URL.editorPage, element: <EditorPage /> },
+    ],
   },
-  {
-    path: PAGES_URL.editorPage,
-    element: (
-      <ProtectedRoute>
-        <App />
-      </ProtectedRoute>
-    ),
-  },
-
-  { path: '*', element: <Navigate to={PAGES_URL.collectionPage} replace /> },
+  { path: '*', element: <NotFound /> },
 ]);
 
 const container = document.getElementById('root')!;
@@ -107,7 +69,9 @@ function processRender() {
     <StrictMode>
       <Provider store={store}>
         <ThemeProvider>
-          <RouterProvider router={router} />
+          <AppRoot>
+            <RouterProvider router={router} />
+          </AppRoot>
         </ThemeProvider>
       </Provider>
     </StrictMode>

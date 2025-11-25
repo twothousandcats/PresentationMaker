@@ -8,14 +8,13 @@ import { concatModifiersByFlag } from '../../store/utils/functions.ts';
 export default function ThemeSwitcher() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const themeClass = concatModifiersByFlag([
-    style.theme,
+    style.themeSwitcher,
     theme === 'light' ? style.light : style.dark,
   ]);
   return (
-    <ul className={style.themeSwitcher} onClick={toggleTheme}>
-      <li className={themeClass}>
+      <li className={themeClass}
+          onClick={toggleTheme}>
         {theme === 'light' ? <IconSun /> : <IconMoon />}
       </li>
-    </ul>
   );
 }

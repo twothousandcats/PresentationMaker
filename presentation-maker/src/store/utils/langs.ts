@@ -16,7 +16,9 @@ const LANGUAGES = {
     submitLogin: 'Войти',
     registrationTitle: 'Регистрация',
     submitRegistration: 'Зарегистрироваться',
-    loginToRegistration: 'Не зарегистрированы?'
+    loginToRegistration: 'Не зарегистрированы?',
+
+    notFoundPage: 'Страница не существует, либо перенесена',
   },
 };
 

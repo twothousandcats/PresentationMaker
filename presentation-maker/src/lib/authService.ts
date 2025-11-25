@@ -87,7 +87,7 @@ export async function logout() {
   }
 }
 
-export async function isAuth() {
+export async function isAuthenticated() {
   try {
     await account.get();
     return true;

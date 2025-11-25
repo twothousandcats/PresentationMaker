@@ -1,153 +1,145 @@
 /* default light theme */
 :root {
-  /* FONT */
-  --base-font: 'Golos UI', sans-serif;
+    /* FONT */
+    --base-font: 'Golos UI', sans-serif;
+    --extra-font: 'Geologica', sans-serif;
 
-  /* BACKGROUND */
-  --default-bg-color: #f9fbfd;
-  --accent-bg-color: #f0f4f9;
-  --accent-bg-color2: #cbcbcb;
-  --modal-overlay-bg: #444746;
+    /* BACKGROUND */
+    --default-bg-color: #f9fbfd;
+    --accent-bg-color: #f0f4f9;
+    --accent-bg-color2: #cbcbcb;
+    --modal-overlay-bg: #444746;
 
-  /* BORDER */
-  --default-border-color: #c4c7c5;
-  --accent-border-color: #7b7b7b;
-  --selected-border-color: #53a4ca;
+    /* BORDER */
+    --default-border-color: #c4c7c5;
+    --accent-border-color: #7b7b7b;
+    --selected-border-color: #53a4ca;
 
-  /* TEXT */
-  --default-text-color: #444746;
+    /* TEXT */
+    --default-text-color: #444746;
 
-  /* RGB */
-  --accent-border-color-rgb: 123, 123, 123;
+    /* RGB */
+    --accent-border-color-rgb: 123, 123, 123;
 
-  /* ICONS */
-  --default-icon-stroke: #000;
+    /* ICONS */
+    --default-icon-stroke: #000;
 
-  /* SCROLLBAR */
-  --scroll-track-color: #f1f1f1;
-  --scroll-thumb-color: #888888;
+    /* SCROLLBAR */
+    --scroll-track-color: #f1f1f1;
+    --scroll-thumb-color: #888888;
 
     /* FORM SETTINGS */
-    --form-font: 'Geologica', sans-serif;
     --form-button-bg-default: #fd376e;
 
     --form-button-text-default: #ffeaf0;
-    --form-button-text-accent:  var(--form-button-bg-default);
+    --form-button-text-accent: var(--form-button-bg-default);
 
     --form-wrapper-bg-default: #19191c;
 }
 
 /* dark theme */
 [data-theme='dark'] {
-  /* BACKGROUND */
-  --default-bg-color: #12181d;
-  --accent-bg-color: #1a222b;
-  --accent-bg-color2: #5a5a5a;
-  --modal-overlay-bg: #bcbfc0;
+    /* BACKGROUND */
+    --default-bg-color: #12181d;
+    --accent-bg-color: #1a222b;
+    --accent-bg-color2: #5a5a5a;
+    --modal-overlay-bg: #bcbfc0;
 
-  /* BORDER */
-  --default-border-color: #5a5d5b;
-  --accent-border-color: #a1a1a1;
-  --selected-border-color: #4a8c9e;
+    /* BORDER */
+    --default-border-color: #5a5d5b;
+    --accent-border-color: #a1a1a1;
+    --selected-border-color: #4a8c9e;
 
-  /* TEXT */
-  --default-text-color: #fbfcfd;
+    /* TEXT */
+    --default-text-color: #fbfcfd;
 
-  /* RGB (для прозрачности и градиентов) */
-  --accent-border-color-rgb: 161, 161, 161;
+    /* RGB (для прозрачности и градиентов) */
+    --accent-border-color-rgb: 161, 161, 161;
 
-  /* ICONS */
-  --default-icon-stroke: #fff;
+    /* ICONS */
+    --default-icon-stroke: #fff;
 
-  /* SCROLLBAR */
-  --scroll-track-color: #1e1e1e;
-  --scroll-thumb-color: #aaaaaa;
+    /* SCROLLBAR */
+    --scroll-track-color: #1e1e1e;
+    --scroll-thumb-color: #aaaaaa;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 
-  font-family: var(--base-font);
-  line-height: 1;
+    font-family: var(--base-font);
+    line-height: 1;
 
-  outline: none;
+    outline: none;
 }
 
 ul,
 ol {
-  list-style: none;
+    list-style: none;
 }
 
 @font-face {
-  font-family: 'Golos UI';
-  src:
-    url('./assets/fonts/Golos/Golos-UI_Regular.woff2') format('woff2'),
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos/Golos-UI_Regular.woff2') format('woff2'),
     url('./assets/fonts/Golos/Golos-UI_Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Golos UI';
-  src:
-    url('./assets/fonts/Golos/Golos-UI_Medium.woff2') format('woff2'),
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos/Golos-UI_Medium.woff2') format('woff2'),
     url('./assets/fonts/Golos/Golos-UI_Medium.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Golos UI';
-  src:
-    url('./assets/fonts/Golos/Golos-UI_Medium.woff2') format('woff2'),
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos/Golos-UI_Medium.woff2') format('woff2'),
     url('./assets/fonts/Golos/Golos-UI_Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Golos UI';
-  src:
-    url('./assets/fonts/Golos/Golos-UI_Bold.woff2') format('woff2'),
+    font-family: 'Golos UI';
+    src: url('./assets/fonts/Golos/Golos-UI_Bold.woff2') format('woff2'),
     url('./assets/fonts/Golos/Golos-UI_Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Geologica';
-  src:
-    url('./assets/fonts/Geologica/Geologica-Regular.woff2') format('woff2'),
+    font-family: 'Geologica';
+    src: url('./assets/fonts/Geologica/Geologica-Regular.woff2') format('woff2'),
     url('./assets/fonts/Geologica/Geologica-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Geologica';
-  src:
-    url('./assets/fonts/Geologica/Geologica-Medium.woff2') format('woff2'),
+    font-family: 'Geologica';
+    src: url('./assets/fonts/Geologica/Geologica-Medium.woff2') format('woff2'),
     url('./assets/fonts/Geologica/Geologica-Medium.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
+    font-weight: 600;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Geologica';
-  src:
-    url('./assets/fonts/Geologica/Geologica-Medium.woff2') format('woff2'),
+    font-family: 'Geologica';
+    src: url('./assets/fonts/Geologica/Geologica-Medium.woff2') format('woff2'),
     url('./assets/fonts/Geologica/Geologica-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Geologica';
-  src:
-    url('./assets/fonts/Geologica/Geologica-Bold.woff2') format('woff2'),
+    font-family: 'Geologica';
+    src: url('./assets/fonts/Geologica/Geologica-Bold.woff2') format('woff2'),
     url('./assets/fonts/Geologica/Geologica-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
+    font-weight: 700;
+    font-style: normal;
 }

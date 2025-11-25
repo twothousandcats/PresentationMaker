@@ -1,0 +1,29 @@
+/* Circular gradient loading spinner */
+.loader {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    /* No solid background color, only a gradient border */
+    background: conic-gradient(
+            from 0deg,
+            #3A7BFF 0deg,
+            #70D7FF 270deg,
+            rgba(180, 254, 221, 0) 320deg,
+            rgba(180, 254, 221, 0) 360deg
+    );
+    mask: radial-gradient(
+            farthest-side,
+            transparent calc(100% - 5px),
+            #000 calc(100% - 5px)
+    );
+
+    /* Infinite spinning animation */
+    animation: spin 1s linear infinite;
+}
+
+/* Rotation keyframes */
+@keyframes spin {
+    to {
+        transform: rotate(-360deg);
+    }
+}

@@ -1,19 +1,20 @@
-import AppStyle from './App.module.css';
-import SlidesList from '../SlidesList/SlidesList.tsx';
-import Toolbar from '../Toolbar/Toolbar.tsx';
-import SlideEditor from '../SlideEditor/SlideEditor.tsx';
+import style from './EditorPage.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
+import { useCallback, useEffect } from 'react';
 import {
+  clearSelection,
   redo,
   removeElementsFromSlide,
   removeSlide,
   undo,
 } from '../../store/slices/editorSlice.ts';
-import { useEffect, useCallback } from 'react';
-import { clearSelection } from '../../store/slices/editorSlice.ts';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
+import Toolbar from '../../components/Toolbar/Toolbar.tsx';
+import SlidesList from '../../components/SlidesList/SlidesList.tsx';
+import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 
-export default function App() {
+
+export const EditorPage = () => {
   const { selection } = useSelector(
     (state: RootState) => state.editor.present
   );
@@ -78,9 +79,9 @@ export default function App() {
   }, [handleKeydown]);
 
   return (
-    <section className={AppStyle.presentation}>
+    <section className={style.presentation}>
       <Toolbar />
-      <div className={AppStyle.presentation__container}>
+      <div className={style.presentation__container}>
         <SlidesList />
         <SlideEditor />
       </div>
