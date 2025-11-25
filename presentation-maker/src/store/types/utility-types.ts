@@ -16,5 +16,6 @@ type ResizePreview = {
 };
 
 type Theme = 'light' | 'dark';
+type AuthMode = 'login' | 'register';
 
-export type { ResizeItem, Theme, ResizePreview };
+export type { ResizeItem, Theme, ResizePreview, AuthMode };

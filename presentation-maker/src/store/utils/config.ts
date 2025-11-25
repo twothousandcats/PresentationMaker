@@ -16,6 +16,12 @@ const LOCAL_STORAGE_NAMES = {
   theme: 'app-theme',
 };
 
+const PAGES_URL = {
+  editorPage: '/',
+  loginPage: '/login/',
+  collectionPage: '/collection/',
+}
+
 const emptyPresentation: Presentation = {
   id: getRandomId(),
   title: '',
@@ -148,6 +154,7 @@ export {
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
   getPortal,
+  PAGES_URL,
   emptyPresentation,
   mockPresentation,
 };

@@ -19,12 +19,12 @@ const TABS = [
   {
     type: 'image' as const,
     icon: <IconAddImage />,
-    ariaLabel: LANGUAGES.dialogImageTab,
+    ariaLabel: LANGUAGES.ru.dialogImageTab,
   },
   {
     type: 'color' as const,
     icon: <IconBrush />,
-    ariaLabel: LANGUAGES.dialogColorTab,
+    ariaLabel: LANGUAGES.ru.dialogColorTab,
   },
 ];
 
@@ -36,8 +36,8 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
 
   const title =
     type === 'image'
-      ? LANGUAGES.imageDialogHeading
-      : LANGUAGES.colorDialogHeading;
+      ? LANGUAGES.ru.imageDialogHeading
+      : LANGUAGES.ru.colorDialogHeading;
 
   const changeBgType = (newType: 'image' | 'color') => {
     setType(newType);
@@ -122,8 +122,8 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
         )}
 
         <div className={style.holder__btns}>
-          <ModalButton fn={handleSubmit} placeHolder={LANGUAGES.dialogSubmit} />
-          <ModalButton fn={onClose} placeHolder={LANGUAGES.dialogCancel} />
+          <ModalButton fn={handleSubmit} placeHolder={LANGUAGES.ru.dialogSubmit} />
+          <ModalButton fn={onClose} placeHolder={LANGUAGES.ru.dialogCancel} />
         </div>
       </div>
     </Modal>

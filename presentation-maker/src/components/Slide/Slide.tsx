@@ -21,7 +21,7 @@ export default function Slide({
   const slide = slides.find((slide) => slide.id === slideId);
 
   if (!slide) {
-    return <div>{LANGUAGES.noSlides}</div>;
+    return <div>{LANGUAGES.ru.noSlides}</div>;
   }
 
   return (

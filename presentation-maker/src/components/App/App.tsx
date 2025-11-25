@@ -3,8 +3,10 @@ import SlidesList from '../SlidesList/SlidesList.tsx';
 import Toolbar from '../Toolbar/Toolbar.tsx';
 import SlideEditor from '../SlideEditor/SlideEditor.tsx';
 import {
+  redo,
   removeElementsFromSlide,
   removeSlide,
+  undo,
 } from '../../store/slices/editorSlice.ts';
 import { useEffect, useCallback } from 'react';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
@@ -17,9 +19,9 @@ export default function App() {
   );
   const dispatch = useDispatch();
 
-  const handleDelete = useCallback(
-    (evt: KeyboardEvent) => {
-      const target = evt.target;
+  const handleKeydown = useCallback(
+    (event: KeyboardEvent) => {
+      const target = event.target;
       if (
         target instanceof HTMLElement &&
         (target.tagName === 'INPUT' ||
@@ -29,7 +31,7 @@ export default function App() {
         return;
       }
 
-      if (evt.key === 'Backspace' || evt.key === 'Delete') {
+      if (event.key === 'Backspace' || event.key === 'Delete') {
         if (selection.selectedElementIds.length > 0) {
           dispatch(
             removeElementsFromSlide({
@@ -44,19 +46,36 @@ export default function App() {
             })
           );
         }
-      } else if (evt.key === 'Escape') {
+      } else if (event.key === 'Escape') {
         dispatch(clearSelection());
+      } else
+      if (
+        (event.ctrlKey && event.key.toLowerCase() === 'z') ||
+        (event.metaKey && event.key.toLowerCase() === 'z')
+      ) {
+        event.preventDefault();
+        dispatch(undo());
+      } else if (
+        (event.ctrlKey && event.key.toLowerCase() === 'y') ||
+        (event.metaKey && event.key.toLowerCase() === 'y')
+      ) {
+        event.preventDefault();
+        dispatch(redo());
       }
     },
-    [selection.selectedElementIds, selection.selectedSlideIds, dispatch]
+    [
+      selection.selectedElementIds,
+      selection.selectedSlideIds,
+      dispatch
+    ]
   );
 
   useEffect(() => {
-    document.addEventListener('keydown', handleDelete as EventListener);
+    document.addEventListener('keydown', handleKeydown);
     return () => {
-      document.removeEventListener('keydown', handleDelete as EventListener);
+      document.removeEventListener('keydown', handleKeydown);
     };
-  }, [handleDelete]);
+  }, [handleKeydown]);
 
   return (
     <section className={AppStyle.presentation}>

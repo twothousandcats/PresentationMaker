@@ -26,6 +26,12 @@
   /* SCROLLBAR */
   --scroll-track-color: #f1f1f1;
   --scroll-thumb-color: #888888;
+
+    /* FORM SETTINGS */
+    --form-button-bg-default: #fd376e;
+
+    --form-button-text-default: #ffeaf0;
+    --form-button-text-accent:  var(--form-button-bg-default);
 }
 
 /* dark theme */

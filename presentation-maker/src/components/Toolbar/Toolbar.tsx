@@ -125,7 +125,9 @@ export default function Toolbar() {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [handleClickOutside]);
 
   const toolbarButtons = [
@@ -183,7 +185,6 @@ export default function Toolbar() {
     {
       icon: <IconUndo />,
       fn: () => {
-        console.log('undo');
         dispatch(undo());
       },
       ariaLabel: 'Отменить действие',
@@ -192,7 +193,6 @@ export default function Toolbar() {
     {
       icon: <IconRedo />,
       fn: () => {
-        console.log('redo');
         dispatch(redo());
       },
       ariaLabel: 'Повторить действие',
