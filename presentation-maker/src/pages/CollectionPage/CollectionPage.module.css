@@ -1,3 +1,71 @@
 .collection {
+    width: 100%;
+    padding: 10px;
 
+    font-family: var(--base-font);
+    color: var(--default-text-color);
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+
+    border-radius: 20px;
+    background-color: var(--accent-bg-color);
+}
+
+.heading {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+
+    border-bottom: 1px solid var(--accent-border-color);
+}
+
+.collectionList {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.collectionItem {
+    width: 300px;
+    height: 200px;
+
+    border: 1px solid var(--accent-border-color);
+    border-radius: 10px;
+
+    transition: box-shadow 0.3s ease;
+
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 0 10px var(--form-button-bg-default);
+    }
+}
+
+.createItem {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+
+    &:before,
+    &:after {
+        content: "";
+        position: absolute;
+
+        width: 20px;
+        height: 2px;
+
+        background-color: var(--form-button-bg-default);
+    }
+
+
+    &:after {
+        rotate: 90deg;
+    }
 }

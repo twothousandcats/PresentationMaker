@@ -20,11 +20,10 @@ export async function savePresentation(
   const data = prepareData(presentation, creatorId);
   const permissions = [
     `read("user:${creatorId}")`,
-    `write("user:${creatorId}")`
+    `write("user:${creatorId}")`,
   ];
 
   try {
-    console.log(presentation.isNew);
     if (!presentation.isNew) {
       return await databases.updateDocument(
         DATABASE_ID,
@@ -37,7 +36,7 @@ export async function savePresentation(
       return await databases.createDocument(
         DATABASE_ID,
         COLLECTION_ID,
-        'unique()',
+        presentation.id,
         data,
         permissions
       );
@@ -64,6 +63,7 @@ export async function getPresentation(id: string) {
       mode: {
         type: 'idle' as const,
       },
+      isNew: false,
     } as Presentation;
   } catch (error) {
     console.error('Ошибка загрузки презентации: ', error);

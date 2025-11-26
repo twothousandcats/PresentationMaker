@@ -1,8 +1,11 @@
 import type {
+  Presentation,
   RectangleElement,
   Slide,
   TextElement,
 } from '../types/types';
+import { PRESENTATION_SIZE } from './config.ts';
+import { LANGUAGES } from './langs.ts';
 
 export function getRandomId() {
   return crypto.randomUUID();
@@ -73,3 +76,21 @@ export function createRectangleEl(): RectangleElement {
     type: 'rectangle',
   };
 }
+
+export const createNewPresentation = (): Presentation => {
+  return {
+    id: getRandomId(),
+    title: LANGUAGES.ru.newPresentationTitle,
+    slides: [],
+    size: {
+      width: PRESENTATION_SIZE.width,
+      height: PRESENTATION_SIZE.height,
+    },
+    selection: {
+      selectedSlideIds: [],
+      selectedElementIds: [],
+    },
+    mode: { type: 'idle' },
+    isNew: true,
+  };
+};

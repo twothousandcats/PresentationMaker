@@ -1,6 +1,5 @@
 import { getRandomId } from './functions.ts';
 import type { Presentation } from '../types/types.ts';
-import { LANGUAGES } from './langs.ts';
 
 const autoSaveDelayMS: number = 10000;
 
@@ -24,22 +23,6 @@ const PAGES_URL = {
   loginPage: '/login/',
   collectionPage: '/collection/',
 }
-
-const emptyPresentation: Presentation = {
-  id: '',
-  title: LANGUAGES.ru.newPresentationTitle,
-  slides: [],
-  size: {
-    width: PRESENTATION_SIZE.width,
-    height: PRESENTATION_SIZE.height,
-  },
-  selection: {
-    selectedSlideIds: [],
-    selectedElementIds: [],
-  },
-  mode: { type: 'idle' },
-  isNew: true,
-};
 
 const mockPresentation: Presentation = {
   id: getRandomId(),
@@ -161,6 +144,5 @@ export {
   PRESENTATION_SIZE,
   getPortal,
   PAGES_URL,
-  emptyPresentation,
   mockPresentation,
 };

@@ -18,6 +18,12 @@
     color: var(--default-text-color);
 
     transition: color 0.3s ease;
+
+    cursor: pointer;
+
+    &:hover {
+        color: var(--form-button-text-accent);
+    }
 }
 
 .handlers {

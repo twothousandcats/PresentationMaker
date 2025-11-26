@@ -23,6 +23,7 @@ import {
   addSlide,
   changeElementBg,
   changeSlideBg,
+  markAsSaved,
   redo,
   removeSlide,
   renamePresentation,
@@ -35,14 +36,16 @@ import IconButton from '../IconButton/IconButton.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
+import { getCurrentUser } from '../../lib/authService.ts';
+import { savePresentation } from '../../lib/presentationService.ts';
 
 export default function Toolbar() {
   const { id, title, selection }: Presentation = useSelector(
     (state: RootState) => state.editor.present
   );
-  const { past, future }: History = useSelector(
+  const { past, present, future }: History = useSelector(
     (state: RootState) => state.editor
-  ); // TODO: написать вариативные селекторы
+  );
   const dispatch = useDispatch();
 
   const [isExpanded, setExpanded] = useState(false);
@@ -129,10 +132,25 @@ export default function Toolbar() {
     };
   }, [handleClickOutside]);
 
+  const handleSave = async () => {
+    try {
+      const user = await getCurrentUser();
+
+      await savePresentation(present, user!.$id);
+      if (present.isNew) {
+        dispatch(markAsSaved());
+        console.log('Флаг с новой презентации снят');
+      }
+      console.log('Презентация успешно сохранена в БД');
+    } catch (error) {
+      console.error('Ошибка сохранения презентации в БД: ', error);
+    }
+  };
+
   const toolbarButtons = [
     {
       icon: <IconDownload />,
-      fn: () => console.log('Сохранить как'),
+      fn: async () => await handleSave(),
       ariaLabel: 'Сохранить презентацию',
     },
     {

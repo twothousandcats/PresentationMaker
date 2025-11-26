@@ -55,7 +55,8 @@ const router = createBrowserRouter([
     element: <ProtectedLayout />,
     children: [
       { path: PAGES_URL.collectionPage, element: <CollectionPage /> },
-      { path: PAGES_URL.editorPage, element: <EditorPage /> },
+      { path: PAGES_URL.editorPage, element: <EditorPage /> }, // new
+      { path: `${PAGES_URL.editorPage}/:id`, element: <EditorPage /> }, // exist
     ],
   },
   { path: '*', element: <NotFound /> },
@@ -66,7 +67,6 @@ const root: Root = createRoot(container);
 
 function processRender() {
   root.render(
-    <StrictMode>
       <Provider store={store}>
         <ThemeProvider>
           <AppRoot>
@@ -74,7 +74,6 @@ function processRender() {
           </AppRoot>
         </ThemeProvider>
       </Provider>
-    </StrictMode>
   );
 }
 

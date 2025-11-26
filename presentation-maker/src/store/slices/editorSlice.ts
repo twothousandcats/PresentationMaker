@@ -6,23 +6,23 @@ import type {
   Slide,
   SlideElement,
   History,
+  Presentation,
 } from '../types/types.ts';
-import { emptyPresentation } from '../utils/config.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
+import { createNewPresentation } from '../utils/functions.ts';
 
 const MAX_HISTORY_STACK_SIZE = 50;
 
 const initialState: History = {
   past: [],
-  present: emptyPresentation,
+  present: createNewPresentation(),
   future: [],
-  lastSavedHash: null,
 };
 
 const editorSlice = createSlice({
   name: 'editor',
-  initialState: initialState, // TODO: заменить mocks перед сдачей проекта
+  initialState: initialState,
 
   // Immer
   reducers: {
@@ -339,18 +339,25 @@ const editorSlice = createSlice({
       };
     },
 
-    setLastSavedHash: (state, action: PayloadAction<string>) => {
-      state.lastSavedHash = action.payload;
+    loadPresentation: (state, action: PayloadAction<Presentation>) => {
+      return {
+        ...state,
+        present: action.payload,
+      }
     },
 
-    setPresentationId: (state, action: PayloadAction<string>) => {
-      state.present.id = action.payload;
-      state.present.isNew = false;
+    markAsSaved: (state) => {
+      return {
+        ...state,
+        present: pureActions.markAsSaved(state.present),
+      };
     },
   },
 });
 
 export const {
+  loadPresentation,
+  markAsSaved,
   renamePresentation,
   addSlide,
   removeSlide,
@@ -369,8 +376,6 @@ export const {
   clearSelection,
   undo,
   redo,
-  setLastSavedHash,
-  setPresentationId,
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

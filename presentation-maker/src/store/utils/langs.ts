@@ -2,6 +2,7 @@ const LANGUAGES = {
   ru: {
     projectName: 'Presentation Maker',
     newPresentationTitle: 'Новая презентация',
+    recentPresentations: 'Недавние',
 
     imageDialogHeading: 'Укажите ссылку',
     dialogCancel: 'Отмена',

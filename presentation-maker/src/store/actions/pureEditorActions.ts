@@ -370,3 +370,10 @@ export function clearSelection(pres: Presentation): Presentation {
     return pres;
   }
 }
+
+export function markAsSaved(pres: Presentation) {
+  return {
+    ...pres,
+    isNew: false,
+  }
+}
