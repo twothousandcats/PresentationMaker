@@ -6,6 +6,7 @@ import type {
 } from '../types/types';
 import { PRESENTATION_SIZE } from './config.ts';
 import { LANGUAGES } from './langs.ts';
+import type { RefObject } from 'react';
 
 export function getRandomId() {
   return crypto.randomUUID();
@@ -22,6 +23,14 @@ export function concatModifiersByFlag(classNames: string[]) {
 export function getPercentValue(v1: number, v2: number): number {
   return (v1 / v2) * 100;
 }
+
+export const deselectInputAndBlur = (inputRef: RefObject<HTMLInputElement | null>) => {
+  if (inputRef.current) {
+    const input = inputRef.current;
+    input.selectionStart = input.selectionEnd; // снимает выделение текста
+    input.blur(); // убирает фокус
+  }
+};
 
 export function createDefaultSlide(): Slide {
   return {
