@@ -30,7 +30,10 @@ import {
   setEditorMode,
   undo,
 } from '../../store/slices/editorSlice.ts';
-import { createDefaultSlide } from '../../store/utils/functions.ts';
+import {
+  createDefaultSlide,
+  deselectInputAndBlur,
+} from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
@@ -49,11 +52,47 @@ export default function Toolbar() {
   const dispatch = useDispatch();
 
   const [isExpanded, setExpanded] = useState(false);
-  const [newTitle, setNewTitle] = useState(title);
+  const [draftTitle, setDraftTitle] = useState(title);
   const [isAddBgDialogOpen, setIsAddBgDialogOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (!isExpanded) {
+      setDraftTitle(title);
+    }
+  }, [title, isExpanded]);
+
+  const saveTitle = useCallback(() => {
+    if (draftTitle !== title) {
+      dispatch(renamePresentation({ newName: draftTitle }));
+    }
+
+    setExpanded(false);
+  }, [draftTitle, title, dispatch]);
+
+  const discardTitle = useCallback(() => {
+    setDraftTitle(title);
+    setExpanded(false);
+  }, [title]);
+
+  const handleChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
+    setDraftTitle(event.target.value);
+  };
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        saveTitle();
+        deselectInputAndBlur(inputRef);
+      } else if (event.key === 'Escape') {
+        discardTitle();
+        deselectInputAndBlur(inputRef);
+      }
+    },
+    [saveTitle, discardTitle]
+  );
 
   const handleChangeBg = useCallback(
     (content: Background | null) => {
@@ -87,37 +126,18 @@ export default function Toolbar() {
     [dispatch, selection]
   );
 
-  const handleChangeTitle = useCallback(
-    (evt: ChangeEvent<HTMLInputElement>) => {
-      const newName = evt.target.value;
-      setNewTitle(newName);
-      dispatch(renamePresentation({ newName }));
-    },
-    [dispatch]
-  );
-
-  const handleKeyDown = useCallback(
-    (evt: KeyboardEvent<HTMLInputElement>) => {
-      if (evt.key === 'Enter') {
-        setExpanded(false);
-        inputRef.current?.blur();
-      } else if (evt.key === 'Escape') {
-        setNewTitle(title);
-        setExpanded(false);
-        inputRef.current?.blur();
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        saveTitle();
+        deselectInputAndBlur(inputRef);
       }
     },
-    [title]
+    [saveTitle]
   );
-
-  const handleClickOutside = useCallback((evt: MouseEvent) => {
-    if (
-      containerRef.current &&
-      !containerRef.current.contains(evt.target as Node)
-    ) {
-      setExpanded(false);
-    }
-  }, []);
 
   useEffect(() => {
     if (isExpanded && inputRef.current) {
@@ -229,7 +249,7 @@ export default function Toolbar() {
               className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
               id={id}
               type="text"
-              value={newTitle}
+              value={draftTitle}
               ref={inputRef}
               onClick={() => setExpanded(true)}
               onKeyDown={handleKeyDown}
