@@ -7,7 +7,7 @@ import type {
   SlideElement,
   History,
 } from '../types/types.ts';
-import { mockPresentation } from '../utils/config.ts';
+import { emptyPresentation } from '../utils/config.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
 
@@ -15,8 +15,9 @@ const MAX_HISTORY_STACK_SIZE = 50;
 
 const initialState: History = {
   past: [],
-  present: mockPresentation,
+  present: emptyPresentation,
   future: [],
+  lastSavedHash: null,
 };
 
 const editorSlice = createSlice({
@@ -319,6 +320,7 @@ const editorSlice = createSlice({
         future: newFuture,
       };
     },
+
     redo: (state) => {
       if (!state.future.length) {
         return;
@@ -334,7 +336,16 @@ const editorSlice = createSlice({
         past: newPast,
         present: state.future[0], // берем сверху
         future: state.future.slice(1), // вырезали взятый
-      }
+      };
+    },
+
+    setLastSavedHash: (state, action: PayloadAction<string>) => {
+      state.lastSavedHash = action.payload;
+    },
+
+    setPresentationId: (state, action: PayloadAction<string>) => {
+      state.present.id = action.payload;
+      state.present.isNew = false;
     },
   },
 });
@@ -358,6 +369,8 @@ export const {
   clearSelection,
   undo,
   redo,
+  setLastSavedHash,
+  setPresentationId,
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

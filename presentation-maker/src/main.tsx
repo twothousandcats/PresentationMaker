@@ -14,12 +14,12 @@ import { LOCAL_STORAGE_NAMES, PAGES_URL } from './store/utils/config.ts';
 import { store } from './store/store.ts';
 import { Provider } from 'react-redux';
 import { NotFound } from './pages/NotFound/NotFound.tsx';
-import { EditorPage } from './pages/Editor/EditorPage.tsx';
 import { CollectionPage } from './pages/CollectionPage/CollectionPage.tsx';
 import { ProtectedLayout } from './components/ProtectedLayout/ProtectedLayout.tsx';
 import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppRoot } from './components/AppRoot/AppRoot.tsx';
+import { EditorPage } from './pages/EditorPage/EditorPage.tsx';
 
 export const ThemeContext = createContext<ThemeInterface>({
   theme: 'light',

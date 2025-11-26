@@ -1,5 +1,8 @@
 import { getRandomId } from './functions.ts';
 import type { Presentation } from '../types/types.ts';
+import { LANGUAGES } from './langs.ts';
+
+const autoSaveDelayMS: number = 10000;
 
 const PRESENTATION_SIZE = {
   width: 1240,
@@ -23,8 +26,8 @@ const PAGES_URL = {
 }
 
 const emptyPresentation: Presentation = {
-  id: getRandomId(),
-  title: '',
+  id: '',
+  title: LANGUAGES.ru.newPresentationTitle,
   slides: [],
   size: {
     width: PRESENTATION_SIZE.width,
@@ -35,6 +38,7 @@ const emptyPresentation: Presentation = {
     selectedElementIds: [],
   },
   mode: { type: 'idle' },
+  isNew: true,
 };
 
 const mockPresentation: Presentation = {
@@ -143,6 +147,7 @@ const mockPresentation: Presentation = {
     selectedElementIds: [],
   },
   mode: { type: 'idle' },
+  isNew: false,
 };
 
 const getPortal = () => {
@@ -150,6 +155,7 @@ const getPortal = () => {
 };
 
 export {
+  autoSaveDelayMS,
   DEFAULT_SLIDE_WIDTH,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,

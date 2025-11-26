@@ -1,7 +1,10 @@
+import style from './CollectionPage.module.css';
 
 
 export const CollectionPage = () => {
   return (
-    <div></div>
+    <section className={style.collection}>
+
+    </section>
   );
 }

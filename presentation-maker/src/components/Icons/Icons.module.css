@@ -2,5 +2,7 @@
   path {
     fill: none;
     stroke: var(--default-icon-stroke);
+
+      transition: stroke 0.3s ease;
   }
 }

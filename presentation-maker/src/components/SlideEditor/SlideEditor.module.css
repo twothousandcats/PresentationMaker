@@ -1,8 +1,7 @@
 .editor {
     max-width: 1920px;
-    max-height: calc(100vh - 178px);
     width: 100vw;
-    /*height: calc(100vh - 104px);*/
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

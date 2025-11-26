@@ -4,13 +4,6 @@ import Slide from '../Slide/Slide.tsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 
-// interface EditorProps {
-//   slides: SlideType[];
-//   size: Size;
-//   selection: Selection;
-//   mode: EditorMode;
-// }
-
 export default function SlideEditor() {
   const { slides, size, selection, mode }: Presentation = useSelector(
     (state: RootState) => state.editor.present

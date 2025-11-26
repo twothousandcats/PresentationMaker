@@ -1,6 +1,6 @@
 import style from './Icons.module.css';
 
-export default function IconSun() {
+export default function IconLogout() {
   return (
     <svg
       className={style.icon}
@@ -11,7 +11,7 @@ export default function IconSun() {
       xmlns='http://www.w3.org/2000/svg'
     >
       <path
-        d='M12 2V4M12 20V22M4 12H2M6.31412 6.31412L4.8999 4.8999M17.6859 6.31412L19.1001 4.8999M6.31412 17.69L4.8999 19.1042M17.6859 17.69L19.1001 19.1042M22 12H20M17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12Z'
+        d='M16 17L21 12M21 12L16 7M21 12H9M9 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V16.2C3 17.8802 3 18.7202 3.32698 19.362C3.6146 19.9265 4.07354 20.3854 4.63803 20.673C5.27976 21 6.11984 21 7.8 21H9'
         stroke='none'
         strokeLinecap='round'
         strokeLinejoin='round'

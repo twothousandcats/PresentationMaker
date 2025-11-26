@@ -78,6 +78,7 @@ type Presentation = {
   size: Size;
   selection: Selection;
   mode: EditorMode;
+  isNew: boolean;
 };
 
 type Idle = {
@@ -95,6 +96,8 @@ type History = {
   past: Presentation[] | [];
   present: Presentation;
   future: Presentation[] | [];
+  // lastSavedHash: string | null;
+  lastSavedHash?: string | null;
 };
 
 export type {

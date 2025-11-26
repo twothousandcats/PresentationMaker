@@ -30,6 +30,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
     padding: 10px;
 
     font-family: var(--extra-font);
@@ -52,5 +53,13 @@
 
         border: 1px solid var(--form-button-bg-default);
         background-color: transparent;
+
+        svg path {
+            stroke: var(--form-button-bg-default);
+        }
+    }
+
+    svg path {
+        stroke: var(--form-button-text-default);
     }
 }
