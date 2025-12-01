@@ -1,7 +1,7 @@
 import styles from './SelectionOverlay.module.css';
 import type { Size, SlideElement, Position } from '../../store/types/types.ts';
 import {
-  concatModifiersByFlag,
+  concatClassNames,
   getPercentValue,
   getRandomId,
 } from '../../store/utils/functions.ts';
@@ -31,7 +31,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'top',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_side,
       styles.resizeHandler_top,
@@ -40,7 +40,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'right',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_side,
       styles.resizeHandler_right,
@@ -49,7 +49,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'bottom',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_side,
       styles.resizeHandler_bottom,
@@ -58,7 +58,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'left',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_side,
       styles.resizeHandler_left,
@@ -67,7 +67,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'topLeft',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_corner,
       styles.resizeHandler_topLeft,
@@ -76,7 +76,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'topRight',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_corner,
       styles.resizeHandler_topRight,
@@ -85,7 +85,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'bottomRight',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_corner,
       styles.resizeHandler_botRight,
@@ -94,7 +94,7 @@ const RESIZE_HANDLERS: Handler[] = [
   {
     key: getRandomId(),
     pos: 'bottomLeft',
-    className: concatModifiersByFlag([
+    className: concatClassNames([
       styles.resizeHandler,
       styles.resizeHandler_corner,
       styles.resizeHandler_botLeft,

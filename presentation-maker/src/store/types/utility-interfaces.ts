@@ -5,4 +5,11 @@ interface ThemeInterface {
   toggleTheme(): void;
 }
 
-export type { ThemeInterface };
+interface AppwriteException {
+  code: number;
+  message: string;
+  type: string;
+  response: string;
+}
+
+export type { ThemeInterface, AppwriteException };

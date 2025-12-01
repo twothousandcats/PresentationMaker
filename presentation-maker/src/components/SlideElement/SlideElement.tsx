@@ -1,7 +1,7 @@
 import style from './SlideElement.module.css';
 import type { Position, Size, SlideElement } from '../../store/types/types.ts';
 import {
-  concatModifiersByFlag,
+  concatClassNames,
   getPercentValue,
 } from '../../store/utils/functions.ts';
 import { DEFAULT_SLIDE_WIDTH } from '../../store/utils/config.ts';
@@ -92,9 +92,9 @@ export default function SlideElement({
       newContent: newContent,
     }));
   };
-  const classNames = concatModifiersByFlag([
+  const classNames = concatClassNames([
     style.element,
-    !isEditable ? style.element_disabled : '',
+    !isEditable && style.element_disabled,
   ]);
 
   useEffect(() => {

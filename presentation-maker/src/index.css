@@ -30,11 +30,17 @@
 
     /* FORM SETTINGS */
     --form-button-bg-default: #fd376e;
+    --form-button-bg-default-rgb: 253, 55, 110;
 
     --form-button-text-default: #ffeaf0;
     --form-button-text-accent: var(--form-button-bg-default);
 
     --form-wrapper-bg-default: #19191c;
+
+    /* ERRORS */
+    --error-default-message: #fd376e;
+
+    --error-default-color: #e53e3e;
 }
 
 /* dark theme */

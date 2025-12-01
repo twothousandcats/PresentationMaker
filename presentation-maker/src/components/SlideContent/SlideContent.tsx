@@ -1,5 +1,7 @@
 import style from './SlideContent.module.css';
-import {concatModifiersByFlag} from "../../store/utils/functions.ts";
+import {
+  concatClassNames,
+} from '../../store/utils/functions.ts';
 import {usePlacementMode} from "../../store/hooks/usePlacementMode.ts";
 import {useElementDND} from "../../store/hooks/useElementDND.ts";
 import {useResize} from "../../store/hooks/useResize.ts";
@@ -33,10 +35,10 @@ export default function SlideContent(
     const activeElements =
         isActive && isEditable ? selection.selectedElementIds : [];
 
-    const classNames = concatModifiersByFlag([
+    const classNames = concatClassNames([
         style.slide,
         isEditable ? style.slide_editable : style.slide_preview,
-        isActive ? style.slide_active : '',
+        isActive && style.slide_active,
     ]);
 
     const bgColor =

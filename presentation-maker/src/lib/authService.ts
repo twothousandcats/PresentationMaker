@@ -1,5 +1,7 @@
 import { account } from './appwriteClient.ts';
 import { getRandomId } from '../store/utils/functions.ts';
+import { LANGUAGES } from '../store/utils/langs.ts';
+import type { AppwriteException } from '../store/types/utility-interfaces.ts';
 
 export type Credentials = {
   email: string;
@@ -50,10 +52,10 @@ export async function register(
       success: true,
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    const appwriteError = error as AppwriteException;
     return {
       success: false,
-      message: error,
+      message: appwriteError.message || LANGUAGES.ru.serverErrorRegisterFallback,
     }
   }
 };
@@ -71,10 +73,10 @@ export async function login(
       success: true,
     }
   } catch (error) {
-    console.error('Login error:', error);
+    const appwriteError = error as AppwriteException;
     return {
       success: false,
-      message: error,
+      message: appwriteError.message || LANGUAGES.ru.serverErrorLoginFallback,
     }
   }
 };

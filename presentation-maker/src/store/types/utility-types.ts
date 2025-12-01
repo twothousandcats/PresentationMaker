@@ -17,5 +17,10 @@ type ResizePreview = {
 
 type Theme = 'light' | 'dark';
 type AuthMode = 'login' | 'register';
+type ValidationError = {
+  email?: string;
+  password?: string;
+  name?: string;
+};
 
-export type { ResizeItem, Theme, ResizePreview, AuthMode };
+export type { ResizeItem, Theme, ResizePreview, AuthMode, ValidationError };

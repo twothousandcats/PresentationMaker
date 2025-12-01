@@ -12,12 +12,8 @@ export function getRandomId() {
   return crypto.randomUUID();
 }
 
-export function concatModifiersByFlag(classNames: string[]) {
-  let modifiers = '';
-  classNames.forEach((className) => {
-    modifiers += ' ' + className;
-  });
-  return modifiers;
+export function concatClassNames(classNames: (string | undefined | null | boolean)[]): string {
+  return classNames.filter(Boolean).join(' ');
 }
 
 export function getPercentValue(v1: number, v2: number): number {

@@ -1,6 +1,8 @@
 import style from './IconButton.module.css';
 import { type ReactNode, useState } from 'react';
-import { concatModifiersByFlag } from '../../store/utils/functions.ts';
+import {
+  concatClassNames,
+} from '../../store/utils/functions.ts';
 
 interface IconButtonProps {
   icon: ReactNode;
@@ -19,10 +21,10 @@ export default function IconButton({
 }: IconButtonProps) {
   const [isShowTooltip, setShowTooltip] = useState(false);
 
-  const classNames = concatModifiersByFlag([
+  const classNames = concatClassNames([
     style.toolbar__item,
-    isActive ? style.toolbar__item_active : '',
-    disabled ? style.toolbar__item_disabled : '',
+    isActive && style.toolbar__item_active,
+    disabled && style.toolbar__item_disabled,
   ]);
 
   const handleClick = () => {

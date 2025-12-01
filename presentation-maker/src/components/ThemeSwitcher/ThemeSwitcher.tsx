@@ -3,11 +3,13 @@ import IconSun from '../Icons/IconSun.tsx';
 import IconMoon from '../Icons/IconMoon.tsx';
 import { useContext } from 'react';
 import { ThemeContext } from '../../main.tsx';
-import { concatModifiersByFlag } from '../../store/utils/functions.ts';
+import {
+  concatClassNames,
+} from '../../store/utils/functions.ts';
 
 export default function ThemeSwitcher() {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const themeClass = concatModifiersByFlag([
+  const themeClass = concatClassNames([
     style.themeSwitcher,
     theme === 'light' ? style.light : style.dark,
   ]);
