@@ -45,6 +45,12 @@ type DefaultElementProps = {
   background: Background;
 };
 
+type ImageElement = DefaultElementProps & {
+  type: 'image';
+  src: string;
+  alt: string;
+};
+
 type RectangleElement = DefaultElementProps & {
   type: 'rectangle';
 };
@@ -58,7 +64,7 @@ type TextElement = DefaultElementProps & {
   color: Color;
 };
 
-type SlideElement = TextElement | RectangleElement;
+type SlideElement = TextElement | RectangleElement | ImageElement;
 
 type Slide = {
   id: string;

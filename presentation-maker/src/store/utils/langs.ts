@@ -4,13 +4,16 @@ const LANGUAGES = {
     newPresentationTitle: 'Новая презентация',
     recentPresentations: 'Недавние',
 
-    imageDialogHeading: 'Укажите ссылку',
+    imageDialogHeading: 'Выберите файл',
+    urlDialogHeading: 'Ссылка на изображение',
+    colorDialogHeading: 'Выберите цвет',
+
+    dialogImageTab: 'Файл',
+    dialogUrlTab: 'Ссылка',
+    dialogColorTab: 'Цвет',
+
     dialogCancel: 'Отмена',
     dialogSubmit: 'Добавить',
-
-    colorDialogHeading: 'Выберите цвет',
-    dialogImageTab: 'Изображение',
-    dialogColorTab: 'Цвет',
 
     noSlides: 'Слайдов нет',
 

@@ -86,7 +86,9 @@ export const createNewPresentation = (): Presentation => {
   return {
     id: getRandomId(),
     title: LANGUAGES.ru.newPresentationTitle,
-    slides: [],
+    slides: [
+      createDefaultSlide()
+    ],
     size: {
       width: PRESENTATION_SIZE.width,
       height: PRESENTATION_SIZE.height,

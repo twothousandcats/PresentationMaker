@@ -2,32 +2,7 @@ import { account } from './appwriteClient.ts';
 import { getRandomId } from '../store/utils/functions.ts';
 import { LANGUAGES } from '../store/utils/langs.ts';
 import type { AppwriteException } from '../store/types/utility-interfaces.ts';
-
-export type Credentials = {
-  email: string;
-  password: string;
-};
-
-export type UserData = Credentials & {
-  name: string;
-}
-
-/*
-const LS_KEYS = {
-  isAuth: 'isAuth',
-};
-
-export async function isAuth (): Promise<boolean> {
-  return localStorage.getItem(LS_KEYS.isAuth) === 'true'
-}
-
-export async function login() {
-  localStorage.setItem(LS_KEYS.isAuth, 'true');
-}
-
-export async function register() {
-  localStorage.setItem(LS_KEYS.isAuth, 'true');
-} */
+import type { Credentials, UserData } from '../store/types/utility-types.ts';
 
 export async function register(
   {

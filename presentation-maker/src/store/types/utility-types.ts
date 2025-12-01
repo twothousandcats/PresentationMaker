@@ -17,6 +17,17 @@ type ResizePreview = {
 
 type Theme = 'light' | 'dark';
 type AuthMode = 'login' | 'register';
+
+// appwrite
+export type Credentials = {
+  email: string;
+  password: string;
+};
+
+export type UserData = Credentials & {
+  name: string;
+}
+
 type ValidationError = {
   email?: string;
   password?: string;

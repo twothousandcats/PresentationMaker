@@ -8,6 +8,7 @@ import {
   redo,
   removeElementsFromSlide,
   removeSlide,
+  setEditorMode,
   undo,
 } from '../../store/slices/editorSlice.ts';
 import Toolbar from '../../components/Toolbar/Toolbar.tsx';
@@ -78,6 +79,11 @@ export const EditorPage = () => {
           );
         }
       } else if (event.key === 'Escape') {
+        dispatch(
+          setEditorMode({
+            mode: { type: 'idle' },
+          })
+        );
         dispatch(clearSelection());
       } else if (
         (event.ctrlKey && event.key.toLowerCase() === 'z') ||
