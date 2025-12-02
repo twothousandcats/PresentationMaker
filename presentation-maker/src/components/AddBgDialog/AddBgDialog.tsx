@@ -9,7 +9,6 @@ import IconBrush from '../Icons/IconBrush.tsx';
 import IconAddImage from '../Icons/IconAddImage.tsx';
 import * as React from 'react';
 import IconAddUrl from '../Icons/IconAddUrl.tsx';
-import { getCurrentUser } from '../../lib/authService.ts';
 import { uploadFile } from '../../lib/fileService.ts';
 
 type TabType = 'file' | 'url' | 'color';
@@ -97,12 +96,7 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
 
     setUploading(true);
     try {
-      const user = await getCurrentUser();
-      if (!user) {
-        throw new Error('Не авторизован');
-      }
-
-      const url = await uploadFile(file, user.$id);
+      const url = await uploadFile(file);
       setUploadedImageUrl(url);
     } catch (error) {
       console.error('Ошибка загрузки:', error);

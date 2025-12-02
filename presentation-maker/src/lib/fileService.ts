@@ -34,10 +34,9 @@ function prepareFileId(file: File): string {
 }
 
 // Загружает в appwrite storage и возвращает публичную ссылку
-export async function uploadFile(file: File, userId: string): Promise<string> {
+export async function uploadFile(file: File): Promise<string> {
   try {
     const fileId = prepareFileId(file);
-    const permissions = [`read("user:${userId}")`, `write("user:${userId}")`];
 
     const response = await storage.createFile({
       bucketId: BUCKET_ID,
