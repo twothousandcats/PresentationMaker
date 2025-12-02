@@ -134,23 +134,6 @@ export function AuthPage() {
     setErrors({});
   };
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkAuth = async () => {
-      const user = await getCurrentUser();
-      if (isMounted && user?.$id) {
-        navigate(PAGES_URL.collectionPage, { replace: true });
-      }
-    };
-
-    checkAuth();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [navigate]);
-
   return (
     <>
       <AppHeader />

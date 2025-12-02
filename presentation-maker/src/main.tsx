@@ -20,6 +20,7 @@ import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppRoot } from './components/AppRoot/AppRoot.tsx';
 import { EditorPage } from './pages/EditorPage/EditorPage.tsx';
+import { GuestOnlyLayout } from './components/GuestOnlyLayout/GuestOnlyLayout.tsx';
 
 export const ThemeContext = createContext<ThemeInterface>({
   theme: 'light',
@@ -50,7 +51,10 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const router = createBrowserRouter([
-  { path: PAGES_URL.loginPage, element: <AuthPage /> },
+  {
+    element: <GuestOnlyLayout />,
+    children: [{ path: PAGES_URL.loginPage, element: <AuthPage /> }],
+  },
   {
     element: <ProtectedLayout />,
     children: [
@@ -67,13 +71,13 @@ const root: Root = createRoot(container);
 
 function processRender() {
   root.render(
-      <Provider store={store}>
-        <ThemeProvider>
-          <AppRoot>
-            <RouterProvider router={router} />
-          </AppRoot>
-        </ThemeProvider>
-      </Provider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <AppRoot>
+          <RouterProvider router={router} />
+        </AppRoot>
+      </ThemeProvider>
+    </Provider>
   );
 }
 
