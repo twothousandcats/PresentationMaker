@@ -150,4 +150,5 @@ export type {
   HistoryEntry,
   HistoryContext,
   UIState,
+  PresentationHistory,
 };

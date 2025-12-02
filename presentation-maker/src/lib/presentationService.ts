@@ -1,5 +1,5 @@
 import type { Presentation } from '../store/types/types.ts';
-import { databases } from './appwriteClient.ts';
+import { tablesDB } from './appwriteClient.ts';
 import { Query } from 'appwrite';
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
@@ -25,21 +25,23 @@ export async function savePresentation(
 
   try {
     if (!presentation.isNew) {
-      return await databases.updateDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        presentation.id,
+      console.log('Презентация успешно обновлена в БД');
+      return await tablesDB.updateRow({
+        databaseId: DATABASE_ID,
+        tableId: COLLECTION_ID,
+        rowId: presentation.id,
         data,
-        permissions
-      );
+        permissions,
+      });
     } else {
-      return await databases.createDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        presentation.id,
+      console.log('Презентация успешно сохранена в БД');
+      return await tablesDB.createRow({
+        databaseId: DATABASE_ID,
+        tableId: COLLECTION_ID,
+        rowId: presentation.id,
         data,
-        permissions
-      );
+        permissions,
+      });
     }
   } catch (error) {
     console.error('Ошибка сохранения презентации: ', error);
@@ -49,7 +51,11 @@ export async function savePresentation(
 
 export async function getPresentation(id: string) {
   try {
-    const doc = await databases.getDocument(DATABASE_ID, COLLECTION_ID, id);
+    const doc = await tablesDB.getRow({
+      databaseId: DATABASE_ID,
+      tableId: COLLECTION_ID,
+      rowId: id,
+    });
     const parsedPresentation = JSON.parse(doc.data);
 
     return {
@@ -73,15 +79,17 @@ export async function getPresentation(id: string) {
 
 export async function getUserPresentations(creatorId: string) {
   try {
-    const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.equal('creatorId', creatorId),
-    ]);
+    const response = await tablesDB.listRows({
+      databaseId: DATABASE_ID,
+      tableId: COLLECTION_ID,
+      queries: [Query.equal('creatorId', creatorId)],
+    });
 
-    return response.documents.map((document) => ({
-      id: document.$id,
-      title: document.title,
-      createdAt: document.$createdAt,
-      updatedAt: document.$updatedAt,
+    return response.rows.map((row) => ({
+      id: row.$id,
+      title: row.title,
+      createdAt: row.$createdAt,
+      updatedAt: row.$updatedAt,
     }));
   } catch (error) {
     console.error('Ошибка получения списка презентаций:', error);

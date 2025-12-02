@@ -1,8 +1,9 @@
 import style from './Toolbar.module.css';
 import type {
   Background,
-  History,
   Presentation,
+  PresentationHistory,
+  UIState,
 } from '../../store/types/types.ts';
 import {
   type ChangeEvent,
@@ -48,8 +49,9 @@ import {
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
-  const { selection }: Presentation = useSelector(selectUI);
-  const { past, present, future }: History = useSelector(selectHistory);
+  const { selection }: UIState = useSelector(selectUI);
+  const { past, future }: PresentationHistory = useSelector(selectHistory);
+  const presentation = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
 
   const [isExpanded, setExpanded] = useState(false);
@@ -156,13 +158,14 @@ export default function Toolbar() {
   const handleSave = async () => {
     try {
       const user = await getCurrentUser();
+      const currentUser = user?.$id;
 
-      await savePresentation(present, user!.$id);
-      if (present.isNew) {
-        dispatch(markAsSaved());
-        console.log('Флаг с новой презентации снят');
+      if (currentUser) {
+        await savePresentation(presentation, currentUser);
+        if (presentation.isNew) {
+          dispatch(markAsSaved());
+        }
       }
-      console.log('Презентация успешно сохранена в БД');
     } catch (error) {
       console.error('Ошибка сохранения презентации в БД: ', error);
     }
