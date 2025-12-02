@@ -80,18 +80,32 @@ export function removeSlide(
   payload: { slideIdsToRemove: string[] }
 ): HistoryEntry {
   const { slideIdsToRemove } = payload;
+  // обновленные, без удаляемого
   const newSlides = pres.slides.filter(
     (slide) => !slideIdsToRemove.includes(slide.id)
   );
-  const scrollTargetSlideId =
-    newSlides.length > 0 ? newSlides[0].id : undefined;
-  const updatedPres: Presentation = {
+  // index удаляемого в исходном состоянии
+  const firstRemovedIndex = pres.slides.findIndex(s => slideIdsToRemove.includes(s.id));
+  let nextSlideId: string | undefined;
+
+  if (firstRemovedIndex !== -1) {
+    if (firstRemovedIndex < newSlides.length) {
+      nextSlideId = newSlides[firstRemovedIndex].id; // следующий
+    } else if (firstRemovedIndex > 0) {
+      nextSlideId = newSlides[firstRemovedIndex - 1].id; // предыдущий
+    }
+    // undefined если нет слайдов -> selection пустой
+  }
+
+  const scrollTargetSlideId = nextSlideId || (newSlides.length > 0 ? newSlides[0].id : undefined);
+
+  const updatedPresentation: Presentation = {
     ...pres,
     slides: newSlides,
   };
 
   return {
-    presentation: updatedPres,
+    presentation: updatedPresentation,
     context: {
       affectedSlideIds: slideIdsToRemove,
       affectedElementIds: [],

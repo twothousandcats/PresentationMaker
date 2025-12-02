@@ -1,15 +1,5 @@
 import type { EditorMode, UIState } from '../types/types.ts';
 
-export function setSelectedSlides(ui: UIState, slideIds: string[]): UIState {
-  return {
-    ...ui,
-    selection: {
-      ...ui.selection,
-      selectedSlideIds: slideIds,
-    },
-  };
-}
-
 export function setSelectedElements(
   ui: UIState,
   elementsIds: string[]
@@ -30,27 +20,25 @@ export function setEditorMode(ui: UIState, mode: EditorMode): UIState {
   };
 }
 
-export function clearSelection(ui: UIState): UIState {
-  if (ui.selection.selectedElementIds.length > 0) {
-    return {
-      ...ui,
-      selection: {
-        ...ui.selection,
-        selectedElementIds: [],
-      },
-    };
-  } else if (
-    ui.selection.selectedElementIds.length === 0 &&
-    ui.selection.selectedSlideIds.length > 0
-  ) {
-    return {
-      ...ui,
-      selection: {
-        ...ui.selection,
-        selectedSlideIds: [],
-      },
-    };
-  } else {
-    return ui;
-  }
+export function setSelectedSlides(ui: UIState, slideIds: string[]): UIState {
+  return {
+    ...ui,
+    selection: {
+      ...ui.selection,
+      selectedSlideIds: slideIds,
+      selectedElementIds: [],
+    },
+  };
+}
+
+export function clearElementsSelection(ui: UIState): UIState {
+  const newSelection = {
+    ...ui.selection,
+    selectedElementIds: [],
+  };
+
+  return {
+    ...ui,
+    selection: newSelection,
+  };
 }

@@ -14,6 +14,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
 import * as pureUiActions from '../actions/uiActions.ts';
 import { createNewPresentation } from '../utils/functions.ts';
+import { clearElementsSelection } from '../actions/uiActions.ts';
 
 const MAX_HISTORY_STACK_SIZE = 50;
 
@@ -59,9 +60,14 @@ function createHistoryReducer<T>(
       future: [],
     };
 
-    const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = result.context;
     // Восстанавливаем UI
-    if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
+    const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = result.context;
+    if (scrollTargetSlideId) {
+      state.ui.selection = {
+        selectedSlideIds: [scrollTargetSlideId],
+        selectedElementIds: [],
+      };
+    } else if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
       state.ui.selection = {
         selectedSlideIds: [...affectedSlideIds],
         selectedElementIds: [...affectedElementIds],
@@ -127,7 +133,7 @@ const editorSlice = createSlice({
     },
 
     clearSelection: (state) => {
-      state.ui = pureUiActions.clearSelection(state.ui);
+      state.ui = pureUiActions.clearElementsSelection(state.ui);
     },
 
     undo: (state) => {
@@ -139,12 +145,15 @@ const editorSlice = createSlice({
       state.presentationHistory.future.unshift(currentEntry);
       state.presentationHistory.present = prevEntry;
 
-      // Восстанавливаем UI из контекста
-      state.ui.selection = {
-        selectedSlideIds: [...prevEntry.context.affectedSlideIds],
-        selectedElementIds: [...prevEntry.context.affectedElementIds],
-      };
-      state.ui.lastAppliedContext = prevEntry.context;
+      // восстановление выделения, если контекст не пустой
+      const { affectedSlideIds, affectedElementIds } = currentEntry.context;
+      if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
+        state.ui.selection = {
+          selectedSlideIds: [...affectedSlideIds],
+          selectedElementIds: [...affectedElementIds],
+        };
+      }
+      state.ui.lastAppliedContext = currentEntry.context;
     },
 
     redo: (state) => {
@@ -156,11 +165,15 @@ const editorSlice = createSlice({
       state.presentationHistory.past.push(currentEntry);
       state.presentationHistory.present = nextEntry;
 
-      state.ui.selection = {
-        selectedSlideIds: [...nextEntry.context.affectedSlideIds],
-        selectedElementIds: [...nextEntry.context.affectedElementIds],
-      };
-      state.ui.lastAppliedContext = nextEntry.context;
+      // восстановление выделения, если контекст не пустой
+      const { affectedSlideIds, affectedElementIds } = nextEntry.context;
+      if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
+        state.ui.selection = {
+          selectedSlideIds: [...affectedSlideIds],
+          selectedElementIds: [...affectedElementIds],
+        };
+      }
+      state.ui.lastAppliedContext = currentEntry.context;
     },
 
     loadPresentation: (state, action: PayloadAction<Presentation>) => {
