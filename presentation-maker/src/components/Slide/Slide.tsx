@@ -1,6 +1,5 @@
-import type { EditorMode, Presentation } from '../../store/types/types.ts';
+import type { EditorMode } from '../../store/types/types.ts';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import SlideContent from '../SlideContent/SlideContent.tsx';
 import {

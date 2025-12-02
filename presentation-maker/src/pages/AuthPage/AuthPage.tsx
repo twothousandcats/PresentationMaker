@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type {
   AuthMode,
   ValidationError,
 } from '../../store/types/utility-types.ts';
-import { getCurrentUser, login, register } from '../../lib/authService.ts';
+import { login, register } from '../../lib/authService.ts';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import style from './AuthPage.module.css';
@@ -28,7 +28,6 @@ const config = {
 };
 
 export function AuthPage() {
-  const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -109,8 +108,6 @@ export function AuthPage() {
       return;
     }
 
-    setIsLoading(true);
-
     try {
       let result;
       if (isLoginMode()) {
@@ -124,9 +121,7 @@ export function AuthPage() {
       } else {
         setServerError(result.message ? result.message : '');
       }
-    } finally {
-      setIsLoading(false);
-    }
+    } catch{}
   };
 
   const toggleMode = () => {

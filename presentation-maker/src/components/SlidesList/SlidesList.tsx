@@ -5,7 +5,6 @@ import { useSelectSlides } from '../../store/hooks/useSelectSlides.ts';
 import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
 import {
   selectCurrentPresentation,
   selectUI,

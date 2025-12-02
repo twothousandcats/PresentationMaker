@@ -38,7 +38,6 @@ import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { savePresentation } from '../../lib/presentationService.ts';
 import {

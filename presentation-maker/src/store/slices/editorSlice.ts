@@ -1,10 +1,5 @@
 import type {
-  Background,
   EditorMode,
-  Position,
-  Size,
-  Slide,
-  SlideElement,
   HistoryContext,
   Presentation,
   EditorState,
@@ -14,7 +9,6 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
 import * as pureUiActions from '../actions/uiActions.ts';
 import { createNewPresentation } from '../utils/functions.ts';
-import { clearElementsSelection } from '../actions/uiActions.ts';
 
 const MAX_HISTORY_STACK_SIZE = 50;
 
@@ -144,9 +138,11 @@ const editorSlice = createSlice({
 
       state.presentationHistory.future.unshift(currentEntry);
       state.presentationHistory.present = prevEntry;
+      console.log(state);
 
       // восстановление выделения, если контекст не пустой
-      const { affectedSlideIds, affectedElementIds } = currentEntry.context;
+      const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = currentEntry.context;
+      console.log(scrollTargetSlideId);
       if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
         state.ui.selection = {
           selectedSlideIds: [...affectedSlideIds],
@@ -166,7 +162,7 @@ const editorSlice = createSlice({
       state.presentationHistory.present = nextEntry;
 
       // восстановление выделения, если контекст не пустой
-      const { affectedSlideIds, affectedElementIds } = nextEntry.context;
+      const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = nextEntry.context;
       if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
         state.ui.selection = {
           selectedSlideIds: [...affectedSlideIds],

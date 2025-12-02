@@ -5,6 +5,7 @@ import type {
   SlideElement,
   Slide,
   HistoryEntry,
+  Presentation,
 } from '../types/types';
 
 function updateSlide(updatedSlide: Slide, pres: Presentation): Presentation {
@@ -359,7 +360,7 @@ export function changeFontFamily(
     presentation: updatedPresentation,
     context: {
       affectedSlideIds: [slideId],
-      affectedElementIds: elementId,
+      affectedElementIds: [elementId],
       scrollTargetSlideId: slideId,
     },
   };

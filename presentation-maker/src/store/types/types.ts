@@ -148,4 +148,6 @@ export type {
   EditorState,
   Presentation,
   HistoryEntry,
+  HistoryContext,
+  UIState,
 };

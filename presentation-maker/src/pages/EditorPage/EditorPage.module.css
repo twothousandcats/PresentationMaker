@@ -1,6 +1,6 @@
 .presentation {
     width: 100%;
-    height: calc(100vh - 58px);
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -13,7 +13,7 @@
 
 .presentation__container {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 150px); /* appHeader + toolbar + gap + pb */
     display: flex;
     gap: 10px;
 }

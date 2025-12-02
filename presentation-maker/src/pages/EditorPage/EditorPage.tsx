@@ -1,6 +1,5 @@
 import style from './EditorPage.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
 import { useCallback, useEffect } from 'react';
 import {
   clearSelection,

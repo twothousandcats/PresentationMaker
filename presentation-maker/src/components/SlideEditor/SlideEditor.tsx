@@ -1,8 +1,6 @@
 import style from './SlideEditor.module.css';
-import type { Presentation } from '../../store/types/types.ts';
 import Slide from '../Slide/Slide.tsx';
 import { useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.ts';
 import {
   selectCurrentPresentation,
   selectUI,
