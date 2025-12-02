@@ -3,11 +3,14 @@ import type { Presentation } from '../../store/types/types.ts';
 import Slide from '../Slide/Slide.tsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
+import {
+  selectCurrentPresentation,
+  selectUI,
+} from '../../store/selectors/editorSelectors.ts';
 
 export default function SlideEditor() {
-  const { slides, size, selection, mode }: Presentation = useSelector(
-    (state: RootState) => state.editor.present
-  );
+  const { slides, size } = useSelector(selectCurrentPresentation);
+  const { selection, mode } = useSelector(selectUI);
   const activeSlide = slides.find(
     (slide) =>
       selection.selectedSlideIds[selection.selectedSlideIds.length - 1] ===

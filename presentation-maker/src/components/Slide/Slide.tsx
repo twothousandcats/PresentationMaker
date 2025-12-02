@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import SlideContent from '../SlideContent/SlideContent.tsx';
+import {
+  selectCurrentPresentation,
+  selectUI,
+} from '../../store/selectors/editorSelectors.ts';
 
 type SlideProps = {
   slideId: string;
@@ -15,9 +19,8 @@ export default function Slide({
   isEditable = false,
   mode,
 }: SlideProps) {
-  const { slides, size, selection }:Presentation = useSelector(
-    (state: RootState) => state.editor.present
-  );
+  const { slides, size } = useSelector(selectCurrentPresentation);
+  const { selection } = useSelector(selectUI);
   const slide = slides.find((slide) => slide.id === slideId);
 
   if (!slide) {

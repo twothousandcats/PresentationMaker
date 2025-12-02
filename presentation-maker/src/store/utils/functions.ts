@@ -93,11 +93,6 @@ export const createNewPresentation = (): Presentation => {
       width: PRESENTATION_SIZE.width,
       height: PRESENTATION_SIZE.height,
     },
-    selection: {
-      selectedSlideIds: [],
-      selectedElementIds: [],
-    },
-    mode: { type: 'idle' },
     isNew: true,
   };
 };

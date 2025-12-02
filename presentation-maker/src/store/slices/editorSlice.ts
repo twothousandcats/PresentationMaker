@@ -5,20 +5,72 @@ import type {
   Size,
   Slide,
   SlideElement,
-  History,
+  HistoryContext,
   Presentation,
+  EditorState,
+  HistoryEntry,
 } from '../types/types.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
+import * as pureUiActions from '../actions/uiActions.ts';
 import { createNewPresentation } from '../utils/functions.ts';
 
 const MAX_HISTORY_STACK_SIZE = 50;
 
-const initialState: History = {
-  past: [],
-  present: createNewPresentation(),
-  future: [],
+const initialPres = createNewPresentation();
+const initialContext: HistoryContext = {
+  affectedSlideIds: [initialPres.slides[0].id],
+  affectedElementIds: [],
+  scrollTargetSlideId: initialPres.slides[0].id,
 };
+const initialState: EditorState = {
+  presentationHistory: {
+    past: [],
+    present: {
+      presentation: initialPres,
+      context: initialContext,
+    },
+    future: [],
+  },
+  ui: {
+    selection: {
+      selectedSlideIds: [initialPres.slides[0].id],
+      selectedElementIds: [],
+    },
+    mode: { type: 'idle' },
+  },
+};
+
+function createHistoryReducer<T>(
+  actionCreator: (presentation: Presentation, payload: T) => HistoryEntry
+) {
+  return (state: EditorState, action: PayloadAction<T>) => {
+    const currentEntry = state.presentationHistory.present;
+    const result = actionCreator(currentEntry.presentation, action.payload);
+
+    const newPast = [...state.presentationHistory.past, currentEntry];
+    if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+      newPast.shift();
+    }
+
+    state.presentationHistory = {
+      past: newPast,
+      present: result,
+      future: [],
+    };
+
+    const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = result.context;
+    // Восстанавливаем UI
+    if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
+      state.ui.selection = {
+        selectedSlideIds: [...affectedSlideIds],
+        selectedElementIds: [...affectedElementIds],
+      };
+    }
+
+    state.ui.lastAppliedContext = result.context;
+  };
+}
 
 const editorSlice = createSlice({
   name: 'editor',
@@ -26,238 +78,19 @@ const editorSlice = createSlice({
 
   // Immer
   reducers: {
-    renamePresentation: (
-      state,
-      action: PayloadAction<{
-        newName: string;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.renamePresentation(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    addSlide: (
-      state,
-      action: PayloadAction<{
-        newSlide: Slide;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.addSlide(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    removeSlide: (
-      state,
-      action: PayloadAction<{
-        slideIdsToRemove: string[];
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.removeSlide(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    moveSlides: (
-      state,
-      action: PayloadAction<{
-        slideIds: string[];
-        newIndex: number;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.moveSlides(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    addElementToSlide: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        newElement: SlideElement;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.addElementToSlide(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    removeElementsFromSlide: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementIds: string[];
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.removeElementsFromSlide(
-          state.present,
-          action.payload
-        ),
-        future: [],
-      };
-    },
-
-    changeElPosition: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementId: string;
-        newPosition: Position;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeElPosition(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    changeElSize: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementId: string;
-        newSize: Size;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeElSize(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    changeTextElContent: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementId: string;
-        newContent: string;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeTextElContent(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    changeFontFamily: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementId: string;
-        newFF: string;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeFontFamily(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    changeElementBg: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        elementId: string;
-        newBg: Background;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeElementBg(state.present, action.payload),
-        future: [],
-      };
-    },
-
-    changeSlideBg: (
-      state,
-      action: PayloadAction<{
-        slideId: string;
-        newBg: Background;
-      }>
-    ) => {
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      return {
-        past: newPast,
-        present: pureActions.changeSlideBg(state.present, action.payload),
-        future: [],
-      };
-    },
+    renamePresentation: createHistoryReducer(pureActions.renamePresentation),
+    addSlide: createHistoryReducer(pureActions.addSlide),
+    removeSlide: createHistoryReducer(pureActions.removeSlide),
+    moveSlides: createHistoryReducer(pureActions.moveSlides),
+    addElementToSlide: createHistoryReducer(pureActions.addElementToSlide),
+    removeElementsFromSlide: createHistoryReducer(pureActions.removeElementsFromSlide),
+    changeElPosition: createHistoryReducer(pureActions.changeElPosition),
+    changeElSize: createHistoryReducer(pureActions.changeElSize),
+    changeTextElContent: createHistoryReducer(pureActions.changeTextElContent),
+    changeFontFamily: createHistoryReducer(pureActions.changeFontFamily),
+    changeElementBg: createHistoryReducer(pureActions.changeElementBg),
+    changeSlideBg: createHistoryReducer(pureActions.changeSlideBg),
+    resizeElement: createHistoryReducer(pureActions.resizeElement),
 
     // UI only reducers
     setSelectedSlides: (
@@ -266,10 +99,10 @@ const editorSlice = createSlice({
         slideIds: string[];
       }>
     ) => {
-      return {
-        ...state,
-        present: pureActions.setSelectedSlides(state.present, action.payload),
-      };
+      state.ui = pureUiActions.setSelectedSlides(
+        state.ui,
+        action.payload.slideIds
+      );
     },
 
     setSelectedElements: (
@@ -278,10 +111,10 @@ const editorSlice = createSlice({
         elementsIds: string[];
       }>
     ) => {
-      return {
-        ...state,
-        present: pureActions.setSelectedElements(state.present, action.payload),
-      };
+      state.ui = state.ui = pureUiActions.setSelectedElements(
+        state.ui,
+        action.payload.elementsIds
+      );
     },
 
     setEditorMode: (
@@ -290,66 +123,80 @@ const editorSlice = createSlice({
         mode: EditorMode;
       }>
     ) => {
-      return {
-        ...state,
-        present: pureActions.setEditorMode(state.present, action.payload),
-      };
+      state.ui = pureUiActions.setEditorMode(state.ui, action.payload.mode);
     },
 
     clearSelection: (state) => {
-      return {
-        ...state,
-        present: pureActions.clearSelection(state.present),
-      };
+      state.ui = pureUiActions.clearSelection(state.ui);
     },
 
     undo: (state) => {
-      if (!state.past.length) {
-        return;
-      }
+      if (state.presentationHistory.past.length === 0) return;
 
-      const newFuture = [state.present, ...state.future];
-      if (newFuture.length > MAX_HISTORY_STACK_SIZE) {
-        // сохранили размерность (конец)
-        newFuture.pop();
-      }
+      const prevEntry = state.presentationHistory.past.pop()!;
+      const currentEntry = state.presentationHistory.present;
 
-      return {
-        past: state.past.slice(0, -1), // удалили последний
-        present: state.past[state.past.length - 1], // теперь он текущий
-        future: newFuture,
+      state.presentationHistory.future.unshift(currentEntry);
+      state.presentationHistory.present = prevEntry;
+
+      // Восстанавливаем UI из контекста
+      state.ui.selection = {
+        selectedSlideIds: [...prevEntry.context.affectedSlideIds],
+        selectedElementIds: [...prevEntry.context.affectedElementIds],
       };
+      state.ui.lastAppliedContext = prevEntry.context;
     },
 
     redo: (state) => {
-      if (!state.future.length) {
-        return;
-      }
+      if (state.presentationHistory.future.length === 0) return;
 
-      const newPast = [...state.past, state.present];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        // сохранили размерность (начало)
-        newPast.shift();
-      }
+      const nextEntry = state.presentationHistory.future.shift()!;
+      const currentEntry = state.presentationHistory.present;
 
-      return {
-        past: newPast,
-        present: state.future[0], // берем сверху
-        future: state.future.slice(1), // вырезали взятый
+      state.presentationHistory.past.push(currentEntry);
+      state.presentationHistory.present = nextEntry;
+
+      state.ui.selection = {
+        selectedSlideIds: [...nextEntry.context.affectedSlideIds],
+        selectedElementIds: [...nextEntry.context.affectedElementIds],
       };
+      state.ui.lastAppliedContext = nextEntry.context;
     },
 
     loadPresentation: (state, action: PayloadAction<Presentation>) => {
-      return {
-        ...state,
-        present: action.payload,
-      }
+      const pres = action.payload;
+      const newContext: HistoryContext = {
+        affectedSlideIds: pres.slides.map((s) => s.id),
+        affectedElementIds: pres.slides.flatMap((s) =>
+          s.elements.map((e) => e.id)
+        ),
+        scrollTargetSlideId: pres.slides[0]?.id,
+      };
+
+      state.presentationHistory = {
+        past: [],
+        present: { presentation: pres, context: newContext },
+        future: [],
+      };
+
+      state.ui.selection = {
+        selectedSlideIds: pres.slides.length ? [pres.slides[0].id] : [],
+        selectedElementIds: [],
+      };
+      state.ui.lastAppliedContext = newContext;
     },
 
     markAsSaved: (state) => {
-      return {
-        ...state,
-        present: pureActions.markAsSaved(state.present),
+      const currentEntry = state.presentationHistory.present;
+      const result = pureActions.markAsSaved(currentEntry.presentation);
+
+      const newPast = [...state.presentationHistory.past, currentEntry];
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) newPast.shift();
+
+      state.presentationHistory = {
+        past: newPast,
+        present: result,
+        future: [],
       };
     },
   },
@@ -370,6 +217,7 @@ export const {
   changeFontFamily,
   changeElementBg,
   changeSlideBg,
+  resizeElement,
   setSelectedSlides,
   setSelectedElements,
   setEditorMode,

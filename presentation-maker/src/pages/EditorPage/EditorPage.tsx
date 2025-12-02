@@ -20,15 +20,14 @@ import {
 } from '../../lib/presentationService.ts';
 import { createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
+import { selectUI } from '../../store/selectors/editorSelectors.ts';
 
 export const EditorPage = () => {
   const { id } = useParams<{ id?: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const selection = useSelector(
-    (state: RootState) => state.editor.present.selection
-  );
+  const { selection } = useSelector(selectUI);
 
   useEffect(() => {
     const load = async () => {

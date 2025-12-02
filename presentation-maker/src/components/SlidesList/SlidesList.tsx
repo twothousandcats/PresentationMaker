@@ -6,11 +6,14 @@ import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
+import {
+  selectCurrentPresentation,
+  selectUI,
+} from '../../store/selectors/editorSelectors.ts';
 
 export default function SlidesList() {
-  const { slides, selection }: Presentation = useSelector(
-    (state: RootState) => state.editor.present
-  );
+  const { slides }: Presentation = useSelector(selectCurrentPresentation);
+  const { selection }: Presentation = useSelector(selectUI);
   const dispatch = useDispatch();
 
   const { handleSelectSlide } = useSelectSlides({

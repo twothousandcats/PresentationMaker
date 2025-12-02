@@ -19,7 +19,7 @@ type Gradient = {
 
 type ImageBackground = {
   type: 'image';
-  data: string; // base64/URL
+  data: string;
 };
 
 type SolidColorBackground = {
@@ -77,16 +77,6 @@ type Selection = {
   selectedElementIds: string[];
 };
 
-type Presentation = {
-  id: string;
-  title: string;
-  slides: Slide[];
-  size: Size;
-  selection: Selection;
-  mode: EditorMode;
-  isNew: boolean;
-};
-
 type Idle = {
   type: 'idle';
 };
@@ -98,10 +88,44 @@ type Placing = {
 
 type EditorMode = Idle | Placing;
 
-type History = {
-  past: Presentation[] | [];
-  present: Presentation;
-  future: Presentation[] | [];
+type Presentation = {
+  id: string;
+  title: string;
+  slides: Slide[];
+  size: Size;
+  isNew: boolean;
+};
+
+// UI-состояние
+type UIState = {
+  selection: Selection;
+  mode: EditorMode;
+  lastAppliedContext?: HistoryContext;
+};
+
+// Контекст действия
+type HistoryContext = {
+  readonly affectedSlideIds: string[];
+  readonly affectedElementIds: string[];
+  readonly scrollTargetSlideId?: string;
+};
+
+// Запись в истории
+type HistoryEntry = {
+  presentation: Presentation;
+  context: HistoryContext;
+};
+
+type PresentationHistory = {
+  past: HistoryEntry[];
+  present: HistoryEntry;
+  future: HistoryEntry[];
+};
+
+// Состояние редактора
+type EditorState = {
+  presentationHistory: PresentationHistory;
+  ui: UIState;
 };
 
 export type {
@@ -120,7 +144,8 @@ export type {
   SlideElement,
   Slide,
   Selection,
-  Presentation,
   EditorMode,
-  History,
+  EditorState,
+  Presentation,
+  HistoryEntry,
 };

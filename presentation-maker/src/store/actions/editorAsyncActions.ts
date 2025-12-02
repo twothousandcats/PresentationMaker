@@ -29,10 +29,9 @@ export const addImageElement =
         },
       };
 
-      // 3. Добавляем в слайд
+      // Добавляем в слайд
       dispatch(addElementToSlide({ slideId, newElement }));
     } catch (error) {
       console.error('Не удалось добавить изображение:', error);
-      // Опционально: показать уведомление
     }
   };

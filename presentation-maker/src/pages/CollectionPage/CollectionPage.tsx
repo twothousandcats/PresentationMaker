@@ -30,6 +30,7 @@ export const CollectionPage = () => {
 
         // Запрашиваем презентации
         const userPresentations = await getUserPresentations(creatorId);
+        console.log(userPresentations);
         setPresentationList(userPresentations);
       } catch (err) {
         console.error('Не удалось загрузить презентации:', err);

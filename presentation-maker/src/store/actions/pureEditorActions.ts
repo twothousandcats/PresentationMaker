@@ -4,14 +4,10 @@ import type {
   Background,
   SlideElement,
   Slide,
-  Presentation,
-  EditorMode,
+  HistoryEntry,
 } from '../types/types';
 
-function updateSlide(
-  updatedSlide: Slide,
-  pres: Presentation
-): Presentation {
+function updateSlide(updatedSlide: Slide, pres: Presentation): Presentation {
   return {
     ...pres,
     slides: pres.slides.map((slide) =>
@@ -36,7 +32,7 @@ function updateElementInSlide(
     elements: targetSlide.elements.map((element) =>
       element.id === elementId
         ? // без тайп гарда ide ругается {}[] из-за map
-        updater(element)
+          updater(element)
         : element
     ),
   };
@@ -47,51 +43,60 @@ function updateElementInSlide(
 export function renamePresentation(
   pres: Presentation,
   payload: { newName: string }
-): Presentation {
-  const { newName } = payload;
+): HistoryEntry {
+  const updatedPres = { ...pres, title: payload.newName };
+
   return {
-    ...pres,
-    title: newName,
+    presentation: updatedPres,
+    context: {
+      affectedSlideIds: [],
+      affectedElementIds: [],
+      scrollTargetSlideId: undefined,
+    },
   };
 }
 
 export function addSlide(
   pres: Presentation,
   payload: { newSlide: Slide }
-): Presentation {
-  const { newSlide } = payload;
-  return {
+): HistoryEntry {
+  const updatedPresentation = {
     ...pres,
-    slides: [...pres.slides, newSlide],
+    slides: [...pres.slides, payload.newSlide],
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [payload.newSlide.id],
+      affectedElementIds: [],
+      scrollTargetSlideId: payload.newSlide.id,
+    },
   };
 }
 
 export function removeSlide(
   pres: Presentation,
   payload: { slideIdsToRemove: string[] }
-): Presentation {
+): HistoryEntry {
   const { slideIdsToRemove } = payload;
   const newSlides = pres.slides.filter(
     (slide) => !slideIdsToRemove.includes(slide.id)
   );
-  const newSelectedSlideIds = pres.selection.selectedSlideIds.filter(
-    (id) => !slideIdsToRemove.includes(id)
-  );
-  const newSelection =
-    !newSelectedSlideIds.length && newSlides.length > 0
-      ? {
-        ...pres.selection,
-        selectedSlideIds: [newSlides[0].id],
-      }
-      : {
-        ...pres.selection,
-        selectedSlideIds: newSelectedSlideIds,
-      };
-
-  return {
+  const scrollTargetSlideId =
+    newSlides.length > 0 ? newSlides[0].id : undefined;
+  const updatedPres: Presentation = {
     ...pres,
     slides: newSlides,
-    selection: newSelection,
+  };
+
+  return {
+    presentation: updatedPres,
+    context: {
+      affectedSlideIds: slideIdsToRemove,
+      affectedElementIds: [],
+      scrollTargetSlideId,
+    },
   };
 }
 
@@ -101,19 +106,17 @@ export function moveSlides(
     slideIds: string[];
     newIndex: number;
   }
-): Presentation {
+): HistoryEntry {
   const { slideIds, newIndex } = payload;
 
   // Убираем дубликаты и сохраняем порядок
   const uniqueSlideIds = Array.from(new Set(slideIds));
 
-  const slides = [...pres.slides];
-
   // Находим текущие индексы перемещаемых слайдов
   const movedSlides: Slide[] = [];
   const remainingSlides: Slide[] = [];
 
-  for (const slide of slides) {
+  for (const slide of pres.slides) {
     if (uniqueSlideIds.includes(slide.id)) {
       movedSlides.push(slide);
     } else {
@@ -123,7 +126,14 @@ export function moveSlides(
 
   // Если ни один из слайдов не найден или newIndex не требует изменений
   if (movedSlides.length === 0) {
-    return pres;
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
   }
 
   // Не выходим за 0 и максимальный индекс
@@ -138,9 +148,18 @@ export function moveSlides(
     ...remainingSlides.slice(clampedNewIndex),
   ];
 
-  return {
+  const updatedPresentation = {
     ...pres,
     slides: newSlides,
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: uniqueSlideIds,
+      affectedElementIds: [],
+      scrollTargetSlideId: uniqueSlideIds[0],
+    },
   };
 }
 
@@ -150,19 +169,39 @@ export function addElementToSlide(
     slideId: string;
     newElement: SlideElement;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, newElement } = payload;
-  const targetSlide = pres.slides.find((slide) => slide.id === slideId);
-  if (!targetSlide) {
-    return pres;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
   }
 
-  const updatedSlide: Slide = {
-    ...targetSlide,
-    elements: [...targetSlide.elements, newElement],
+  const updatedSlides = [...pres.slides];
+  updatedSlides[slideIndex] = {
+    ...updatedSlides[slideIndex],
+    elements: [...updatedSlides[slideIndex].elements, newElement],
   };
 
-  return updateSlide(updatedSlide, pres);
+  const updatedPresentation: Presentation = {
+    ...pres,
+    slides: updatedSlides,
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [newElement.id],
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function removeElementsFromSlide(
@@ -171,28 +210,40 @@ export function removeElementsFromSlide(
     slideId: string;
     elementIds: string[];
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementIds } = payload;
-  const targetSlide = pres.slides.find((slide) => slide.id === slideId);
-  if (!targetSlide) {
-    return pres;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
   }
 
-  const updatedSlide: Slide = {
-    ...targetSlide,
-    elements: targetSlide.elements.filter((el) => !elementIds.includes(el.id)),
+  const updatedSlides = [...pres.slides];
+  updatedSlides[slideIndex] = {
+    ...updatedSlides[slideIndex],
+    elements: updatedSlides[slideIndex].elements.filter(
+      (el) => !elementIds.includes(el.id)
+    ),
   };
-  const newSelectedElementIds = pres.selection.selectedElementIds.filter(
-    (id) => !elementIds.includes(id)
-  );
-  const newSelection = {
-    ...pres.selection,
-    selectedElementIds: newSelectedElementIds,
+
+  const updatedPresentation: Presentation = {
+    ...pres,
+    slides: updatedSlides,
   };
 
   return {
-    ...updateSlide(updatedSlide, pres),
-    selection: newSelection,
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementIds,
+      scrollTargetSlideId: slideId,
+    },
   };
 }
 
@@ -203,15 +254,23 @@ export function changeElPosition(
     elementId: string;
     newPosition: Position;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementId, newPosition } = payload;
-
-  return updateElementInSlide(
+  const updatedPresentation = updateElementInSlide(
     slideId,
     elementId,
     (el) => ({ ...el, position: newPosition }) as SlideElement,
     pres
   );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function changeElSize(
@@ -221,14 +280,23 @@ export function changeElSize(
     elementId: string;
     newSize: Size;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementId, newSize } = payload;
-  return updateElementInSlide(
+  const updatedPresentation = updateElementInSlide(
     slideId,
     elementId,
     (el) => ({ ...el, size: newSize }) as SlideElement,
     pres
   );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function changeTextElContent(
@@ -238,14 +306,23 @@ export function changeTextElContent(
     elementId: string;
     newContent: string;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementId, newContent } = payload;
-  return updateElementInSlide(
+  const updatedPresentation = updateElementInSlide(
     slideId,
     elementId,
     (el) => ({ ...el, content: newContent }) as SlideElement,
     pres
   );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function changeFontFamily(
@@ -255,14 +332,23 @@ export function changeFontFamily(
     elementId: string;
     newFF: string;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementId, newFF } = payload;
-  return updateElementInSlide(
+  const updatedPresentation = updateElementInSlide(
     slideId,
     elementId,
     (el) => ({ ...el, fontFamily: newFF }) as SlideElement,
     pres
   );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementId,
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function changeElementBg(
@@ -272,14 +358,23 @@ export function changeElementBg(
     elementId: string;
     newBg: Background;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, elementId, newBg } = payload;
-  return updateElementInSlide(
+  const updatedPresentation = updateElementInSlide(
     slideId,
     elementId,
     (el) => ({ ...el, background: newBg }) as SlideElement,
     pres
   );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
 }
 
 export function changeSlideBg(
@@ -288,92 +383,90 @@ export function changeSlideBg(
     slideId: string;
     newBg: Background;
   }
-): Presentation {
+): HistoryEntry {
   const { slideId, newBg } = payload;
-  const targetSlide = pres.slides.find((slide) => slide.id === slideId);
-  if (!targetSlide) {
-    return pres;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
   }
 
-  const updatedSlide: Slide = {
-    ...targetSlide,
+  const updatedSlides = [...pres.slides];
+  updatedSlides[slideIndex] = {
+    ...updatedSlides[slideIndex],
     background: newBg,
   };
 
-  return updateSlide(updatedSlide, pres);
-}
-
-export function setSelectedSlides(
-  pres: Presentation,
-  payload: {
-    slideIds: string[];
-  }
-): Presentation {
-  const { slideIds } = payload;
-  return {
+  const updatedPresentation: Presentation = {
     ...pres,
-    selection: {
-      ...pres.selection,
-      selectedSlideIds: slideIds,
+    slides: updatedSlides,
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [],
+      scrollTargetSlideId: slideId,
     },
   };
 }
 
-export function setSelectedElements(
+export function resizeElement(
   pres: Presentation,
   payload: {
-    elementsIds: string[];
+    slideId: string;
+    elementId: string;
+    newSize: Size;
+    newPosition: Position;
   }
-): Presentation {
-  const { elementsIds } = payload;
+): HistoryEntry {
+  const { slideId, elementId, newSize, newPosition } = payload;
+
+  // размер
+  let updatedPres = updateElementInSlide(
+    slideId,
+    elementId,
+    (el) => ({ ...el, size: newSize }) as SlideElement,
+    pres
+  );
+
+  // позиция
+  updatedPres = updateElementInSlide(
+    slideId,
+    elementId,
+    (el) => ({ ...el, position: newPosition }) as SlideElement,
+    updatedPres
+  );
+
   return {
-    ...pres,
-    selection: {
-      ...pres.selection,
-      selectedElementIds: elementsIds,
+    presentation: updatedPres,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
     },
   };
 }
 
-export function setEditorMode(
-  pres: Presentation,
-  payload: { mode: EditorMode }
-): Presentation {
-  const { mode } = payload;
-  return {
-    ...pres,
-    mode,
-  };
-}
-
-export function clearSelection(pres: Presentation): Presentation {
-  if (pres.selection.selectedElementIds.length > 0) {
-    return {
-      ...pres,
-      selection: {
-        ...pres.selection,
-        selectedElementIds: [],
-      },
-    };
-  } else if (
-    pres.selection.selectedElementIds.length === 0 &&
-    pres.selection.selectedSlideIds.length > 0
-  ) {
-    return {
-      ...pres,
-      selection: {
-        ...pres.selection,
-        selectedSlideIds: [],
-      },
-    };
-  } else {
-    return pres;
-  }
-}
-
-export function markAsSaved(pres: Presentation) {
-  return {
+export function markAsSaved(pres: Presentation): HistoryEntry {
+  const updatedPresentation = {
     ...pres,
     isNew: false,
-  }
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [],
+      affectedElementIds: [],
+      scrollTargetSlideId: undefined,
+    },
+  };
 }

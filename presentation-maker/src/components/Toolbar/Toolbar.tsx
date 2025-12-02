@@ -41,14 +41,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { savePresentation } from '../../lib/presentationService.ts';
+import {
+  selectCurrentPresentation,
+  selectHistory,
+  selectUI,
+} from '../../store/selectors/editorSelectors.ts';
 
 export default function Toolbar() {
-  const { id, title, selection }: Presentation = useSelector(
-    (state: RootState) => state.editor.present
-  );
-  const { past, present, future }: History = useSelector(
-    (state: RootState) => state.editor
-  );
+  const { id, title }: Presentation = useSelector(selectCurrentPresentation);
+  const { selection }: Presentation = useSelector(selectUI);
+  const { past, present, future }: History = useSelector(selectHistory);
   const dispatch = useDispatch();
 
   const [isExpanded, setExpanded] = useState(false);
