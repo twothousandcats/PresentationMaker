@@ -46,6 +46,7 @@ import {
   selectHistory,
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
+import { AUTOSAVE_DELAY_MS } from '../../store/utils/config.ts';
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
@@ -53,6 +54,12 @@ export default function Toolbar() {
   const { past, future }: PresentationHistory = useSelector(selectHistory);
   const presentation = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
+
+  const [lastSaveLength, setLastSaveLength] = useState<number>(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const presentationRef = useRef(presentation);
+  const pastLengthRef = useRef(past.length);
+  const lastSaveLengthRef = useRef(lastSaveLength);
 
   const [isExpanded, setExpanded] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
@@ -155,27 +162,51 @@ export default function Toolbar() {
     };
   }, [handleClickOutside]);
 
-  const handleSave = async () => {
-    try {
-      const user = await getCurrentUser();
-      const currentUser = user?.$id;
+  useEffect(() => {
+    presentationRef.current = presentation;
+    pastLengthRef.current = past.length;
+    lastSaveLengthRef.current = lastSaveLength;
+  });
 
-      if (currentUser) {
-        await savePresentation(presentation, currentUser);
+  useEffect(() => {
+    intervalRef.current = setInterval(async () => {
+      const currentPresentation = presentationRef.current;
+      const currentPastLength = pastLengthRef.current;
+      const currentLastSaveLength = lastSaveLengthRef.current;
+
+      if (currentPastLength === currentLastSaveLength) {
+        return;
+      }
+
+      try {
+        const user = await getCurrentUser();
+        const currentUser = user?.$id;
+        if (!currentUser) {
+          return;
+        }
+
+        await savePresentation(currentPresentation, currentUser);
         if (presentation.isNew) {
           dispatch(markAsSaved());
         }
+        setLastSaveLength(currentPastLength);
+      } catch (error) {
+        console.error('Ошибка автосохранения:', error);
       }
-    } catch (error) {
-      console.error('Ошибка сохранения презентации в БД: ', error);
-    }
-  };
+    }, AUTOSAVE_DELAY_MS);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  });
 
   const toolbarButtons = [
     {
       icon: <IconDownload />,
-      fn: async () => await handleSave(),
-      ariaLabel: 'Сохранить презентацию',
+      fn: () => console.log('Сохранить презентацию в pdf'),
+      ariaLabel: 'Сохранить презентацию в pdf',
     },
     {
       icon: <IconPlus />,

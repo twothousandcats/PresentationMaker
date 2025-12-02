@@ -1,7 +1,7 @@
 import { getRandomId } from './functions.ts';
 import type { Presentation } from '../types/types.ts';
 
-const autoSaveDelayMS: number = 10000;
+const AUTOSAVE_DELAY_MS: number = 10000;
 
 const PRESENTATION_SIZE = {
   width: 1240,
@@ -133,7 +133,7 @@ const getPortal = () => {
 };
 
 export {
-  autoSaveDelayMS,
+  AUTOSAVE_DELAY_MS,
   DEFAULT_SLIDE_WIDTH,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
