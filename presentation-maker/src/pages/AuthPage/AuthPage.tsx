@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type {
   AuthMode,
   ValidationError,
 } from '../../store/types/utility-types.ts';
-import { login, register } from '../../lib/authService.ts';
+import { getCurrentUser, login, register } from '../../lib/authService.ts';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import style from './AuthPage.module.css';
@@ -133,6 +133,23 @@ export function AuthPage() {
     setMode(isLoginMode() ? 'register' : 'login');
     setErrors({});
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkAuth = async () => {
+      const user = await getCurrentUser();
+      if (isMounted && user?.$id) {
+        navigate(PAGES_URL.collectionPage, { replace: true });
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate]);
 
   return (
     <>

@@ -18,15 +18,20 @@ export const CollectionPage = () => {
   const [presentationList, setPresentationList] = useState<
     PresentationPreview[]
   >([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPresentations = async () => {
       try {
         const user = await getCurrentUser();
-        const creatorId = user!.$id; // !. ?
-        console.log(user);
+        const creatorId = user?.$id;
+
+        if (!creatorId) {
+          console.warn('No user ID found');
+          setPresentationList([]);
+          return;
+        }
 
         // Запрашиваем презентации
         const userPresentations = await getUserPresentations(creatorId);
@@ -34,6 +39,7 @@ export const CollectionPage = () => {
         setPresentationList(userPresentations);
       } catch (err) {
         console.error('Не удалось загрузить презентации:', err);
+        setPresentationList([]);
       } finally {
         setLoading(false);
       }
@@ -62,7 +68,7 @@ export const CollectionPage = () => {
               className={`${style.collectionItem} ${style.createItem}`}
               onClick={handleCreatePresentation}
             ></li>
-            {presentationList.length > 0 ?
+            {presentationList.length > 0 &&
               presentationList.map((item) => (
                 <li
                   key={item.id}
@@ -74,9 +80,7 @@ export const CollectionPage = () => {
                   <p>{item.createdAt}</p>
                   <p>{item.updatedAt}</p>
                 </li>
-              ))
-              : <Loader />
-            }
+              ))}
           </ul>
         </div>
       )}
