@@ -1,9 +1,9 @@
 import type {
   EditorMode,
-  HistoryContext,
-  Presentation,
   EditorState,
+  HistoryContext,
   HistoryEntry,
+  Presentation,
 } from '../types/types.ts';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import * as pureActions from '../actions/pureEditorActions.ts';
@@ -55,7 +55,8 @@ function createHistoryReducer<T>(
     };
 
     // Восстанавливаем UI
-    const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = result.context;
+    const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } =
+      result.context;
     if (scrollTargetSlideId) {
       state.ui.selection = {
         selectedSlideIds: [scrollTargetSlideId],
@@ -83,7 +84,9 @@ const editorSlice = createSlice({
     removeSlide: createHistoryReducer(pureActions.removeSlide),
     moveSlides: createHistoryReducer(pureActions.moveSlides),
     addElementToSlide: createHistoryReducer(pureActions.addElementToSlide),
-    removeElementsFromSlide: createHistoryReducer(pureActions.removeElementsFromSlide),
+    removeElementsFromSlide: createHistoryReducer(
+      pureActions.removeElementsFromSlide
+    ),
     changeElPosition: createHistoryReducer(pureActions.changeElPosition),
     changeElSize: createHistoryReducer(pureActions.changeElSize),
     changeTextElContent: createHistoryReducer(pureActions.changeTextElContent),
@@ -138,17 +141,33 @@ const editorSlice = createSlice({
 
       state.presentationHistory.future.unshift(currentEntry);
       state.presentationHistory.present = prevEntry;
-      console.log(state);
 
-      // восстановление выделения, если контекст не пустой
-      const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = currentEntry.context;
-      console.log(scrollTargetSlideId);
+      // восстановление выделения из контекста отменяемого действия
+      const { affectedSlideIds, affectedElementIds } = currentEntry.context;
       if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
         state.ui.selection = {
           selectedSlideIds: [...affectedSlideIds],
           selectedElementIds: [...affectedElementIds],
         };
       }
+
+      // обработка валидации выделения
+      const slides = state.presentationHistory.present.presentation.slides;
+      const validSlideIds = state.ui.selection.selectedSlideIds.filter((id) =>
+        slides.some((s) => s.id === id)
+      );
+
+      if (validSlideIds.length === 0 && slides.length > 0) {
+        state.ui.selection.selectedSlideIds = [slides[slides.length - 1].id];
+        state.ui.selection.selectedElementIds = [];
+      } else {
+        state.ui.selection.selectedSlideIds = validSlideIds;
+        state.ui.selection.selectedElementIds =
+          state.ui.selection.selectedElementIds.filter((id) =>
+            slides.some((s) => s.elements.some((e) => e.id === id))
+          );
+      }
+
       state.ui.lastAppliedContext = currentEntry.context;
     },
 
@@ -162,13 +181,31 @@ const editorSlice = createSlice({
       state.presentationHistory.present = nextEntry;
 
       // восстановление выделения, если контекст не пустой
-      const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } = nextEntry.context;
+      const { affectedSlideIds, affectedElementIds } = nextEntry.context;
       if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
         state.ui.selection = {
           selectedSlideIds: [...affectedSlideIds],
           selectedElementIds: [...affectedElementIds],
         };
       }
+
+      // обработка валидации выделения
+      const slides = state.presentationHistory.present.presentation.slides;
+      const validSlideIds = state.ui.selection.selectedSlideIds.filter((id) =>
+        slides.some((s) => s.id === id)
+      );
+
+      if (validSlideIds.length === 0 && slides.length > 0) {
+        state.ui.selection.selectedSlideIds = [slides[slides.length - 1].id];
+        state.ui.selection.selectedElementIds = [];
+      } else {
+        state.ui.selection.selectedSlideIds = validSlideIds;
+        state.ui.selection.selectedElementIds =
+          state.ui.selection.selectedElementIds.filter((id) =>
+            slides.some((s) => s.elements.some((e) => e.id === id))
+          );
+      }
+
       state.ui.lastAppliedContext = currentEntry.context;
     },
 

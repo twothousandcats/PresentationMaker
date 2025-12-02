@@ -1,4 +1,5 @@
 import { storage } from './appwriteClient.ts';
+import { AppwriteException } from 'appwrite';
 
 const BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
 
@@ -49,11 +50,12 @@ export async function uploadFile(file: File, userId: string): Promise<string> {
 
     return publicLink;
   } catch (error) {
+    const newError = error as AppwriteException;
     console.log('Ошибка загрузки файла:', {
-      code: error?.code,
-      message: error?.message,
-      type: error?.type,
-      response: error?.response,
+      code: newError?.code,
+      message: newError?.message,
+      type: newError?.type,
+      response: newError?.response,
     });
     throw error;
   }

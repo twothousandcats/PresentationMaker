@@ -14,9 +14,7 @@ import Toolbar from '../../components/Toolbar/Toolbar.tsx';
 import SlidesList from '../../components/SlidesList/SlidesList.tsx';
 import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  getPresentation,
-} from '../../lib/presentationService.ts';
+import { getPresentation } from '../../lib/presentationService.ts';
 import { createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
@@ -84,15 +82,13 @@ export const EditorPage = () => {
         );
         dispatch(clearSelection());
       } else if (
-        (event.ctrlKey && event.key.toLowerCase() === 'z') ||
-        (event.metaKey && event.key.toLowerCase() === 'z')
+        (event.ctrlKey || event.metaKey) &&
+        event.code === 'KeyZ' &&
+        !event.shiftKey
       ) {
         event.preventDefault();
         dispatch(undo());
-      } else if (
-        (event.ctrlKey && event.key.toLowerCase() === 'y') ||
-        (event.metaKey && event.key.toLowerCase() === 'y')
-      ) {
+      } else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyY') {
         event.preventDefault();
         dispatch(redo());
       }

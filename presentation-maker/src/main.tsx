@@ -2,7 +2,6 @@ import {
   createContext,
   type FC,
   type ReactNode,
-  StrictMode,
   useEffect,
   useState,
 } from 'react';
