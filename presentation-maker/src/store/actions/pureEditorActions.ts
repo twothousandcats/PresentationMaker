@@ -452,6 +452,8 @@ export function resizeElement(
     pres
   );
 
+  console.log(updatedPres);
+
   // позиция
   updatedPres = updateElementInSlide(
     slideId,
@@ -459,6 +461,8 @@ export function resizeElement(
     (el) => ({ ...el, position: newPosition }) as SlideElement,
     updatedPres
   );
+
+  console.log(updatedPres);
 
   return {
     presentation: updatedPres,
