@@ -15,7 +15,7 @@ import SlidesList from '../../components/SlidesList/SlidesList.tsx';
 import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPresentation } from '../../lib/presentationService.ts';
-import { createNewPresentation } from '../../store/utils/functions.ts';
+import { concatClassNames, createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
@@ -27,13 +27,14 @@ export const EditorPage = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
-  const {save} = usePresentationSave();
+  const { save, isSaving } = usePresentationSave();
 
   const { selection } = useSelector(selectUI);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
+
       try {
         if (id) {
           const presentation = await getPresentation(id);
@@ -125,6 +126,7 @@ export const EditorPage = () => {
           <SlideEditor />
         </div>
       )}
+      <div className={concatClassNames([style.statusModal, isSaving && style.statusModalShown])}>Сохранение презентации...</div>
     </section>
   );
 };

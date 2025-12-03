@@ -17,3 +17,23 @@
     display: flex;
     gap: 10px;
 }
+
+.statusModal {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+
+    padding: 20px;
+
+    border: 1px solid var(--form-wrapper-bg-default);
+    border-radius: 20px;
+    background-color: var(--info-default-message);
+
+    transition: top 0.3s ease;
+
+    transform: translateX(-50%);
+
+    &.statusModalShown {
+        top: 20px;
+    }
+}

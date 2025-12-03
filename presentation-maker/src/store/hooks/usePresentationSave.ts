@@ -15,10 +15,13 @@ export const usePresentationSave = () => {
   const { past } = useSelector(selectHistory);
 
   const [lastSaveLength, setLastSaveLength] = useState<number>(0);
+  const [isSaving, setIsSaving] = useState(false);
+
   const presentationRef = useRef(presentation);
   const pastLengthRef = useRef(past.length);
   const lastSaveLengthRef = useRef(lastSaveLength);
 
+  // Синхронизация
   useEffect(() => {
     presentationRef.current = presentation;
     pastLengthRef.current = past.length;
@@ -34,6 +37,8 @@ export const usePresentationSave = () => {
       return;
     }
 
+    setIsSaving(true);
+
     try {
       const user = await getCurrentUser();
       const currentUserId = user?.$id;
@@ -48,6 +53,7 @@ export const usePresentationSave = () => {
       }
       setLastSaveLength(currentPastLength);
       lastSaveLengthRef.current = currentPastLength; // синхронизируем ref
+      setIsSaving(false);
     } catch (error) {
       console.error('Ошибка сохранения:', error);
     }
@@ -61,5 +67,5 @@ export const usePresentationSave = () => {
     return () => clearInterval(interval);
   }, [save]);
 
-  return { save, lastSaveLength };
+  return { save, lastSaveLength, isSaving };
 };

@@ -37,6 +37,9 @@
 
     --form-wrapper-bg-default: #19191c;
 
+    /* INFO */
+    --info-default-message: #64d5ba;
+
     /* ERRORS */
     --error-default-message: #fd376e;
 
