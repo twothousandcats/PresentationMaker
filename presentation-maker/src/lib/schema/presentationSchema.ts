@@ -54,7 +54,6 @@ export interface SavedPresentation {
   title: string;
   slides: Slide[];
   size: Size;
-  isNew: boolean;
 }
 
 // Вспомогательные схемы
@@ -203,8 +202,7 @@ export const presentationSchema = {
       minItems: 1,
     },
     size: sizeSchema,
-    isNew: { type: 'boolean' },
   },
-  required: ['id', 'title', 'slides', 'size', 'isNew'],
+  required: ['id', 'title', 'slides', 'size'],
   additionalProperties: false,
 } as const;

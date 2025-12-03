@@ -54,6 +54,25 @@ function createHistoryReducer<T>(
       future: [],
     };
 
+    /* const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } =
+      result.context;
+
+    if (scrollTargetSlideId) {
+      const newSlideIds = [scrollTargetSlideId];
+      const newElementIds =
+        affectedElementIds.length > 0 ? [...affectedElementIds] : [];
+
+      state.ui.selection = {
+        selectedSlideIds: newSlideIds,
+        selectedElementIds: newElementIds,
+      };
+    } else if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
+      state.ui.selection = {
+        selectedSlideIds: [...affectedSlideIds],
+        selectedElementIds: [...affectedElementIds],
+      };
+    } */
+
     // Восстанавливаем UI
     const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } =
       result.context;
@@ -235,28 +254,11 @@ const editorSlice = createSlice({
       };
       state.ui.lastAppliedContext = newContext;
     },
-
-    markAsSaved: (state) => {
-      const currentEntry = state.presentationHistory.present;
-      const result = pureActions.markAsSaved(currentEntry.presentation);
-
-      const newPast = [...state.presentationHistory.past, currentEntry];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
-        newPast.shift();
-      }
-
-      state.presentationHistory = {
-        past: newPast,
-        present: result,
-        future: [],
-      };
-    },
   },
 });
 
 export const {
   loadPresentation,
-  markAsSaved,
   renamePresentation,
   addSlide,
   removeSlide,

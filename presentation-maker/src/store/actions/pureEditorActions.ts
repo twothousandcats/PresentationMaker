@@ -469,19 +469,3 @@ export function resizeElement(
     },
   };
 }
-
-export function markAsSaved(pres: Presentation): HistoryEntry {
-  const updatedPresentation = {
-    ...pres,
-    isNew: false,
-  };
-
-  return {
-    presentation: updatedPresentation,
-    context: {
-      affectedSlideIds: [],
-      affectedElementIds: [],
-      scrollTargetSlideId: undefined,
-    },
-  };
-}

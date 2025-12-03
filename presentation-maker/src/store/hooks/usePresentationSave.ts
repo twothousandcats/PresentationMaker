@@ -1,42 +1,26 @@
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectCurrentPresentation,
-  selectHistory,
-} from '../selectors/editorSelectors.ts';
+import { useSelector } from 'react-redux';
+import { selectCurrentPresentation } from '../selectors/editorSelectors.ts';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AUTOSAVE_DELAY_MS } from '../utils/config.ts';
-import { markAsSaved } from '../slices/editorSlice.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { savePresentation } from '../../lib/presentationService.ts';
 
 export const usePresentationSave = () => {
-  const dispatch = useDispatch();
   const presentation = useSelector(selectCurrentPresentation);
-  const { past } = useSelector(selectHistory);
-
-  const [lastSaveLength, setLastSaveLength] = useState<number>(0);
   const [isSaving, setIsSaving] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const savedPresentationRef = useRef(presentation);
 
-  const presentationRef = useRef(presentation);
-  const pastLengthRef = useRef(past.length);
-  const lastSaveLengthRef = useRef(lastSaveLength);
-
-  // Синхронизация
+  // Сброс при размонтировании
   useEffect(() => {
-    presentationRef.current = presentation;
-    pastLengthRef.current = past.length;
-    lastSaveLengthRef.current = lastSaveLength;
-  });
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const save = useCallback(async () => {
-    const currentPresentation = presentationRef.current;
-    const currentPastLength = pastLengthRef.current;
-
-    // Нет изменений — не сохраняем
-    if (currentPastLength === lastSaveLengthRef.current) {
-      return;
-    }
-
     setIsSaving(true);
 
     try {
@@ -47,25 +31,30 @@ export const usePresentationSave = () => {
         return;
       }
 
-      await savePresentation(currentPresentation, currentUserId);
-      if (currentPresentation.isNew) {
-        dispatch(markAsSaved());
-      }
-      setLastSaveLength(currentPastLength);
-      lastSaveLengthRef.current = currentPastLength; // синхронизируем ref
+      await savePresentation(presentation, currentUserId);
+
       setIsSaving(false);
+      savedPresentationRef.current = presentation;
     } catch (error) {
       console.error('Ошибка сохранения:', error);
     }
-  }, [dispatch]);
+  }, [presentation]);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      await save();
+    // Отмена
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // защита (нужна ли)
+    if (presentation === savedPresentationRef.current) {
+      return;
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      save();
     }, AUTOSAVE_DELAY_MS);
+  }, [presentation, save]); // presentation триггер
 
-    return () => clearInterval(interval);
-  }, [save]);
-
-  return { save, lastSaveLength, isSaving };
+  return { save, isSaving };
 };

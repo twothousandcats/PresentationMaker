@@ -93,7 +93,6 @@ type Presentation = {
   title: string;
   slides: Slide[];
   size: Size;
-  isNew: boolean;
 };
 
 // UI-состояние

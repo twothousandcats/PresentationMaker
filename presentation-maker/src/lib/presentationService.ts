@@ -21,7 +21,11 @@ export async function savePresentation(
   presentation: Presentation,
   creatorId: string
 ) {
-  console.log(presentation);
+  console.log('Начало сохранения презентации:', presentation.id);
+
+  const userPresentations = await getUserPresentations(creatorId);
+  const presentationExists = userPresentations.some(p => p.id === presentation.id);
+
   const data = prepareData(presentation, creatorId);
   const permissions = [
     `read("user:${creatorId}")`,
@@ -29,7 +33,7 @@ export async function savePresentation(
   ];
 
   try {
-    if (!presentation.isNew) {
+    if (presentationExists) {
       console.log('Презентация успешно обновлена в БД');
       return await tablesDB.updateRow({
         databaseId: DATABASE_ID,
@@ -82,7 +86,6 @@ export async function getPresentation(id: string) {
 
     return {
       ...validatedPresentation,
-      isNew: false,
     } as Presentation;
   } catch (error) {
     console.error('Ошибка загрузки презентации: ', error);

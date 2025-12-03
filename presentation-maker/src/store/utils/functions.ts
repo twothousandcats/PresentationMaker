@@ -93,6 +93,5 @@ export const createNewPresentation = (): Presentation => {
       width: PRESENTATION_SIZE.width,
       height: PRESENTATION_SIZE.height,
     },
-    isNew: true,
   };
 };
