@@ -134,7 +134,9 @@ const editorSlice = createSlice({
     },
 
     undo: (state) => {
-      if (state.presentationHistory.past.length === 0) return;
+      if (state.presentationHistory.past.length === 0) {
+        return;
+      }
 
       const prevEntry = state.presentationHistory.past.pop()!;
       const currentEntry = state.presentationHistory.present;
@@ -172,7 +174,9 @@ const editorSlice = createSlice({
     },
 
     redo: (state) => {
-      if (state.presentationHistory.future.length === 0) return;
+      if (state.presentationHistory.future.length === 0) {
+        return;
+      }
 
       const nextEntry = state.presentationHistory.future.shift()!;
       const currentEntry = state.presentationHistory.present;
@@ -237,7 +241,9 @@ const editorSlice = createSlice({
       const result = pureActions.markAsSaved(currentEntry.presentation);
 
       const newPast = [...state.presentationHistory.past, currentEntry];
-      if (newPast.length > MAX_HISTORY_STACK_SIZE) newPast.shift();
+      if (newPast.length > MAX_HISTORY_STACK_SIZE) {
+        newPast.shift();
+      }
 
       state.presentationHistory = {
         past: newPast,

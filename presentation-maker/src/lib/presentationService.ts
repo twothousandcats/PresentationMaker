@@ -1,6 +1,8 @@
 import type { Presentation } from '../store/types/types.ts';
 import { tablesDB } from './appwriteClient.ts';
 import { Query } from 'appwrite';
+import Ajv from 'ajv';
+import { presentationSchema, type SavedPresentation } from './schema/presentationSchema.ts';
 
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
@@ -13,10 +15,13 @@ function prepareData(presentation: Presentation, creatorId: string) {
   };
 }
 
+const ajv = new Ajv({ strict: true, allErrors: true });
+
 export async function savePresentation(
   presentation: Presentation,
   creatorId: string
 ) {
+  console.log(presentation);
   const data = prepareData(presentation, creatorId);
   const permissions = [
     `read("user:${creatorId}")`,
@@ -56,19 +61,27 @@ export async function getPresentation(id: string) {
       tableId: COLLECTION_ID,
       rowId: id,
     });
+
     const parsedPresentation = JSON.parse(doc.data);
+    const validate = ajv.compile(presentationSchema);
+    const isValid = validate(parsedPresentation);
+
+    if (!isValid) {
+      const errorMsg =
+        validate.errors
+          ?.map(
+            (err) =>
+              `${err.instancePath || '/'}: ${err.message || 'ошибка валидации'}`
+          )
+          .join('; ') || 'неизвестная ошибка валидации';
+
+      throw new Error(`Данные презентации не валидные: ${errorMsg}`);
+    }
+
+    const validatedPresentation = parsedPresentation as SavedPresentation;
 
     return {
-      id: doc.$id,
-      title: doc.title,
-      ...parsedPresentation,
-      selection: {
-        selectedSlideIds: [],
-        selectedElementIds: [],
-      },
-      mode: {
-        type: 'idle' as const,
-      },
+      ...validatedPresentation,
       isNew: false,
     } as Presentation;
   } catch (error) {

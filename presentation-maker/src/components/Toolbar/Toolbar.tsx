@@ -24,7 +24,6 @@ import {
   addSlide,
   changeElementBg,
   changeSlideBg,
-  markAsSaved,
   redo,
   removeSlide,
   renamePresentation,
@@ -39,27 +38,17 @@ import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
 import IconRectangle from '../Icons/IconRectangle.tsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser } from '../../lib/authService.ts';
-import { savePresentation } from '../../lib/presentationService.ts';
 import {
   selectCurrentPresentation,
   selectHistory,
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
-import { AUTOSAVE_DELAY_MS } from '../../store/utils/config.ts';
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
   const { selection }: UIState = useSelector(selectUI);
   const { past, future }: PresentationHistory = useSelector(selectHistory);
-  const presentation = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
-
-  const [lastSaveLength, setLastSaveLength] = useState<number>(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const presentationRef = useRef(presentation);
-  const pastLengthRef = useRef(past.length);
-  const lastSaveLengthRef = useRef(lastSaveLength);
 
   const [isExpanded, setExpanded] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
@@ -161,46 +150,6 @@ export default function Toolbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [handleClickOutside]);
-
-  useEffect(() => {
-    presentationRef.current = presentation;
-    pastLengthRef.current = past.length;
-    lastSaveLengthRef.current = lastSaveLength;
-  });
-
-  useEffect(() => {
-    intervalRef.current = setInterval(async () => {
-      const currentPresentation = presentationRef.current;
-      const currentPastLength = pastLengthRef.current;
-      const currentLastSaveLength = lastSaveLengthRef.current;
-
-      if (currentPastLength === currentLastSaveLength) {
-        return;
-      }
-
-      try {
-        const user = await getCurrentUser();
-        const currentUser = user?.$id;
-        if (!currentUser) {
-          return;
-        }
-
-        await savePresentation(currentPresentation, currentUser);
-        if (presentation.isNew) {
-          dispatch(markAsSaved());
-        }
-        setLastSaveLength(currentPastLength);
-      } catch (error) {
-        console.error('Ошибка автосохранения:', error);
-      }
-    }, AUTOSAVE_DELAY_MS);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  });
 
   const toolbarButtons = [
     {

@@ -1,6 +1,6 @@
 import style from './EditorPage.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   clearSelection,
   loadPresentation,
@@ -18,16 +18,22 @@ import { getPresentation } from '../../lib/presentationService.ts';
 import { createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
+import { Loader } from '../../components/Loader/Loader.tsx';
+import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
 
 export const EditorPage = () => {
   const { id } = useParams<{ id?: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+  const {save} = usePresentationSave();
+
   const { selection } = useSelector(selectUI);
 
   useEffect(() => {
     const load = async () => {
+      setLoading(true);
       try {
         if (id) {
           const presentation = await getPresentation(id);
@@ -41,6 +47,8 @@ export const EditorPage = () => {
       } catch (error) {
         console.error('Ошибка загрузки/создания презентации', error);
         navigate(PAGES_URL.collectionPage);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -91,9 +99,12 @@ export const EditorPage = () => {
       } else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyY') {
         event.preventDefault();
         dispatch(redo());
+      } else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
+        event.preventDefault();
+        save();
       }
     },
-    [selection.selectedElementIds, selection.selectedSlideIds, dispatch]
+    [selection.selectedElementIds, selection.selectedSlideIds, save, dispatch]
   );
 
   useEffect(() => {
@@ -106,10 +117,14 @@ export const EditorPage = () => {
   return (
     <section className={style.presentation}>
       <Toolbar />
-      <div className={style.presentation__container}>
-        <SlidesList />
-        <SlideEditor />
-      </div>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className={style.presentation__container}>
+          <SlidesList />
+          <SlideEditor />
+        </div>
+      )}
     </section>
   );
 };
