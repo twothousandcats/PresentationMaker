@@ -1,17 +1,22 @@
 import style from './CollectionPage.module.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserPresentations } from '../../lib/presentationService.ts';
+import {
+  getUserPresentations,
+} from '../../lib/presentationService.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
+import { CollectionItem } from '../../components/CollectionItem/CollectionItem.tsx';
 
 type PresentationPreview = {
   id: string;
   title: string;
   createdAt: string;
   updatedAt: string;
+  size: string;
+  preview: string;
 };
 
 export const CollectionPage = () => {
@@ -35,8 +40,14 @@ export const CollectionPage = () => {
 
         // Запрашиваем презентации
         const userPresentations = await getUserPresentations(creatorId);
-        console.log(userPresentations);
-        setPresentationList(userPresentations);
+
+        const sortedPresentations = userPresentations.sort((a, b) => {
+          const dateA = new Date(a.updatedAt).getTime();
+          const dateB = new Date(b.updatedAt).getTime();
+          return dateB - dateA;
+        });
+
+        setPresentationList(sortedPresentations);
       } catch (err) {
         console.error('Не удалось загрузить презентации:', err);
         setPresentationList([]);
@@ -48,12 +59,12 @@ export const CollectionPage = () => {
     fetchPresentations();
   }, []);
 
-  const handleOpenPresentation = (id: string) => {
-    navigate(`${PAGES_URL.editorPage}${id}`);
-  };
-
   const handleCreatePresentation = () => {
     navigate(PAGES_URL.editorPage);
+  };
+
+  const handleDeletePresentation = (id: string) => {
+    setPresentationList(prev => prev.filter(p => p.id !== id));
   };
 
   return (
@@ -70,16 +81,15 @@ export const CollectionPage = () => {
             ></li>
             {presentationList.length > 0 &&
               presentationList.map((item) => (
-                <li
+                <CollectionItem
                   key={item.id}
-                  className={style.collectionItem}
-                  onClick={() => handleOpenPresentation(item.id)}
-                >
-                  <p>{item.id}</p>
-                  <p>{item.title}</p>
-                  <p>{item.createdAt}</p>
-                  <p>{item.updatedAt}</p>
-                </li>
+                  id={item.id}
+                  title={item.title}
+                  updatedAt={item.updatedAt}
+                  size={JSON.parse(item.size)}
+                  preview={JSON.parse(item.preview)}
+                  onDelete={handleDeletePresentation}
+                />
               ))}
           </ul>
         </div>

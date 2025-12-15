@@ -1,0 +1,73 @@
+.collectionItem {
+    position: relative;
+
+    min-width: 320px;
+    height: 240px;
+
+    border: 1px solid var(--accent-border-color);
+    border-radius: 10px;
+
+    transition: box-shadow 0.3s ease;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    &:hover {
+        box-shadow: 0 0 10px var(--form-button-bg-default);
+    }
+}
+
+.collectionItemWrapper {
+    min-width: 310px;
+    height: 180px;
+
+    overflow: hidden;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+
+    background: rgba(var(--accent-bg-color-rgb), 0.5);
+    border: 1px solid var(--accent-border-color);
+    border-radius: 10px;
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background: var(--accent-bg-color);
+    }
+}
+
+.preview {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.previewText {
+    max-width: 200px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-family: var(--extra-font);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--default-text-color);
+
+    transition: color 0.3s ease;
+
+    &.previewHeading {
+        font-weight: 600;
+        font-size: 16px;
+    }
+}

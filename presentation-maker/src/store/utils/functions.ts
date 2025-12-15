@@ -12,7 +12,9 @@ export function getRandomId() {
   return crypto.randomUUID();
 }
 
-export function concatClassNames(classNames: (string | undefined | null | boolean)[]): string {
+export function concatClassNames(
+  classNames: (string | undefined | null | boolean)[]
+): string {
   return classNames.filter(Boolean).join(' ');
 }
 
@@ -20,7 +22,32 @@ export function getPercentValue(v1: number, v2: number): number {
   return (v1 / v2) * 100;
 }
 
-export const deselectInputAndBlur = (inputRef: RefObject<HTMLInputElement | null>) => {
+export function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  if (isToday) {
+    // HH:mm
+    return date.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } else {
+    const day = date.getDate();
+    const month = date.toLocaleString('ru-RU', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+}
+
+export const deselectInputAndBlur = (
+  inputRef: RefObject<HTMLInputElement | null>
+) => {
   if (inputRef.current) {
     const input = inputRef.current;
     input.selectionStart = input.selectionEnd; // снимает выделение текста
@@ -86,9 +113,7 @@ export const createNewPresentation = (): Presentation => {
   return {
     id: getRandomId(),
     title: LANGUAGES.ru.newPresentationTitle,
-    slides: [
-      createDefaultSlide()
-    ],
+    slides: [createDefaultSlide()],
     size: {
       width: PRESENTATION_SIZE.width,
       height: PRESENTATION_SIZE.height,

@@ -20,6 +20,7 @@
 
     /* RGB */
     --accent-border-color-rgb: 123, 123, 123;
+    --accent-bg-color-rgb: 255, 255, 255;
 
     /* ICONS */
     --default-icon-stroke: #000;
@@ -64,6 +65,7 @@
 
     /* RGB (для прозрачности и градиентов) */
     --accent-border-color-rgb: 161, 161, 161;
+    --accent-bg-color-rgb: 0, 0, 0;
 
     /* ICONS */
     --default-icon-stroke: #fff;

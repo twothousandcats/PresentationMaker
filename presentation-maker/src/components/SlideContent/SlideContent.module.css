@@ -22,3 +22,8 @@
 .slide_editable {
     border: 1px solid var(--default-border-color);
 }
+
+.slide_reset {
+    border-radius: 0 !important;
+    border: none !important;
+}

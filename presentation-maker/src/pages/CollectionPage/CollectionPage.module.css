@@ -23,15 +23,17 @@
 
 .collectionList {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     padding-top: 10px;
 }
 
 .collectionItem {
-    width: 300px;
-    height: 200px;
+    position: relative;
+
+    min-width: 320px;
+    height: 240px;
 
     border: 1px solid var(--accent-border-color);
     border-radius: 10px;
@@ -39,6 +41,7 @@
     transition: box-shadow 0.3s ease;
 
     cursor: pointer;
+    overflow: hidden;
 
     &:hover {
         box-shadow: 0 0 10px var(--form-button-bg-default);
@@ -46,7 +49,6 @@
 }
 
 .createItem {
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
