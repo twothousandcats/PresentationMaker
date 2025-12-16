@@ -1,0 +1,42 @@
+.message {
+    font-family: var(--base-font);
+    color: var(--default-text-color);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+
+    font-family: var(--base-font);
+    font-size: 14px;
+    color: var(--default-text-color);
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background-color: transparent;
+
+    transition: background-color 0.3s ease,
+                color 0.3s ease;
+
+    cursor: pointer;
+}
+
+.buttonCancel {
+    border: 1px solid var(--default-border-color);
+
+    &:hover {
+        background-color: var(--accent-bg-color2);
+        color: var(--default-text-color);
+    }
+}
+
+.buttonConfirm {
+    background-color: var(--error-default-color);
+}

@@ -71,3 +71,24 @@
         rotate: 90deg;
     }
 }
+
+.closeBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+
+    background: rgba(var(--accent-bg-color-rgb), 0.5);
+    border: 1px solid var(--accent-border-color);
+    border-radius: 10px;
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background: var(--accent-bg-color);
+    }
+}

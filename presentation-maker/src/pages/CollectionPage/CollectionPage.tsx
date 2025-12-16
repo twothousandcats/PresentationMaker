@@ -3,12 +3,20 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getUserPresentations,
+  removePresentation,
 } from '../../lib/presentationService.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import { CollectionItem } from '../../components/CollectionItem/CollectionItem.tsx';
+import IconClose from '../../components/Icons/IconClose.tsx';
+import { AcceptanceDialog } from '../../components/AcceptanceDialog/AcceptanceDialog.tsx';
+
+type ConfirmationState = {
+  id: string;
+  title: string;
+} | null;
 
 type PresentationPreview = {
   id: string;
@@ -24,6 +32,8 @@ export const CollectionPage = () => {
     PresentationPreview[]
   >([]);
   const [loading, setLoading] = useState(true);
+  const [confirmationToDelete, setConfirmationToDelete] =
+    useState<ConfirmationState>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,8 +73,32 @@ export const CollectionPage = () => {
     navigate(PAGES_URL.editorPage);
   };
 
-  const handleDeletePresentation = (id: string) => {
-    setPresentationList(prev => prev.filter(p => p.id !== id));
+  const openDeleteConfirmation = (id: string, title: string) => {
+    setConfirmationToDelete({ id, title });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmationToDelete) return;
+
+    try {
+      await removePresentation(confirmationToDelete.id);
+      setPresentationList((prev) =>
+        prev.filter((p) => p.id !== confirmationToDelete.id)
+      );
+    } catch (err) {
+      console.error('Failed to delete presentation:', err);
+      // TODO: toast
+    } finally {
+      setConfirmationToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmationToDelete(null);
+  };
+
+  const handleOpenPresentation = (id: string) => {
+    navigate(`${PAGES_URL.editorPage}${id}`);
   };
 
   return (
@@ -81,18 +115,43 @@ export const CollectionPage = () => {
             ></li>
             {presentationList.length > 0 &&
               presentationList.map((item) => (
-                <CollectionItem
+                <li
                   key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  updatedAt={item.updatedAt}
-                  size={JSON.parse(item.size)}
-                  preview={JSON.parse(item.preview)}
-                  onDelete={handleDeletePresentation}
-                />
+                  className={style.collectionItem}
+                  onClick={() => handleOpenPresentation(item.id)}
+                >
+                  <CollectionItem
+                    key={item.id}
+                    title={item.title}
+                    updatedAt={item.updatedAt}
+                    size={JSON.parse(item.size)}
+                    preview={JSON.parse(item.preview)}
+                  />
+                  <div
+                    className={style.closeBtn}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openDeleteConfirmation(item.id, item.title);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </li>
               ))}
           </ul>
         </div>
+      )}
+
+      {confirmationToDelete && (
+        <AcceptanceDialog
+          isOpen={true}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+          title={LANGUAGES.ru.deleteDialogHeading}
+          message={LANGUAGES.ru.deleteDialogTextP1 + confirmationToDelete.title + LANGUAGES.ru.deleteDialogTextP2}
+          confirmText={LANGUAGES.ru.dialogDelete}
+          cancelText={LANGUAGES.ru.dialogCancel}
+        />
       )}
     </section>
   );

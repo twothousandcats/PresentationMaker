@@ -7,6 +7,9 @@ const LANGUAGES = {
     imageDialogHeading: 'Выберите файл',
     urlDialogHeading: 'Ссылка на изображение',
     colorDialogHeading: 'Выберите цвет',
+    deleteDialogHeading: 'Подтверждение удаления',
+    deleteDialogTextP1: 'Вы уверены, что хотите удалить презентацию «',
+    deleteDialogTextP2: '»? Это действие нельзя отменить.',
 
     dialogImageTab: 'Файл',
     dialogUrlTab: 'Ссылка',
@@ -14,6 +17,7 @@ const LANGUAGES = {
 
     dialogCancel: 'Отмена',
     dialogSubmit: 'Добавить',
+    dialogDelete: 'Удалить',
 
     noSlides: 'Слайдов нет',
 
