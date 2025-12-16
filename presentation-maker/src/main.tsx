@@ -20,6 +20,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppRoot } from './components/AppRoot/AppRoot.tsx';
 import { EditorPage } from './pages/EditorPage/EditorPage.tsx';
 import { GuestOnlyLayout } from './components/GuestOnlyLayout/GuestOnlyLayout.tsx';
+import { ViewPage } from './pages/ViewPage/ViewPage.tsx';
 
 export const ThemeContext = createContext<ThemeInterface>({
   theme: 'light',
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
       { path: PAGES_URL.collectionPage, element: <CollectionPage /> },
       { path: PAGES_URL.editorPage, element: <EditorPage /> }, // new
       { path: `${PAGES_URL.editorPage}/:id`, element: <EditorPage /> }, // exist
+      { path: `${PAGES_URL.presentationViewPage}/:id`, element: <ViewPage /> }, // exist
     ],
   },
   { path: '*', element: <NotFound /> },

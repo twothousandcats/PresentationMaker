@@ -19,6 +19,7 @@ const PAGES_URL = {
   editorPage: '/',
   loginPage: '/login/',
   collectionPage: '/collection/',
+  presentationViewPage: '/view/',
 }
 
 const getPortal = () => {

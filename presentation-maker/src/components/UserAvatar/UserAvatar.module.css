@@ -1,11 +1,14 @@
 .avatar {
+    min-width: 34px;
+    min-height: 34px;
     display: flex;
+    justify-content: center;
     align-items: center;
     padding: 5px;
     margin-left: 20px;
 
     font-family: var(--extra-font);
-    font-size: 24px;
+    font-size: 18px;
     line-height: 1;
 
     border-radius: 50%;

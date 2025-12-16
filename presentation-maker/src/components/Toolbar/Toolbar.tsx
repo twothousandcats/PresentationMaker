@@ -43,6 +43,8 @@ import {
   selectHistory,
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
+import IconPlay from '../Icons/IconPlay.tsx';
+import { PAGES_URL } from '../../store/utils/config.ts';
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
@@ -152,6 +154,16 @@ export default function Toolbar() {
   }, [handleClickOutside]);
 
   const toolbarButtons = [
+    {
+      icon: <IconPlay />,
+      fn: () => {
+        if (id) {
+          window.open(`${PAGES_URL.presentationViewPage}${id}`, '_blank');
+          // navigate(`${PAGES_URL.presentationViewPage}${id}`);
+        }
+      },
+      ariaLabel: 'Слайд-шоу',
+    },
     {
       icon: <IconDownload />,
       fn: () => console.log('Сохранить презентацию в pdf'),

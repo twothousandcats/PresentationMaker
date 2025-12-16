@@ -20,6 +20,7 @@ import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
+import { LANGUAGES } from '../../store/utils/langs.ts';
 
 export const EditorPage = () => {
   const { id } = useParams<{ id?: string }>();
@@ -126,7 +127,7 @@ export const EditorPage = () => {
           <SlideEditor />
         </div>
       )}
-      <div className={concatClassNames([style.statusModal, isSaving && style.statusModalShown])}>Сохранение презентации...</div>
+      <div className={concatClassNames([style.statusModal, isSaving && style.statusModalShown])}>{LANGUAGES.ru.toastSave}</div>
     </section>
   );
 };

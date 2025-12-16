@@ -1,5 +1,6 @@
 import style from './AcceptanceDialog.module.css';
 import { Modal } from '../Modal/Modal.tsx';
+import { LANGUAGES } from "../../store/utils/langs.ts";
 
 interface AcceptanceDialogProps {
   isOpen: boolean;
@@ -18,8 +19,8 @@ export const AcceptanceDialog  = (
     onConfirm,
     message,
     title = 'Подтверждение',
-    confirmText = 'Удалить',
-    cancelText = 'Отмена',
+    confirmText = LANGUAGES.ru.dialogDelete,
+    cancelText = LANGUAGES.ru.dialogCancel,
   }: AcceptanceDialogProps
 ) => {
   return (

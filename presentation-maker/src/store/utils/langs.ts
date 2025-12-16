@@ -43,6 +43,9 @@ const LANGUAGES = {
     // AuthPage SERVER VALIDATION
     serverErrorLoginFallback: 'Ошибка входа',
     serverErrorRegisterFallback: 'Ошибка входа',
+
+    // TOAST
+    toastSave: 'Сохранение презентации...',
   },
 };
 
