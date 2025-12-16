@@ -148,7 +148,11 @@ export const CollectionPage = () => {
           onClose={handleCancelDelete}
           onConfirm={handleConfirmDelete}
           title={LANGUAGES.ru.deleteDialogHeading}
-          message={LANGUAGES.ru.deleteDialogTextP1 + confirmationToDelete.title + LANGUAGES.ru.deleteDialogTextP2}
+          message={
+            LANGUAGES.ru.deleteDialogTextP1 +
+            confirmationToDelete.title +
+            LANGUAGES.ru.deleteDialogTextP2
+          }
           confirmText={LANGUAGES.ru.dialogDelete}
           cancelText={LANGUAGES.ru.dialogCancel}
         />
