@@ -1,24 +1,18 @@
-.themeSwitcher {
+.avatar {
     display: flex;
     align-items: center;
     padding: 5px;
+    margin-left: 20px;
+
+    font-family: var(--extra-font);
+    font-size: 24px;
+    line-height: 1;
 
     border-radius: 50%;
-    background-color: var(--accent-bg-color2);
 
     list-style: none;
 
     transition: background-color 0.3s ease;
 
     cursor: pointer;
-
-    &:hover {
-        background-color: var(--accent-border-color);
-    }
-}
-
-.light {
-}
-
-.dark {
 }

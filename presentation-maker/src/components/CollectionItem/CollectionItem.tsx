@@ -33,8 +33,6 @@ export const CollectionItem = ({
     navigate(`${PAGES_URL.editorPage}${id}`);
   };
 
-  console.log(size);
-  console.log(preview);
   return (
     <li
       key={id}

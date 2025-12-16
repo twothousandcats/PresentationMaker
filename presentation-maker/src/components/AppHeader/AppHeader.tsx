@@ -4,6 +4,7 @@ import { LANGUAGES } from '../../store/utils/langs.ts';
 import IconLogout from '../Icons/IconLogout.tsx';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_URL } from '../../store/utils/config.ts';
+import { UserAvatar } from '../UserAvatar/UserAvatar.tsx';
 
 type AppHeaderProps = {
   onLogout?: () => void;
@@ -25,10 +26,13 @@ export const AppHeader = ({ onLogout, isAuth }: AppHeaderProps) => {
       </h1>
       <ul className={style.handlers}>
         {isAuth && (
-          <li className={style.logout} onClick={onLogout}>
-            <IconLogout />
-            {LANGUAGES.ru.logout}
-          </li>
+          <>
+            <li className={style.logout} onClick={onLogout}>
+              <IconLogout />
+              {LANGUAGES.ru.logout}
+            </li>
+            <UserAvatar />
+          </>
         )}
         <ThemeSwitcher />
       </ul>

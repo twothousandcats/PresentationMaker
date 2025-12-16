@@ -25,7 +25,9 @@ export const ProtectedLayout = () => {
     navigate(PAGES_URL.loginPage, { replace: true });
   };
 
-  if (!isAuth) return null;
+  if (!isAuth) {
+    return null;
+  }
 
   return (
     <>

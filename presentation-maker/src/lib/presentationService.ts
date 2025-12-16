@@ -130,7 +130,7 @@ export async function removePresentation(id: string) {
       rowId: id,
     });
 
-    console.log(`Преза с id: ${id} успешно удалена`);
+    console.log(`Презентация с id: ${id} успешно удалена`);
   } catch (error) {
     console.error('Ошибка удаления презентации: ', error);
     throw error;
