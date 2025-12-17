@@ -1,4 +1,5 @@
 const AUTOSAVE_DELAY_MS: number = 5000;
+const CONTROLS_TO_HIDE_DELAY_MS: number = 3000;
 
 const PRESENTATION_SIZE = {
   width: 1240,
@@ -28,6 +29,7 @@ const getPortal = () => {
 
 export {
   AUTOSAVE_DELAY_MS,
+  CONTROLS_TO_HIDE_DELAY_MS,
   DEFAULT_SLIDE_WIDTH,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,

@@ -46,6 +46,11 @@ const LANGUAGES = {
 
     // TOAST
     toastSave: 'Сохранение презентации...',
+
+    // Slider
+    sliderErrorMessage: 'Презентация не найдена или недоступна.',
+    sliderToNext: 'Следующий слайд.',
+    sliderToPrev: 'Предыдущий слайд.',
   },
 };
 

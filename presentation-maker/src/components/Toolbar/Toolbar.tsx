@@ -45,12 +45,14 @@ import {
 } from '../../store/selectors/editorSelectors.ts';
 import IconPlay from '../Icons/IconPlay.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
+import {useNavigate} from "react-router-dom";
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
   const { selection }: UIState = useSelector(selectUI);
   const { past, future }: PresentationHistory = useSelector(selectHistory);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isExpanded, setExpanded] = useState(false);
   const [draftTitle, setDraftTitle] = useState(title);
@@ -158,8 +160,7 @@ export default function Toolbar() {
       icon: <IconPlay />,
       fn: () => {
         if (id) {
-          window.open(`${PAGES_URL.presentationViewPage}${id}`, '_blank');
-          // navigate(`${PAGES_URL.presentationViewPage}${id}`);
+          navigate(`${PAGES_URL.presentationViewPage}${id}`);
         }
       },
       ariaLabel: 'Слайд-шоу',

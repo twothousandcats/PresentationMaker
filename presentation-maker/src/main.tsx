@@ -60,8 +60,8 @@ const router = createBrowserRouter([
     children: [
       { path: PAGES_URL.collectionPage, element: <CollectionPage /> },
       { path: PAGES_URL.editorPage, element: <EditorPage /> }, // new
-      { path: `${PAGES_URL.editorPage}/:id`, element: <EditorPage /> }, // exist
-      { path: `${PAGES_URL.presentationViewPage}/:id`, element: <ViewPage /> }, // exist
+      { path: `${PAGES_URL.editorPage}:id`, element: <EditorPage /> }, // exist
+      { path: `${PAGES_URL.presentationViewPage}:id`, element: <ViewPage /> }, // exist
     ],
   },
   { path: '*', element: <NotFound /> },
