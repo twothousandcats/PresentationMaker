@@ -46,6 +46,7 @@ import {
 import IconPlay from '../Icons/IconPlay.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import {useNavigate} from "react-router-dom";
+import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
@@ -60,6 +61,8 @@ export default function Toolbar() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLLIElement>(null);
+
+  const { save } = usePresentationSave();
 
   useEffect(() => {
     if (!isExpanded) {
@@ -158,8 +161,9 @@ export default function Toolbar() {
   const toolbarButtons = [
     {
       icon: <IconPlay />,
-      fn: () => {
+      fn: async () => {
         if (id) {
+          await save();
           navigate(`${PAGES_URL.presentationViewPage}${id}`);
         }
       },

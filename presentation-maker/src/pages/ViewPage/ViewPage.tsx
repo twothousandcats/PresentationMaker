@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPresentation } from '../../lib/presentationService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
@@ -12,7 +12,7 @@ import IconClose from '../../components/Icons/IconClose.tsx';
 import {
   PAGES_URL,
 } from '../../store/utils/config.ts';
-import {concatClassNames} from "../../store/utils/functions.ts";
+import { concatClassNames } from '../../store/utils/functions.ts';
 
 export const ViewPage = () => {
   // TODO: из стейта или из БД?
@@ -25,41 +25,12 @@ export const ViewPage = () => {
   const [error, setError] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const [showControls, setShowControls] = useState(true);
-  const hideTimer = useRef<NodeJS.Timeout | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const handleBack = useCallback(() => {
     if (id) {
       navigate(PAGES_URL.editorPage + id);
     }
     // navigate(-1);
   }, [id, navigate]);
-
-  useEffect(() => {
-    const handleMouseMove = () => {
-      setShowControls(true);
-      if (hideTimer.current) {
-        clearTimeout(hideTimer.current);
-      }
-      hideTimer.current = setTimeout(() => setShowControls(false), 3000);
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('mousemove', handleMouseMove);
-      hideTimer.current = setTimeout(() => setShowControls(false), 3000);
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener('mousemove', handleMouseMove);
-      }
-      if (hideTimer.current) {
-        clearTimeout(hideTimer.current);
-      }
-    };
-  }, []);
 
   // Загрузка
   useEffect(() => {
@@ -143,42 +114,31 @@ export const ViewPage = () => {
     selectedSlideIds: [],
     selectedElementIds: [],
   };
-  const slideClasses = concatClassNames(
-      [
-        style.slide,
-        isTransitioning && style.slideEntering
-      ]
-  );
-  const closeClasses = concatClassNames(
-      [
-        style.closeBtn,
-        !showControls && style.hiddenHandler
-      ]
-  );
-  const prevClasses = concatClassNames(
-      [
-        style.navBtn,
-        !(currentSlideIndex > 0) && style.navBtnDisabled
-      ]
-  );
-  const nextClasses = concatClassNames(
-      [
-        style.navBtn,
-        !(currentSlideIndex < presentation.slides.length - 1) && style.navBtnDisabled
-      ]
-  );
+  const slideClasses = concatClassNames([
+    style.slide,
+    isTransitioning && style.slideEntering,
+  ]);
+  const closeClasses = concatClassNames([
+    style.closeBtn,
+  ]);
+  const prevClasses = concatClassNames([
+    style.navBtn,
+    !(currentSlideIndex > 0) && style.navBtnDisabled,
+  ]);
+  const nextClasses = concatClassNames([
+    style.navBtn,
+    !(currentSlideIndex < presentation.slides.length - 1) &&
+      style.navBtnDisabled,
+  ]);
 
   // fade
   return (
-    <div className={style.container} ref={containerRef}>
+    <div className={style.container}>
       <button className={closeClasses} onClick={handleBack}>
         <IconClose />
       </button>
       <div className={style.slider}>
-        <div
-          key={currentSlide.id}
-          className={slideClasses}
-        >
+        <div key={currentSlide.id} className={slideClasses}>
           <SlideContent
             slide={currentSlide}
             selection={selection}

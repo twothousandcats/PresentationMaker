@@ -15,7 +15,10 @@ import SlidesList from '../../components/SlidesList/SlidesList.tsx';
 import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPresentation } from '../../lib/presentationService.ts';
-import { concatClassNames, createNewPresentation } from '../../store/utils/functions.ts';
+import {
+  concatClassNames,
+  createNewPresentation,
+} from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
@@ -58,7 +61,7 @@ export const EditorPage = () => {
   }, [id, dispatch, navigate]);
 
   const handleKeydown = useCallback(
-    (event: KeyboardEvent) => {
+    async (event: KeyboardEvent) => {
       const target = event.target;
       if (
         target instanceof HTMLElement &&
@@ -103,7 +106,7 @@ export const EditorPage = () => {
         dispatch(redo());
       } else if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
         event.preventDefault();
-        save();
+        await save();
       }
     },
     [selection.selectedElementIds, selection.selectedSlideIds, save, dispatch]
@@ -116,6 +119,7 @@ export const EditorPage = () => {
     };
   }, [handleKeydown]);
 
+  // TODO: вынести в toast ошибки/успех!
   return (
     <section className={style.presentation}>
       <Toolbar />
@@ -127,7 +131,14 @@ export const EditorPage = () => {
           <SlideEditor />
         </div>
       )}
-      <div className={concatClassNames([style.statusModal, isSaving && style.statusModalShown])}>{LANGUAGES.ru.toastSave}</div>
+      <div
+        className={concatClassNames([
+          style.statusModal,
+          isSaving && style.statusModalShown,
+        ])}
+      >
+        {LANGUAGES.ru.toastSave}
+      </div>
     </section>
   );
 };
