@@ -46,6 +46,8 @@ const LANGUAGES = {
 
     // TOAST MESSAGES
     save: 'Сохранение презентации...',
+    presentationDeletedSuccess: 'Презентация успешно удалена',
+    presentationDeletedFailure: 'Не удалось удалить презентацию',
 
     // Slider
     sliderErrorMessage: 'Презентация не найдена или недоступна.',

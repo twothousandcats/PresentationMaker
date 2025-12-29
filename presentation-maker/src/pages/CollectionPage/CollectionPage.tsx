@@ -7,12 +7,14 @@ import {
 } from '../../lib/presentationService.ts';
 import { getCurrentUser } from '../../lib/authService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
-import { PAGES_URL } from '../../store/utils/config.ts';
+import { INFO_DELAY_MS, PAGES_URL } from '../../store/utils/config.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import { CollectionItem } from '../../components/CollectionItem/CollectionItem.tsx';
 import IconClose from '../../components/Icons/IconClose.tsx';
 import { AcceptanceDialog } from '../../components/AcceptanceDialog/AcceptanceDialog.tsx';
 import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
+import type { ToastType } from '../../store/types/utility-types.ts';
+import { Toast } from '../../components/Toast/Toast.tsx';
 
 type ConfirmationState = {
   id: string;
@@ -35,6 +37,7 @@ export const CollectionPage = () => {
   const [loading, setLoading] = useState(true);
   const [confirmationToDelete, setConfirmationToDelete] =
     useState<ConfirmationState>(null);
+  const [toast, setToast] = useState<{message: string; type: ToastType} | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +73,15 @@ export const CollectionPage = () => {
     fetchPresentations();
   }, []);
 
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, INFO_DELAY_MS);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   const handleCreatePresentation = () => {
     navigate(PAGES_URL.editorPage);
   };
@@ -86,9 +98,17 @@ export const CollectionPage = () => {
       setPresentationList((prev) =>
         prev.filter((p) => p.id !== confirmationToDelete.id)
       );
+      setToast({
+        message: LANGUAGES.ru.presentationDeletedSuccess,
+        type: 'success',
+      });
     } catch (err) {
       console.error('Failed to delete presentation:', err);
-      // TODO: toast
+
+      setToast({
+        message: LANGUAGES.ru.presentationDeletedFailure,
+        type: 'error',
+      });
     } finally {
       setConfirmationToDelete(null);
     }
@@ -159,6 +179,11 @@ export const CollectionPage = () => {
           cancelText={LANGUAGES.ru.dialogCancel}
         />
       )}
+        <Toast
+          message={toast?.message || ''}
+          type={toast?.type || 'success'}
+          visible={!!toast}
+        />
     </section>
   );
 };

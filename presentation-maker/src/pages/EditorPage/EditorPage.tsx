@@ -124,7 +124,6 @@ export const EditorPage = () => {
 
   useDocumentTitle(LANGUAGES.ru.pages.editor);
 
-  // TODO: вынести в toast ошибки/успех!
   return (
     <section className={style.presentation}>
       <Toolbar />

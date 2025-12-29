@@ -17,7 +17,8 @@
         }
     }
 
-    &.saving {
+    &.saving,
+    &.success {
         position: absolute;
         top: -100px;
         left: 50%;
