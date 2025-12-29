@@ -13,9 +13,9 @@ import {
   PAGES_URL,
 } from '../../store/utils/config.ts';
 import { concatClassNames } from '../../store/utils/functions.ts';
+import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
 
 export const ViewPage = () => {
-  // TODO: из стейта или из БД?
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -102,6 +102,8 @@ export const ViewPage = () => {
     }
   }, [isTransitioning]);
 
+  useDocumentTitle(LANGUAGES.ru.pages.viewer);
+
   if (loading) {
     return <Loader />;
   }
@@ -130,7 +132,6 @@ export const ViewPage = () => {
     !(currentSlideIndex < presentation.slides.length - 1) &&
       style.navBtnDisabled,
   ]);
-
   // fade
   return (
     <div className={style.container}>

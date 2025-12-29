@@ -11,6 +11,8 @@ import style from './AuthPage.module.css';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import { AppHeader } from '../../components/AppHeader/AppHeader.tsx';
 import { concatClassNames } from '../../store/utils/functions.ts';
+import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
+import { Toast } from '../../components/Toast/Toast.tsx';
 
 const config = {
   name: {
@@ -121,13 +123,15 @@ export function AuthPage() {
       } else {
         setServerError(result.message ? result.message : '');
       }
-    } catch{}
+    } catch {}
   };
 
   const toggleMode = () => {
     setMode(isLoginMode() ? 'register' : 'login');
     setErrors({});
   };
+
+  useDocumentTitle(LANGUAGES.ru.pages.auth);
 
   return (
     <>
@@ -191,6 +195,11 @@ export function AuthPage() {
             )}
           </div>
           <div className={style.buttonGroup}>
+            <button className={style.submitButton} type="submit">
+              {isLoginMode()
+                ? LANGUAGES.ru.submitLogin
+                : LANGUAGES.ru.submitRegistration}
+            </button>
             {isLoginMode() && (
               <button className={style.submitButton} onClick={toggleMode}>
                 {LANGUAGES.ru.loginToRegistration}
@@ -201,17 +210,10 @@ export function AuthPage() {
                 {LANGUAGES.ru.registrationToLogin}
               </button>
             )}
-            <button className={style.submitButton} type="submit">
-              {isLoginMode()
-                ? LANGUAGES.ru.submitLogin
-                : LANGUAGES.ru.submitRegistration}
-            </button>
           </div>
         </form>
       </div>
-      <div className={concatClassNames([style.errorPopup, serverError && style.showPopup])}>
-        <p className={style.errorPopupMessage}>{serverError}</p>
-      </div>
+      <Toast message={serverError || ''} type="error" visible={!!serverError} />
     </>
   );
 }

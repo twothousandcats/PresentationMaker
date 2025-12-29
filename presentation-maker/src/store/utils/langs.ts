@@ -44,13 +44,21 @@ const LANGUAGES = {
     serverErrorLoginFallback: 'Ошибка входа',
     serverErrorRegisterFallback: 'Ошибка входа',
 
-    // TOAST
-    toastSave: 'Сохранение презентации...',
+    // TOAST MESSAGES
+    save: 'Сохранение презентации...',
 
     // Slider
     sliderErrorMessage: 'Презентация не найдена или недоступна.',
     sliderToNext: 'Следующий слайд.',
     sliderToPrev: 'Предыдущий слайд.',
+
+    pages: {
+      auth: 'Авторизация',
+      collection: 'Коллекция',
+      editor: 'Редактор',
+      notFound: '404',
+      viewer: 'Слайд-шоу',
+    }
   },
 };
 

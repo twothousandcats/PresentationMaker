@@ -12,6 +12,7 @@ import { LANGUAGES } from '../../store/utils/langs.ts';
 import { CollectionItem } from '../../components/CollectionItem/CollectionItem.tsx';
 import IconClose from '../../components/Icons/IconClose.tsx';
 import { AcceptanceDialog } from '../../components/AcceptanceDialog/AcceptanceDialog.tsx';
+import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
 
 type ConfirmationState = {
   id: string;
@@ -101,6 +102,8 @@ export const CollectionPage = () => {
     navigate(`${PAGES_URL.editorPage}${id}`);
   };
 
+  useDocumentTitle(LANGUAGES.ru.pages.collection);
+
   return (
     <section className={style.collection}>
       {loading ? (
@@ -121,7 +124,6 @@ export const CollectionPage = () => {
                   onClick={() => handleOpenPresentation(item.id)}
                 >
                   <CollectionItem
-                    key={item.id}
                     title={item.title}
                     updatedAt={item.updatedAt}
                     size={JSON.parse(item.size)}

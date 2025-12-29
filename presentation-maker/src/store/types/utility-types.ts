@@ -26,7 +26,7 @@ export type Credentials = {
 
 export type UserData = Credentials & {
   name: string;
-}
+};
 
 type ValidationError = {
   email?: string;
@@ -34,4 +34,21 @@ type ValidationError = {
   name?: string;
 };
 
-export type { ResizeItem, Theme, ResizePreview, AuthMode, ValidationError };
+type ToastType = 'error' | 'success' | 'info' | 'saving';
+
+type ToastProps = {
+  message: string;
+  visible: boolean;
+  type?: ToastType;
+  duration?: number;
+};
+
+export type {
+  ResizeItem,
+  Theme,
+  ResizePreview,
+  AuthMode,
+  ValidationError,
+  ToastType,
+  ToastProps,
+};

@@ -24,6 +24,9 @@ import { selectUI } from '../../store/selectors/editorSelectors.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
+import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
+import { Toast } from '../../components/Toast/Toast.tsx';
+import * as React from 'react';
 
 export const EditorPage = () => {
   const { id } = useParams<{ id?: string }>();
@@ -119,6 +122,8 @@ export const EditorPage = () => {
     };
   }, [handleKeydown]);
 
+  useDocumentTitle(LANGUAGES.ru.pages.editor);
+
   // TODO: вынести в toast ошибки/успех!
   return (
     <section className={style.presentation}>
@@ -131,14 +136,7 @@ export const EditorPage = () => {
           <SlideEditor />
         </div>
       )}
-      <div
-        className={concatClassNames([
-          style.statusModal,
-          isSaving && style.statusModalShown,
-        ])}
-      >
-        {LANGUAGES.ru.toastSave}
-      </div>
+      <Toast message={LANGUAGES.ru.save} type="saving" visible={isSaving} />
     </section>
   );
 };
