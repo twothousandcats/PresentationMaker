@@ -103,7 +103,7 @@ export const CollectionPage = () => {
         type: 'success',
       });
     } catch (err) {
-      console.error('Failed to delete presentation:', err);
+      console.error('Ошибка удаления презентации:', err);
 
       setToast({
         message: LANGUAGES.ru.presentationDeletedFailure,

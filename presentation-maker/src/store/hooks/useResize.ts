@@ -75,7 +75,11 @@ const computeFinalResize = (
   };
 };
 
-export const useResize = (slide: Slide, isEditable?: boolean) => {
+export const useResize = (
+  slide: Slide,
+  isEditable?: boolean,
+  screenToLogical?: (screenX: number, screenY: number) => Position
+) => {
   const dispatch = useDispatch();
   const [resizePreview, setResizePreview] = useState<Record<
     string,
@@ -98,6 +102,8 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
         return;
       }
 
+      // Преобразуем
+      const logicalStart = screenToLogical?.(clientX, clientY) ?? { x: clientX, y: clientY };
       const initialData = {
         width: element.size.width,
         height: element.size.height,
@@ -105,16 +111,15 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
         y: element.position.y,
       };
 
-      const startMouse: Position = {
-        x: clientX,
-        y: clientY,
-      };
-
       const handleMouseMove = (event: MouseEvent) => {
         event.preventDefault(); // с изображением были баги
+        const logicalCurrent = screenToLogical?.(event.clientX, event.clientY) ?? {
+          x: event.clientX,
+          y: event.clientY,
+        };
         const delta: Position = {
-          x: event.clientX - startMouse.x,
-          y: event.clientY - startMouse.y,
+          x: logicalCurrent.x - logicalStart.x,
+          y: logicalCurrent.y - logicalStart.y,
         };
 
         const preview = computeFinalResize(
@@ -132,14 +137,19 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
 
       const handleMouseUp = (event: MouseEvent) => {
         setResizePreview(null);
-
-        const finalDeltaX = event.clientX - startMouse.x;
-        const finalDeltaY = event.clientY - startMouse.y;
+        const logicalFinal = screenToLogical?.(event.clientX, event.clientY) ?? {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        const finalDelta = {
+          x: logicalFinal.x - logicalStart.x,
+          y: logicalFinal.y - logicalStart.y,
+        };
 
         const finalPreview = computeFinalResize(
           resizeItem,
-          finalDeltaX,
-          finalDeltaY,
+          finalDelta.x,
+          finalDelta.y,
           initialData.width,
           initialData.height,
           initialData.x,
@@ -162,7 +172,7 @@ export const useResize = (slide: Slide, isEditable?: boolean) => {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [isEditable, slide.elements, slide.id, dispatch]
+    [isEditable, slide.elements, slide.id, screenToLogical, dispatch]
   );
 
   return { startResizing, resizePreview };

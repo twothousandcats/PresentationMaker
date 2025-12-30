@@ -10,6 +10,7 @@ import { type SyntheticEvent, useEffect, useRef } from 'react';
 import * as React from 'react';
 import { useSelectElements } from '../../store/hooks/useSelectElements.ts';
 import { useDispatch } from 'react-redux';
+import type {ScreenStyle} from "../../store/types/utility-types.ts";
 
 type ElementProps = {
   element: SlideElement;
@@ -17,6 +18,8 @@ type ElementProps = {
   slideId: string;
   slideElements: SlideElement[];
   selectedElementsIds: string[];
+  styleOverride: ScreenStyle;
+  scale: number;
   isEditable?: boolean;
   isInteractive?: boolean;
   isPlacing?: boolean;
@@ -32,6 +35,8 @@ export default function SlideElement({
   slideId,
   slideElements,
   selectedElementsIds,
+  styleOverride,
+  scale,
   isEditable,
   isInteractive,
   isPlacing,
@@ -53,12 +58,6 @@ export default function SlideElement({
     onDragStart?.(evt.clientX, evt.clientY);
   };
 
-  let fontSize = element.type === 'text' ? element.fontSize : null;
-  if (!isEditable) {
-    const scale = DEFAULT_SLIDE_WIDTH / slideSize.width;
-    fontSize = fontSize ? Math.max(1, Math.round(fontSize * scale)) : 1;
-  }
-
   const bgColor =
     element.background?.type === 'solid' && element.background.color
       ? element.background.color
@@ -71,14 +70,6 @@ export default function SlideElement({
         ? element.background.gradient
         : null */
 
-  const displaySize = resizePreview?.size || element.size;
-  const displayPosition = resizePreview?.position || element.position;
-
-  const xPercent = getPercentValue(displayPosition.x, slideSize.width);
-  const yPercent = getPercentValue(displayPosition.y, slideSize.height);
-  const widthPercent = getPercentValue(displaySize.width, slideSize.width);
-  const heightPercent = getPercentValue(displaySize.height, slideSize.height);
-
   const { handleSelectElement } = useSelectElements({
     elements: slideElements,
     selection: selectedElementsIds,
@@ -86,11 +77,13 @@ export default function SlideElement({
 
   const handleTextChange = (evt: SyntheticEvent<HTMLDivElement>) => {
     const newContent = evt.currentTarget.innerHTML;
-    dispatch(changeTextElContent({
-      slideId: slideId,
-      elementId: element.id,
-      newContent: newContent,
-    }));
+    dispatch(
+      changeTextElContent({
+        slideId: slideId,
+        elementId: element.id,
+        newContent: newContent,
+      })
+    );
   };
   const classNames = concatClassNames([
     style.element,
@@ -101,20 +94,21 @@ export default function SlideElement({
     if (isEditable && isActive && element.type === 'text' && textRef.current) {
       textRef.current?.focus();
     }
-  }, [isEditable, isActive]);
+  }, [isEditable, isActive, element.type]);
 
   return (
     <div
       className={classNames}
       style={{
-        top: `${yPercent}%`,
-        left: `${xPercent}%`,
-        width: `${widthPercent}%`,
-        height: `${heightPercent}%`,
+        ...styleOverride,
+        // top: `${yPercent}%`,
+        // left: `${xPercent}%`,
+        // width: `${widthPercent}%`,
+        // height: `${heightPercent}%`,
 
         // drag styles
         transform: dragOffset
-          ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
+          ? `translate(${dragOffset.x * scale}px, ${dragOffset.y * scale}px)`
           : 'none',
         cursor: isPlacing
           ? 'inherit'
@@ -152,7 +146,7 @@ export default function SlideElement({
           onBlur={handleTextChange}
           style={{
             fontFamily: `${element.fontFamily}`,
-            fontSize: `${fontSize}px`,
+            fontSize: `${(element.fontSize * scale).toFixed(2)}px`,
             fontWeight: `${element.fontWeight}`,
             color: `${element.color}`,
             backgroundColor: `${bgColor}`,

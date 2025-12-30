@@ -16,7 +16,6 @@ import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPresentation } from '../../lib/presentationService.ts';
 import {
-  concatClassNames,
   createNewPresentation,
 } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
@@ -26,7 +25,6 @@ import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';
 import { useDocumentTitle } from '../../store/hooks/useDocumentTitle.ts';
 import { Toast } from '../../components/Toast/Toast.tsx';
-import * as React from 'react';
 
 export const EditorPage = () => {
   const { id } = useParams<{ id?: string }>();

@@ -11,6 +11,9 @@ interface SelectionOverlayProps {
   selectedElementIds: string[];
   slideElements: SlideElement[];
   slideSize: Size;
+  scale: number;
+  offsetX: number;
+  offsetY: number;
   dragOffsets?: Record<string, Position>;
   resizePreview?: Record<string, { size: Size; position: Position }> | null;
   onStartResizing?: (
@@ -106,6 +109,9 @@ export const SelectionOverlay = ({
   selectedElementIds,
   slideElements,
   slideSize,
+  scale,
+  offsetX,
+  offsetY,
   onStartResizing,
   resizePreview,
   dragOffsets = {},
@@ -128,10 +134,15 @@ export const SelectionOverlay = ({
       y += dragOffsets[id].y;
     }
 
-    const xPercent = getPercentValue(x, slideSize.width);
-    const yPercent = getPercentValue(y, slideSize.height);
-    const widthPercent = getPercentValue(displaySize.width, slideSize.width);
-    const heightPercent = getPercentValue(displaySize.height, slideSize.height);
+    const screenX = offsetX + x * scale;
+    const screenY = offsetY + y * scale;
+    const screenW = displaySize.width * scale;
+    const screenH = displaySize.height * scale;
+
+    console.log(screenX);
+    console.log(screenY);
+    console.log(screenW);
+    console.log(screenH);
 
     return (
       <div
@@ -139,10 +150,10 @@ export const SelectionOverlay = ({
         className={styles.selectionBox}
         style={{
           position: 'absolute',
-          top: `${yPercent}%`,
-          left: `${xPercent}%`,
-          width: `${widthPercent}%`,
-          height: `${heightPercent}%`,
+          top: `${screenY}px`,
+          left: `${screenX}px`,
+          width: `${screenW}px`,
+          height: `${screenH}px`,
           pointerEvents: 'none',
           zIndex: 100,
         }}

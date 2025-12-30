@@ -43,6 +43,13 @@ type ToastProps = {
   duration?: number;
 };
 
+type ScreenStyle = {
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+};
+
 export type {
   ResizeItem,
   Theme,
@@ -51,4 +58,5 @@ export type {
   ValidationError,
   ToastType,
   ToastProps,
+  ScreenStyle,
 };
