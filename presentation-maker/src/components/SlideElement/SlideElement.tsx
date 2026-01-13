@@ -1,16 +1,12 @@
 import style from './SlideElement.module.css';
 import type { Position, Size, SlideElement } from '../../store/types/types.ts';
-import {
-  concatClassNames,
-  getPercentValue,
-} from '../../store/utils/functions.ts';
-import { DEFAULT_SLIDE_WIDTH } from '../../store/utils/config.ts';
+import { concatClassNames } from '../../store/utils/functions.ts';
 import { changeTextElContent } from '../../store/slices/editorSlice.ts';
 import { type SyntheticEvent, useEffect, useRef } from 'react';
 import * as React from 'react';
 import { useSelectElements } from '../../store/hooks/useSelectElements.ts';
 import { useDispatch } from 'react-redux';
-import type {ScreenStyle} from "../../store/types/utility-types.ts";
+import type { ScreenStyle } from '../../store/types/utility-types.ts';
 
 type ElementProps = {
   element: SlideElement;
@@ -31,7 +27,6 @@ type ElementProps = {
 
 export default function SlideElement({
   element,
-  slideSize,
   slideId,
   slideElements,
   selectedElementsIds,
@@ -43,7 +38,6 @@ export default function SlideElement({
   isActive,
   onDragStart,
   dragOffset,
-  resizePreview,
 }: ElementProps) {
   const dispatch = useDispatch();
 
@@ -101,11 +95,6 @@ export default function SlideElement({
       className={classNames}
       style={{
         ...styleOverride,
-        // top: `${yPercent}%`,
-        // left: `${xPercent}%`,
-        // width: `${widthPercent}%`,
-        // height: `${heightPercent}%`,
-
         // drag styles
         transform: dragOffset
           ? `translate(${dragOffset.x * scale}px, ${dragOffset.y * scale}px)`
@@ -145,15 +134,16 @@ export default function SlideElement({
           suppressContentEditableWarning={true}
           onBlur={handleTextChange}
           style={{
-            fontFamily: `${element.fontFamily}`,
-            fontSize: `${(element.fontSize * scale).toFixed(2)}px`,
-            fontWeight: `${element.fontWeight}`,
-            color: `${element.color}`,
+            fontFamily: `${element?.fontFamily}`,
+            fontSize: `${(element?.fontSize * scale).toFixed(2)}px`,
+            fontWeight: `${element?.fontWeight}`,
+            color: `${element?.color}`,
             backgroundColor: `${bgColor}`,
             backgroundImage: `${bgImg}`,
+            userSelect: `${!isEditable ? 'none' : 'auto'}`,
           }}
         >
-          {element.content}
+          {element?.content}
         </div>
       )}
     </div>

@@ -82,7 +82,11 @@ export default function SlideContent({
     selection,
     isInteractive
   );
-  const { startResizing, resizePreview } = useResize(slide, isInteractive, screenToLogical);
+  const { startResizing, resizePreview } = useResize(
+    slide,
+    isInteractive,
+    screenToLogical
+  );
 
   const handleNonElementClick = (event: React.MouseEvent) => {
     if (event.target === containerRef.current) {
@@ -155,12 +159,17 @@ export default function SlideContent({
     >
       {slide.elements.map((element) => {
         // логические -> экранные
-        const screenX =
-          scaleInfo.offsetX + element.position.x * scaleInfo.scale;
-        const screenY =
-          scaleInfo.offsetY + element.position.y * scaleInfo.scale;
-        const screenW = element.size.width * scaleInfo.scale;
-        const screenH = element.size.height * scaleInfo.scale;
+        const preview = resizePreview?.[element.id];
+
+        const logicalX = preview?.position.x ?? element.position.x;
+        const logicalY = preview?.position.y ?? element.position.y;
+        const logicalW = preview?.size.width ?? element.size.width;
+        const logicalH = preview?.size.height ?? element.size.height;
+
+        const screenX = scaleInfo.offsetX + logicalX * scaleInfo.scale;
+        const screenY = scaleInfo.offsetY + logicalY * scaleInfo.scale;
+        const screenW = logicalW * scaleInfo.scale;
+        const screenH = logicalH * scaleInfo.scale;
 
         return (
           <SlideElement
