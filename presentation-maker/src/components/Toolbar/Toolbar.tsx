@@ -47,6 +47,7 @@ import IconPlay from '../Icons/IconPlay.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import {useNavigate} from "react-router-dom";
 import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
+import IconLayerOne from '../Icons/IconLayerOne.tsx';
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
@@ -216,6 +217,16 @@ export default function Toolbar() {
       icon: <IconDrop />,
       fn: () => setIsAddBgDialogOpen(true),
       ariaLabel: 'Изменить фон',
+      disabled:
+        selection.selectedSlideIds.length === 0 &&
+        selection.selectedElementIds.length === 0,
+    },
+    {
+      icon: <IconLayerOne />,
+      fn: () => {
+        console.log('Изменить слой');
+      },
+      ariaLabel: 'Изменить слой',
       disabled:
         selection.selectedSlideIds.length === 0 &&
         selection.selectedElementIds.length === 0,
