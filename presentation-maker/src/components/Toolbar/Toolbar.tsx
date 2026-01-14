@@ -24,6 +24,10 @@ import {
   addSlide,
   changeElementBg,
   changeSlideBg,
+  moveElementsDown,
+  moveElementsToBottom,
+  moveElementsToTop,
+  moveElementsUp,
   redo,
   removeSlide,
   renamePresentation,
@@ -45,9 +49,15 @@ import {
 } from '../../store/selectors/editorSelectors.ts';
 import IconPlay from '../Icons/IconPlay.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { usePresentationSave } from '../../store/hooks/usePresentationSave.ts';
 import IconLayerOne from '../Icons/IconLayerOne.tsx';
+import IconLayerUpper from '../Icons/IconLayerUpper.tsx';
+import IconLayerDoubleUpper from '../Icons/IconLayerDoubleUpper.tsx';
+import IconLayerLower from '../Icons/IconLayerLower.tsx';
+import IconLayerDoubleLower from '../Icons/IconLayerDoubleLower.tsx';
+import DropdownToolbar from '../DropdownMenu/DropdownToolbar.tsx';
+import {LANGUAGES} from "../../store/utils/langs.ts";
 
 export default function Toolbar() {
   const { id, title }: Presentation = useSelector(selectCurrentPresentation);
@@ -168,17 +178,17 @@ export default function Toolbar() {
           navigate(`${PAGES_URL.presentationViewPage}${id}`);
         }
       },
-      ariaLabel: 'Слайд-шоу',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.slideShow,
     },
     {
       icon: <IconDownload />,
-      fn: () => console.log('Сохранить презентацию в pdf'),
-      ariaLabel: 'Сохранить презентацию в pdf',
+      fn: () => console.log(LANGUAGES.ru.toolbarButtons.saveAsPdf),
+      ariaLabel: LANGUAGES.ru.toolbarButtons.saveAsPdf,
     },
     {
       icon: <IconPlus />,
       fn: () => dispatch(addSlide({ newSlide: createDefaultSlide() })),
-      ariaLabel: 'Добавить слайд',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.addSlide,
     },
     {
       icon: <IconRemove />,
@@ -188,7 +198,7 @@ export default function Toolbar() {
             slideIdsToRemove: selection.selectedSlideIds,
           })
         ),
-      ariaLabel: 'Удалить активный слайд',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.removeSlide,
       disabled: selection.selectedSlideIds.length === 0,
     },
     {
@@ -199,7 +209,7 @@ export default function Toolbar() {
             mode: { type: 'placing', elementType: 'rectangle' },
           })
         ),
-      ariaLabel: 'Добавить прямоугольник',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.addRectangle,
       disabled: selection.selectedSlideIds.length === 0,
     },
     {
@@ -210,33 +220,75 @@ export default function Toolbar() {
             mode: { type: 'placing', elementType: 'text' },
           })
         ),
-      ariaLabel: 'Добавить текстовый элемент',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.addText,
       disabled: selection.selectedSlideIds.length === 0,
     },
     {
       icon: <IconDrop />,
       fn: () => setIsAddBgDialogOpen(true),
-      ariaLabel: 'Изменить фон',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.changeBackground,
       disabled:
         selection.selectedSlideIds.length === 0 &&
         selection.selectedElementIds.length === 0,
     },
     {
       icon: <IconLayerOne />,
-      fn: () => {
-        console.log('Изменить слой');
-      },
-      ariaLabel: 'Изменить слой',
-      disabled:
-        selection.selectedSlideIds.length === 0 &&
-        selection.selectedElementIds.length === 0,
+      fn: () => {},
+      ariaLabel: LANGUAGES.ru.toolbarButtons.changeLayer,
+      disabled: selection.selectedElementIds.length === 0,
+      children: [
+        {
+          icon: <IconLayerDoubleUpper />,
+          fn: () =>
+              dispatch(
+                  moveElementsToTop({
+                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
+                    elementIds: selection.selectedElementIds,
+                  })
+              ),
+          ariaLabel: LANGUAGES.ru.toolbarButtons.topLayer,
+        },
+        {
+          icon: <IconLayerUpper />,
+          fn: () =>
+              dispatch(
+                  moveElementsUp({
+                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
+                    elementIds: selection.selectedElementIds,
+                  })
+              ),
+          ariaLabel: LANGUAGES.ru.toolbarButtons.upperLayer,
+        },
+        {
+          icon: <IconLayerLower />,
+          fn: () =>
+              dispatch(
+                  moveElementsDown({
+                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
+                    elementIds: selection.selectedElementIds,
+                  })
+              ),
+          ariaLabel: LANGUAGES.ru.toolbarButtons.lowerLayer,
+        },
+        {
+          icon: <IconLayerDoubleLower />,
+          fn: () =>
+              dispatch(
+                  moveElementsToBottom({
+                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
+                    elementIds: selection.selectedElementIds,
+                  })
+              ),
+          ariaLabel: LANGUAGES.ru.toolbarButtons.bottomLayer,
+        },
+      ],
     },
     {
       icon: <IconUndo />,
       fn: () => {
         dispatch(undo());
       },
-      ariaLabel: 'Отменить действие',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.undo,
       disabled: past.length === 0,
     },
     {
@@ -244,7 +296,7 @@ export default function Toolbar() {
       fn: () => {
         dispatch(redo());
       },
-      ariaLabel: 'Повторить действие',
+      ariaLabel: LANGUAGES.ru.toolbarButtons.redo,
       disabled: future.length === 0,
     },
   ];
@@ -269,15 +321,38 @@ export default function Toolbar() {
               readOnly={!isExpanded}
             />
           </li>
-          {toolbarButtons.map((btn, index) => (
-            <IconButton
-              key={index}
-              icon={btn.icon}
-              onClickFn={btn.fn}
-              ariaLabel={btn.ariaLabel}
-              disabled={btn.disabled}
-            />
-          ))}
+          {toolbarButtons.map((btn, index) => {
+            if (btn.children && btn.children.length > 0 && !btn.disabled) {
+              return (
+                <DropdownToolbar
+                  key={index}
+                  trigger={
+                    <IconButton
+                      icon={btn.icon}
+                      onClickFn={() => {}}
+                      ariaLabel={btn.ariaLabel}
+                      disabled={btn.disabled}
+                    />
+                  }
+                  items={btn.children.map((child) => ({
+                    label: child.ariaLabel,
+                    icon: child.icon,
+                    onClick: child.fn,
+                  }))}
+                />
+              );
+            } else {
+              return (
+                <IconButton
+                  key={index}
+                  icon={btn.icon}
+                  onClickFn={btn.fn}
+                  ariaLabel={btn.ariaLabel}
+                  disabled={btn.disabled}
+                />
+              );
+            }
+          })}
         </ul>
       </div>
 

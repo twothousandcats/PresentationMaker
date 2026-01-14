@@ -1,6 +1,6 @@
 import style from './Icons.module.css';
 
-export default function IconLayerDoubleUpper() {
+export default function IconLayerDoubleLower() {
   return (
     <svg
       className={style.icon}

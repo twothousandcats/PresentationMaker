@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import style from './DropdownToolbar.module.css';
 import IconButton from '../IconButton/IconButton.tsx';
+import * as React from 'react';
 
 type DropdownItem = {
   label: string;
@@ -18,7 +19,7 @@ export default function DropdownToolbar({
   items,
 }: DropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,16 +38,22 @@ export default function DropdownToolbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
+  const handleTriggerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <div
+    <li
       className={style.dropdown}
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
+      onClick={handleTriggerClick}
       ref={dropdownRef}
     >
-      <div className={style.trigger}>{trigger}</div>
+      <ul>
+        {trigger}
+      </ul>
       {isOpen && (
-        <ul>
+        <ul className={style.list}>
           {items.map((btn, index) => (
             <IconButton
               key={index}
@@ -57,6 +64,6 @@ export default function DropdownToolbar({
           ))}
         </ul>
       )}
-    </div>
+    </li>
   );
 }

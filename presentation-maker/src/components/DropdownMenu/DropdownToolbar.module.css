@@ -1,5 +1,21 @@
 .dropdown {
+    position: relative;
 }
 
 .trigger {
+}
+
+.list {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -5px;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+
+    border-radius: 5px;
+    background-color: var(--accent-bg-color2);
 }

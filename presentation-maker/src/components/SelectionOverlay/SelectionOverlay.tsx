@@ -139,11 +139,6 @@ export const SelectionOverlay = ({
     const screenW = displaySize.width * scale;
     const screenH = displaySize.height * scale;
 
-    console.log(screenX);
-    console.log(screenY);
-    console.log(screenW);
-    console.log(screenH);
-
     return (
       <div
         key={id}

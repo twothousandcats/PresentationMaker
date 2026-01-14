@@ -86,7 +86,9 @@ export function removeSlide(
     (slide) => !slideIdsToRemove.includes(slide.id)
   );
   // index удаляемого в исходном состоянии
-  const firstRemovedIndex = pres.slides.findIndex(s => slideIdsToRemove.includes(s.id));
+  const firstRemovedIndex = pres.slides.findIndex((s) =>
+    slideIdsToRemove.includes(s.id)
+  );
   let nextSlideId: string | undefined;
 
   if (firstRemovedIndex !== -1) {
@@ -98,7 +100,8 @@ export function removeSlide(
     // undefined если нет слайдов -> selection пустой
   }
 
-  const scrollTargetSlideId = nextSlideId || (newSlides.length > 0 ? newSlides[0].id : undefined);
+  const scrollTargetSlideId =
+    nextSlideId || (newSlides.length > 0 ? newSlides[0].id : undefined);
 
   const updatedPresentation: Presentation = {
     ...pres,
@@ -452,8 +455,6 @@ export function resizeElement(
     pres
   );
 
-  console.log(updatedPres);
-
   // позиция
   updatedPres = updateElementInSlide(
     slideId,
@@ -462,13 +463,225 @@ export function resizeElement(
     updatedPres
   );
 
-  console.log(updatedPres);
-
   return {
     presentation: updatedPres,
     context: {
       affectedSlideIds: [slideId],
       affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+// изменения индексов внутри elements слайда
+export function moveElementsToTop(
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementIds: string[];
+  }
+): HistoryEntry {
+  const { slideId, elementIds } = payload;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
+  }
+
+  const slide = pres.slides[slideIndex];
+  const selectedSet = new Set(elementIds);
+
+  // Сохраняем исходный порядок выбранных элементов
+  const selected: SlideElement[] = [];
+  const others: SlideElement[] = [];
+
+  for (const el of slide.elements) {
+    if (selectedSet.has(el.id)) {
+      selected.push(el);
+    } else {
+      others.push(el);
+    }
+  }
+
+  const updatedSlide = {
+    ...slide,
+    elements: [...others, ...selected],
+  };
+  const updatedPresentation = {
+    ...pres,
+    slides: pres.slides.map((s) => (s.id === slideId ? updatedSlide : s)),
+  };
+
+  console.log('Верхний');
+  console.log(updatedSlide);
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementIds,
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function moveElementsToBottom(
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementIds: string[];
+  }
+): HistoryEntry {
+  const { slideId, elementIds } = payload;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
+  }
+
+  const slide = pres.slides[slideIndex];
+  const selectedSet = new Set(elementIds);
+
+  // Сохраняем исходный порядок выбранных элементов
+  const selected: SlideElement[] = [];
+  const others: SlideElement[] = [];
+
+  for (const el of slide.elements) {
+    if (selectedSet.has(el.id)) {
+      selected.push(el);
+    } else {
+      others.push(el);
+    }
+  }
+
+  const updatedSlide = {
+    ...slide,
+    elements: [...selected, ...others],
+  };
+  const updatedPresentation = {
+    ...pres,
+    slides: pres.slides.map((s) => (s.id === slideId ? updatedSlide : s)),
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementIds,
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function moveElementsUp(
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementIds: string[];
+  }
+): HistoryEntry {
+  const { slideId, elementIds } = payload;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
+  }
+
+  const slide = pres.slides[slideIndex];
+  const selectedSet = new Set(elementIds);
+  const elements = [...slide.elements];
+
+  // Проходим справа налево
+  for (let i = elements.length - 2; i >= 0; i--) {
+    const currentId = elements[i].id;
+    const nextId = elements[i + 1].id;
+
+    // Если текущий выбран, а следующий — нет -> меняем
+    if (selectedSet.has(currentId) && !selectedSet.has(nextId)) {
+      [elements[i], elements[i + 1]] = [elements[i + 1], elements[i]];
+    }
+  }
+
+  const updatedSlide = { ...slide, elements };
+  const updatedPresentation = {
+    ...pres,
+    slides: pres.slides.map((s) => (s.id === slideId ? updatedSlide : s)),
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementIds,
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function moveElementsDown(
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementIds: string[];
+  }
+): HistoryEntry {
+  const { slideId, elementIds } = payload;
+  const slideIndex = pres.slides.findIndex((s) => s.id === slideId);
+  if (slideIndex === -1) {
+    return {
+      presentation: pres,
+      context: {
+        affectedSlideIds: [],
+        affectedElementIds: [],
+        scrollTargetSlideId: undefined,
+      },
+    };
+  }
+
+  const slide = pres.slides[slideIndex];
+  const selectedSet = new Set(elementIds);
+  const elements = [...slide.elements];
+
+  // Проходим слева направо
+  for (let i = 1; i < elements.length; i++) {
+    const currentId = elements[i].id;
+    const prevId = elements[i - 1].id;
+
+    // Если текущий выбран, а предыдущий — нет -> меняем
+    if (selectedSet.has(currentId) && !selectedSet.has(prevId)) {
+      [elements[i - 1], elements[i]] = [elements[i], elements[i - 1]];
+    }
+  }
+
+  const updatedSlide = { ...slide, elements };
+  const updatedPresentation = {
+    ...pres,
+    slides: pres.slides.map((s) => (s.id === slideId ? updatedSlide : s)),
+  };
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: elementIds,
       scrollTargetSlideId: slideId,
     },
   };

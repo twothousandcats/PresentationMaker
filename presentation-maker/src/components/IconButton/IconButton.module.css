@@ -36,7 +36,7 @@
 .toolbar__hint {
   position: absolute;
   top: calc(100% + 10px);
-  z-index: 1;
+  z-index: 2;
 
   display: flex;
   justify-content: center;

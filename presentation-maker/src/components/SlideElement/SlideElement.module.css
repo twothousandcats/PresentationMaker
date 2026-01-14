@@ -9,14 +9,3 @@
 .element_disabled {
   pointer-events: none;
 }
-
-.image {
-  width: -webkit-fill-available;
-  object-fit: cover;
-}
-
-.text {
-  width: -webkit-fill-available;
-
-  outline: none;
-}

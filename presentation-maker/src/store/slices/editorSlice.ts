@@ -114,6 +114,11 @@ const editorSlice = createSlice({
     changeSlideBg: createHistoryReducer(pureActions.changeSlideBg),
     resizeElement: createHistoryReducer(pureActions.resizeElement),
 
+    moveElementsToTop: createHistoryReducer(pureActions.moveElementsToTop),
+    moveElementsToBottom: createHistoryReducer(pureActions.moveElementsToBottom),
+    moveElementsUp: createHistoryReducer(pureActions.moveElementsUp),
+    moveElementsDown: createHistoryReducer(pureActions.moveElementsDown),
+
     // UI only reducers
     setSelectedSlides: (
       state,
@@ -232,6 +237,7 @@ const editorSlice = createSlice({
       state.ui.lastAppliedContext = currentEntry.context;
     },
 
+    // загрузка начального состояния
     loadPresentation: (state, action: PayloadAction<Presentation>) => {
       const pres = action.payload;
       const newContext: HistoryContext = {
@@ -272,6 +278,13 @@ export const {
   changeElementBg,
   changeSlideBg,
   resizeElement,
+
+  moveElementsToTop,
+  moveElementsToBottom,
+  moveElementsUp,
+  moveElementsDown,
+
+
   setSelectedSlides,
   setSelectedElements,
   setEditorMode,

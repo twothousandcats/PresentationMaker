@@ -60,6 +60,23 @@ const LANGUAGES = {
       editor: 'Редактор',
       notFound: '404',
       viewer: 'Слайд-шоу',
+    },
+
+    toolbarButtons: {
+      slideShow: 'Слайд-шоу',
+      saveAsPdf: 'Сохранить презентацию в pdf',
+      addSlide: 'Добавить слайд',
+      removeSlide: 'Удалить активный слайд',
+      addRectangle: 'Добавить прямоугольник',
+      addText: 'Добавить текстовый элемент',
+      changeBackground: 'Изменить фон',
+      changeLayer: 'Изменить слой',
+      topLayer: 'На верхний уровень',
+      upperLayer: 'На уровень выше',
+      lowerLayer: 'На уровень ниже',
+      bottomLayer: 'На нижний уровень',
+      undo: 'Отменить действие',
+      redo: 'Повторить действие',
     }
   },
 };
