@@ -1,0 +1,27 @@
+.holder {
+    position: relative;
+}
+
+.trigger {
+    width: 24px;
+    height: 24px;
+
+    border: 2px solid var(--accent-border-color);
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition: border 0.3s ease;
+
+    &:hover {
+        border: 2px solid var(--selected-border-color);
+    }
+}
+
+.input {
+    position: absolute;
+    top: 0;
+
+    opacity: 0;
+    pointer-events: none;
+}

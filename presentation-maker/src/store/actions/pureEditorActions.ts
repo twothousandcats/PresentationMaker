@@ -518,9 +518,6 @@ export function moveElementsToTop(
     slides: pres.slides.map((s) => (s.id === slideId ? updatedSlide : s)),
   };
 
-  console.log('Верхний');
-  console.log(updatedSlide);
-
   return {
     presentation: updatedPresentation,
     context: {
@@ -682,6 +679,60 @@ export function moveElementsDown(
     context: {
       affectedSlideIds: [slideId],
       affectedElementIds: elementIds,
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function changeElementFontSize(
+    pres: Presentation,
+    payload: {
+        slideId: string;
+        elementId: string;
+        newFontSize: number;
+    }
+): HistoryEntry
+{
+  const { slideId, elementId, newFontSize } = payload;
+  const updatedPresentation = updateElementInSlide(
+    slideId,
+    elementId,
+    (el) => ({ ...el, fontSize: newFontSize }) as SlideElement,
+    pres
+  );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function changeElementFontColor(
+    pres: Presentation,
+    payload: {
+        slideId: string;
+        elementId: string;
+        newColor: string;
+    }
+): HistoryEntry
+{
+  const { slideId, elementId, newColor } = payload;
+  const updatedPresentation = updateElementInSlide(
+    slideId,
+    elementId,
+    (el) => ({ ...el, color: newColor }) as SlideElement,
+    pres
+  );
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [elementId],
       scrollTargetSlideId: slideId,
     },
   };

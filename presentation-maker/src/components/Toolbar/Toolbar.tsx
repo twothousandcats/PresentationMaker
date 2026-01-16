@@ -6,11 +6,7 @@ import type {
   UIState,
 } from '../../store/types/types.ts';
 import {
-  type ChangeEvent,
-  type KeyboardEvent,
   useState,
-  useRef,
-  useEffect,
   useCallback,
 } from 'react';
 import IconPlus from '../Icons/IconPlus.tsx';
@@ -30,13 +26,11 @@ import {
   moveElementsUp,
   redo,
   removeSlide,
-  renamePresentation,
   setEditorMode,
   undo,
 } from '../../store/slices/editorSlice.ts';
 import {
   createDefaultSlide,
-  deselectInputAndBlur,
 } from '../../store/utils/functions.ts';
 import { AddBgDialog } from '../AddBgDialog/AddBgDialog.tsx';
 import IconButton from '../IconButton/IconButton.tsx';
@@ -57,59 +51,20 @@ import IconLayerDoubleUpper from '../Icons/IconLayerDoubleUpper.tsx';
 import IconLayerLower from '../Icons/IconLayerLower.tsx';
 import IconLayerDoubleLower from '../Icons/IconLayerDoubleLower.tsx';
 import DropdownToolbar from '../DropdownMenu/DropdownToolbar.tsx';
-import {LANGUAGES} from "../../store/utils/langs.ts";
+import { LANGUAGES } from '../../store/utils/langs.ts';
+import TitleInput from '../TitleInput/TitleInput.tsx';
+import TextFormattingToolbar from '../TextFormattingToolbar/TextFormattingToolbar.tsx';
 
 export default function Toolbar() {
-  const { id, title }: Presentation = useSelector(selectCurrentPresentation);
+  const { id }: Presentation = useSelector(selectCurrentPresentation);
   const { selection }: UIState = useSelector(selectUI);
   const { past, future }: PresentationHistory = useSelector(selectHistory);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isExpanded, setExpanded] = useState(false);
-  const [draftTitle, setDraftTitle] = useState(title);
   const [isAddBgDialogOpen, setIsAddBgDialogOpen] = useState(false);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLLIElement>(null);
-
   const { save } = usePresentationSave();
-
-  useEffect(() => {
-    if (!isExpanded) {
-      setDraftTitle(title);
-    }
-  }, [title, isExpanded]);
-
-  const saveTitle = useCallback(() => {
-    if (draftTitle !== title) {
-      dispatch(renamePresentation({ newName: draftTitle }));
-    }
-
-    setExpanded(false);
-  }, [draftTitle, title, dispatch]);
-
-  const discardTitle = useCallback(() => {
-    setDraftTitle(title);
-    setExpanded(false);
-  }, [title]);
-
-  const handleChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
-    setDraftTitle(event.target.value);
-  };
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        saveTitle();
-        deselectInputAndBlur(inputRef);
-      } else if (event.key === 'Escape') {
-        discardTitle();
-        deselectInputAndBlur(inputRef);
-      }
-    },
-    [saveTitle, discardTitle]
-  );
 
   const handleChangeBg = useCallback(
     (content: Background | null) => {
@@ -142,32 +97,6 @@ export default function Toolbar() {
     },
     [dispatch, selection]
   );
-
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        saveTitle();
-        deselectInputAndBlur(inputRef);
-      }
-    },
-    [saveTitle]
-  );
-
-  useEffect(() => {
-    if (isExpanded && inputRef.current) {
-      inputRef.current.select();
-    }
-  }, [isExpanded]);
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [handleClickOutside]);
 
   const toolbarButtons = [
     {
@@ -240,45 +169,57 @@ export default function Toolbar() {
         {
           icon: <IconLayerDoubleUpper />,
           fn: () =>
-              dispatch(
-                  moveElementsToTop({
-                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
-                    elementIds: selection.selectedElementIds,
-                  })
-              ),
+            dispatch(
+              moveElementsToTop({
+                slideId:
+                  selection.selectedSlideIds[
+                    selection.selectedSlideIds.length - 1
+                  ],
+                elementIds: selection.selectedElementIds,
+              })
+            ),
           ariaLabel: LANGUAGES.ru.toolbarButtons.topLayer,
         },
         {
           icon: <IconLayerUpper />,
           fn: () =>
-              dispatch(
-                  moveElementsUp({
-                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
-                    elementIds: selection.selectedElementIds,
-                  })
-              ),
+            dispatch(
+              moveElementsUp({
+                slideId:
+                  selection.selectedSlideIds[
+                    selection.selectedSlideIds.length - 1
+                  ],
+                elementIds: selection.selectedElementIds,
+              })
+            ),
           ariaLabel: LANGUAGES.ru.toolbarButtons.upperLayer,
         },
         {
           icon: <IconLayerLower />,
           fn: () =>
-              dispatch(
-                  moveElementsDown({
-                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
-                    elementIds: selection.selectedElementIds,
-                  })
-              ),
+            dispatch(
+              moveElementsDown({
+                slideId:
+                  selection.selectedSlideIds[
+                    selection.selectedSlideIds.length - 1
+                  ],
+                elementIds: selection.selectedElementIds,
+              })
+            ),
           ariaLabel: LANGUAGES.ru.toolbarButtons.lowerLayer,
         },
         {
           icon: <IconLayerDoubleLower />,
           fn: () =>
-              dispatch(
-                  moveElementsToBottom({
-                    slideId: selection.selectedSlideIds[selection.selectedSlideIds.length - 1],
-                    elementIds: selection.selectedElementIds,
-                  })
-              ),
+            dispatch(
+              moveElementsToBottom({
+                slideId:
+                  selection.selectedSlideIds[
+                    selection.selectedSlideIds.length - 1
+                  ],
+                elementIds: selection.selectedElementIds,
+              })
+            ),
           ariaLabel: LANGUAGES.ru.toolbarButtons.bottomLayer,
         },
       ],
@@ -305,22 +246,7 @@ export default function Toolbar() {
     <>
       <div className={style.toolbar}>
         <ul className={style.toolbar__wrapper}>
-          <li
-            className={`${style.toolbar__item} ${style.toolbar__item_title} ${style.toolbar__item_title}`}
-            ref={containerRef}
-          >
-            <input
-              className={`${style.toolbar__input} ${isExpanded ? style.toolbar__input_expanded : ''}`}
-              id={id}
-              type="text"
-              value={draftTitle}
-              ref={inputRef}
-              onClick={() => setExpanded(true)}
-              onKeyDown={handleKeyDown}
-              onChange={handleChangeTitle}
-              readOnly={!isExpanded}
-            />
-          </li>
+          <TitleInput />
           {toolbarButtons.map((btn, index) => {
             if (btn.children && btn.children.length > 0 && !btn.disabled) {
               return (
@@ -353,6 +279,7 @@ export default function Toolbar() {
               );
             }
           })}
+          <TextFormattingToolbar />
         </ul>
       </div>
 

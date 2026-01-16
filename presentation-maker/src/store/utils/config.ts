@@ -24,6 +24,10 @@ const PAGES_URL = {
   presentationViewPage: '/view/',
 }
 
+const FONT_METADATA_URL = 'https://fonts.google.com/metadata/fonts';
+const INITIAL_FONT = 'Roboto';
+const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
+
 const getPortal = () => {
   return document.getElementById(SELECTORS.portalRoot);
 };
@@ -35,6 +39,9 @@ export {
   DEFAULT_SLIDE_WIDTH,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
-  getPortal,
   PAGES_URL,
+  FONT_METADATA_URL,
+  INITIAL_FONT,
+  FONT_SIZES,
+  getPortal,
 };

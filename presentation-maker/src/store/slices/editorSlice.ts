@@ -109,10 +109,14 @@ const editorSlice = createSlice({
     changeElPosition: createHistoryReducer(pureActions.changeElPosition),
     changeElSize: createHistoryReducer(pureActions.changeElSize),
     changeTextElContent: createHistoryReducer(pureActions.changeTextElContent),
-    changeFontFamily: createHistoryReducer(pureActions.changeFontFamily),
     changeElementBg: createHistoryReducer(pureActions.changeElementBg),
     changeSlideBg: createHistoryReducer(pureActions.changeSlideBg),
     resizeElement: createHistoryReducer(pureActions.resizeElement),
+
+    // text el
+    changeFontFamily: createHistoryReducer(pureActions.changeFontFamily),
+    changeElementFontSize: createHistoryReducer(pureActions.changeElementFontSize),
+    changeElementFontColor: createHistoryReducer(pureActions.changeElementFontColor),
 
     moveElementsToTop: createHistoryReducer(pureActions.moveElementsToTop),
     moveElementsToBottom: createHistoryReducer(pureActions.moveElementsToBottom),
@@ -274,10 +278,13 @@ export const {
   changeElPosition,
   changeElSize,
   changeTextElContent,
-  changeFontFamily,
   changeElementBg,
   changeSlideBg,
   resizeElement,
+
+  changeFontFamily,
+  changeElementFontSize,
+  changeElementFontColor,
 
   moveElementsToTop,
   moveElementsToBottom,

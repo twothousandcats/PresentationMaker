@@ -40,5 +40,5 @@
 }
 
 .message {
-
+    color: var(--accent-text-color);
 }
