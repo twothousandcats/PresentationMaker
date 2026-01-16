@@ -24,8 +24,25 @@ const PAGES_URL = {
   presentationViewPage: '/view/',
 }
 
-const FONT_METADATA_URL = 'https://fonts.google.com/metadata/fonts';
-const INITIAL_FONT = 'Roboto';
+const STANDARD_FONTS = [
+  'Arial',
+  'Helvetica',
+  'Times New Roman',
+  'Georgia',
+  'Courier New',
+  'Verdana',
+  'Tahoma',
+  'Trebuchet MS',
+  'Palatino',
+  'Garamond',
+  'Comic Sans MS',
+  'Impact',
+  'Lucida Sans Unicode',
+  'Geneva',
+  'sans-serif',
+  'serif',
+  'monospace',
+];
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 
 const getPortal = () => {
@@ -40,8 +57,7 @@ export {
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
   PAGES_URL,
-  FONT_METADATA_URL,
-  INITIAL_FONT,
+  STANDARD_FONTS,
   FONT_SIZES,
   getPortal,
 };

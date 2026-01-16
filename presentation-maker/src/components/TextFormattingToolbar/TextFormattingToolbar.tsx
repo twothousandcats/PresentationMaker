@@ -4,7 +4,7 @@ import {
   selectCurrentSlideElements,
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   changeElementFontColor,
   changeElementFontSize,
@@ -88,10 +88,6 @@ export default function TextFormattingToolbar() {
       })
     );
   };
-
-  useEffect(() => {
-    console.log(selectedTextElements.length);
-  });
 
   return (
     <>

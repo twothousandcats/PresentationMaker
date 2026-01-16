@@ -66,6 +66,7 @@
     top: calc(100% + 10px);
     z-index: 10000;
 
+    max-height: 200px;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -75,6 +76,8 @@
 
     border-radius: 5px;
     background-color: var(--accent-bg-color2);
+
+    overflow-y: auto;
 }
 
 .dropdownItem {

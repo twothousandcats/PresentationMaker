@@ -1,0 +1,54 @@
+.holder {
+    position: relative;
+}
+
+.control {
+    min-width: 120px;
+    padding: 4px 10px;
+    border-radius: 5px;
+
+    border: none;
+    background-color: var(--default-bg-color);
+
+    cursor: pointer;
+
+    [data-theme='dark'] & {
+        background-color: #f9fbfd;
+    }
+}
+
+.list {
+    position: absolute;
+    top: calc(100% + 10px);
+    z-index: 10000;
+
+    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    gap: 5px;
+
+    color: var(--default-text-color);
+
+    border-radius: 5px;
+    background-color: var(--accent-bg-color2);
+
+    overflow-y: auto;
+}
+
+.listItem {
+    width: 100%;
+    padding: 5px 10px;
+
+    color: var(--default-text-color);
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: var(--accent-bg-color);
+    }
+}

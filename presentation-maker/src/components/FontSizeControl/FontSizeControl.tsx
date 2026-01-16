@@ -22,6 +22,7 @@ export const FontSizeControl = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Закрытие при клике вне
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -71,7 +72,7 @@ export const FontSizeControl = ({
   const displayValue = isMixed ? '' : `${value}px`;
 
   return (
-    <div className={style.control}>
+    <div className={style.control} ref={dropdownRef}>
       <button
         className={decrementBtnClasses}
         onClick={handleDecrement}
