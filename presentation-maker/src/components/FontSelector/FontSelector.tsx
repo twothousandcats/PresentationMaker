@@ -43,10 +43,6 @@ export const FontSelector = ({ value, onChange }: FontSelectorProps) => {
               className={style.listItem}
               key={family}
               onClick={() => handleSelect(family)}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = '#f0f0f0')
-              }
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '')}
             >
               {family}
             </li>
