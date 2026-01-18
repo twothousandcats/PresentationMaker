@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  useCallback,
-  useRef
-} from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { moveSlides } from '../slices/editorSlice.ts';
 import type { Slide } from '../types/types.ts';
 import { useDispatch } from 'react-redux';
@@ -12,12 +9,23 @@ interface SlidesDNDProps {
   selectedSlideIds: string[];
 }
 
+type SlidesDNDState = {
+  draggedIds: string[];
+  targetId: string | null;
+  insertAfter: boolean;
+};
+
 export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
   const dispatch = useDispatch();
 
   const draggedSlideIdsRef = useRef<string[]>([]);
   const dragTargetIdRef = useRef<string | null>(null);
   const insertAfterRef = useRef<boolean>(false);
+  const [dragState, setDragState] = useState<SlidesDNDState>({
+    draggedIds: [],
+    targetId: null,
+    insertAfter: false,
+  });
 
   const handleMouseDown = useCallback(
     (event: React.MouseEvent, slideId: string) => {
@@ -57,6 +65,12 @@ export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
 
         dragTargetIdRef.current = targetId;
         insertAfterRef.current = isBottomHalf;
+
+        setDragState({
+          draggedIds: draggedSlideIdsRef.current,
+          targetId,
+          insertAfter: isBottomHalf,
+        });
       };
 
       const handleMouseUp = () => {
@@ -88,12 +102,15 @@ export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
             newIndex,
           })
         );
+
+        cleanup();
       };
 
       const cleanup = () => {
         draggedSlideIdsRef.current = [];
         dragTargetIdRef.current = null;
         insertAfterRef.current = false;
+        setDragState({ draggedIds: [], targetId: null, insertAfter: false });
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
       };
@@ -104,5 +121,5 @@ export const useSlidesDND = ({ slides, selectedSlideIds }: SlidesDNDProps) => {
     [dispatch, selectedSlideIds, slides]
   );
 
-  return { handleMouseDown };
+  return { handleMouseDown, dragState };
 };

@@ -102,7 +102,10 @@ export default function SlideContent({
     }
 
     const updateScale = () => {
-      const container = containerRef.current!;
+      const container = containerRef.current;
+      if(!container) {
+        return;
+      }
       const containerWidth = container.clientWidth;
       const containerHeight = container.clientHeight;
       const logicalWidth = size.width;

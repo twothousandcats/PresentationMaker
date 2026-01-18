@@ -9,6 +9,7 @@ import {
   selectCurrentPresentation,
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
+import { concatClassNames } from '../../store/utils/functions.ts';
 
 export default function SlidesList() {
   const { slides }: Presentation = useSelector(selectCurrentPresentation);
@@ -19,10 +20,12 @@ export default function SlidesList() {
     slides,
     selectedSlideIds: selection.selectedSlideIds,
   });
-  const { handleMouseDown } = useSlidesDND({
+  const { handleMouseDown, dragState } = useSlidesDND({
     slides,
     selectedSlideIds: selection.selectedSlideIds,
   });
+
+  const { draggedIds, targetId, insertAfter } = dragState;
 
   return (
     <ul className={style.container}>
@@ -30,7 +33,7 @@ export default function SlidesList() {
         slides.map((slide, index) => (
           <li
             key={slide.id}
-            className={style.holder}
+            className={style.frame}
             data-slide-id={slide.id}
             onClick={(event) => {
               handleSelectSlide(event, slide);
@@ -41,7 +44,18 @@ export default function SlidesList() {
             onMouseDown={(event) => handleMouseDown(event, slide.id)}
           >
             <p className={style.holder__num}>{index + 1}</p>
-            <Slide slideId={slide.id} isEditable={false} />
+            <div
+              className={concatClassNames([
+                style.holder,
+                draggedIds.includes(slide.id) && style.holder_dragged,
+                targetId === slide.id &&
+                  (insertAfter
+                    ? style.holder_drop_after
+                    : style.holder_drop_before),
+              ])}
+            >
+              <Slide slideId={slide.id} isEditable={false} />
+            </div>
           </li>
         ))}
     </ul>

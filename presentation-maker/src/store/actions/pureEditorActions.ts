@@ -7,6 +7,7 @@ import type {
   HistoryEntry,
   Presentation,
 } from '../types/types';
+import { createDefaultSlide } from '../utils/functions.ts';
 
 function updateSlide(updatedSlide: Slide, pres: Presentation): Presentation {
   return {
@@ -80,32 +81,34 @@ export function removeSlide(
   pres: Presentation,
   payload: { slideIdsToRemove: string[] }
 ): HistoryEntry {
+  let scrollTargetSlideId: string | undefined;
   const { slideIdsToRemove } = payload;
-  // обновленные, без удаляемого
   const newSlides = pres.slides.filter(
     (slide) => !slideIdsToRemove.includes(slide.id)
   );
-  // index удаляемого в исходном состоянии
+
   const firstRemovedIndex = pres.slides.findIndex((s) =>
     slideIdsToRemove.includes(s.id)
   );
-  let nextSlideId: string | undefined;
-
   if (firstRemovedIndex !== -1) {
     if (firstRemovedIndex < newSlides.length) {
-      nextSlideId = newSlides[firstRemovedIndex].id; // следующий
+      scrollTargetSlideId = newSlides[firstRemovedIndex].id;
     } else if (firstRemovedIndex > 0) {
-      nextSlideId = newSlides[firstRemovedIndex - 1].id; // предыдущий
+      scrollTargetSlideId = newSlides[firstRemovedIndex - 1].id;
     }
-    // undefined если нет слайдов -> selection пустой
   }
 
-  const scrollTargetSlideId =
-    nextSlideId || (newSlides.length > 0 ? newSlides[0].id : undefined);
+  // слайдов 0 -> новый
+  const finalSlides =
+    newSlides.length === 0 ? [createDefaultSlide()] : newSlides;
+
+  // Обновляем scrollTarget, если был добавлен новый слайд
+  const finalScrollTarget =
+    newSlides.length === 0 ? finalSlides[0].id : scrollTargetSlideId;
 
   const updatedPresentation: Presentation = {
     ...pres,
-    slides: newSlides,
+    slides: finalSlides,
   };
 
   return {
@@ -113,7 +116,7 @@ export function removeSlide(
     context: {
       affectedSlideIds: slideIdsToRemove,
       affectedElementIds: [],
-      scrollTargetSlideId,
+      scrollTargetSlideId: finalScrollTarget,
     },
   };
 }
@@ -685,14 +688,13 @@ export function moveElementsDown(
 }
 
 export function changeElementFontSize(
-    pres: Presentation,
-    payload: {
-        slideId: string;
-        elementId: string;
-        newFontSize: number;
-    }
-): HistoryEntry
-{
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementId: string;
+    newFontSize: number;
+  }
+): HistoryEntry {
   const { slideId, elementId, newFontSize } = payload;
   const updatedPresentation = updateElementInSlide(
     slideId,
@@ -712,14 +714,13 @@ export function changeElementFontSize(
 }
 
 export function changeElementFontColor(
-    pres: Presentation,
-    payload: {
-        slideId: string;
-        elementId: string;
-        newColor: string;
-    }
-): HistoryEntry
-{
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementId: string;
+    newColor: string;
+  }
+): HistoryEntry {
   const { slideId, elementId, newColor } = payload;
   const updatedPresentation = updateElementInSlide(
     slideId,

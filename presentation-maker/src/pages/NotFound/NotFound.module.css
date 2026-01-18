@@ -11,6 +11,12 @@
     align-items: center;
 }
 
+.back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
 .notFound {
     font-family: var(--base-font);
     color: var(--default-text-color);

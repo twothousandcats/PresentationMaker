@@ -10,6 +10,8 @@ import IconAddImage from '../Icons/IconAddImage.tsx';
 import * as React from 'react';
 import IconAddUrl from '../Icons/IconAddUrl.tsx';
 import { uploadFile } from '../../lib/fileService.ts';
+import { ColorPicker } from '../ColorPicker/ColorPicker.tsx';
+import { Loader } from '../Loader/Loader.tsx';
 
 type TabType = 'file' | 'url' | 'color';
 
@@ -129,7 +131,7 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
       if (activeTab === 'url' && urlInputRef.current) {
         urlInputRef.current.focus();
       } else if (activeTab === 'color' && urlInputRef.current) {
-        // цветной инпут
+        // цвет
       }
     }
   }, [activeTab, isOpen]);
@@ -159,13 +161,22 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
               className={style.fileInput}
               disabled={uploading}
             />
-            {uploading && <div className={style.uploading}>Загрузка...</div>}
+
+            <button
+              type="button"
+              className={style.customUploadBtn}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+            >
+              {LANGUAGES.ru.imageDialogHeading}
+            </button>
+            {uploading && <Loader />}
             {uploadedImageUrl && (
               <div className={style.preview}>
                 <img
                   src={uploadedImageUrl}
                   alt="Preview"
-                  style={{ maxWidth: '100%', maxHeight: '100px' }}
+                  style={{ maxWidth: '100%', maxHeight: '400px' }}
                 />
               </div>
             )}
@@ -188,12 +199,7 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
 
         {activeTab === 'color' && (
           <div className={style.holder_color}>
-            <input
-              type="color"
-              value={currentColor}
-              onChange={(e) => setCurrentColor(e.target.value)}
-              className={style.colorInput}
-            />
+            <ColorPicker value={currentColor} onChange={setCurrentColor} />
           </div>
         )}
 

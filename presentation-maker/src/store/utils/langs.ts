@@ -81,7 +81,9 @@ const LANGUAGES = {
 
     fonts: {
       fetchError: 'Не удалось загрузить шрифты: ',
-    }
+    },
+
+    back: "Назад"
   },
 };
 

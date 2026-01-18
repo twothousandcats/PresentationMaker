@@ -70,6 +70,7 @@ export const TextElement: React.FC<TextElementProps> = ({
         backgroundRepeat: 'no-repeat',
         backgroundSize: '100% 100%',
       }),
+    cursor: isEditing ? 'text' : 'default',
 
     // vendor
     border: 'none',
