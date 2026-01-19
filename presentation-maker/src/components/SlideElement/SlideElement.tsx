@@ -60,7 +60,7 @@ export default function SlideElement({
       style={{
         ...styleOverride,
         transform: dragOffset
-          ? `translate(${dragOffset.x * scale}px, ${dragOffset.y * scale}px)`
+          ? `translate(${dragOffset.x}px, ${dragOffset.y}px)`
           : 'none',
         cursor: isPlacing
           ? 'inherit'

@@ -7,8 +7,6 @@ const PRESENTATION_SIZE = {
   height: 720,
 };
 
-const DEFAULT_SLIDE_WIDTH = 240;
-
 const SELECTORS = {
   portalRoot: 'portal-root',
 };
@@ -53,7 +51,6 @@ export {
   AUTOSAVE_DELAY_MS,
   INFO_DELAY_MS,
   CONTROLS_TO_HIDE_DELAY_MS,
-  DEFAULT_SLIDE_WIDTH,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
   PAGES_URL,

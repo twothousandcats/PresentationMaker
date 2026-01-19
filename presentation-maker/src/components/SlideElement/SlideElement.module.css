@@ -1,11 +1,13 @@
 .element {
-  position: absolute;
+    position: absolute;
 
-  display: flex;
+    display: flex;
 
-  border: 2px solid transparent;
+    border: 2px solid transparent;
 }
 
 .element_disabled {
-  pointer-events: none;
+    pointer-events: none;
+
+    box-sizing: content-box;
 }

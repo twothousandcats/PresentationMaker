@@ -1,4 +1,7 @@
 .image {
-    width: -webkit-fill-available;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    outline: none;
 }
