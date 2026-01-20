@@ -2,9 +2,10 @@ const AUTOSAVE_DELAY_MS: number = 5000;
 const INFO_DELAY_MS: number = 4000;
 const CONTROLS_TO_HIDE_DELAY_MS: number = 3000;
 
+// 16:9
 const PRESENTATION_SIZE = {
-  width: 1240,
-  height: 720,
+  width: 1600, // width: 1240,
+  height: 900, // height: 720,
 };
 
 const DEFAULT_SLIDE_WIDTH = 240;

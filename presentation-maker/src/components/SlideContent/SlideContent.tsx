@@ -103,7 +103,7 @@ export default function SlideContent({
 
     const updateScale = () => {
       const container = containerRef.current;
-      if(!container) {
+      if (!container) {
         return;
       }
       const containerWidth = container.clientWidth;
@@ -160,75 +160,80 @@ export default function SlideContent({
       onMouseDown={handlePlacementStart}
       onClick={handleNonElementClick}
     >
-      {slide.elements.map((element) => {
-        // логические -> экранные
-        const preview = resizePreview?.[element.id];
+      <div
+        style={{
+          transform: `translate(${scaleInfo.offsetX}px, ${scaleInfo.offsetY}px) scale(${scaleInfo.scale})`,
+          transformOrigin: '0 0',
+          position: 'relative',
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+        }}
+      >
+        {slide.elements.map((element) => {
+          // логические -> экранные
+          const preview = resizePreview?.[element.id];
 
-        const logicalX = preview?.position.x ?? element.position.x;
-        const logicalY = preview?.position.y ?? element.position.y;
-        const logicalW = preview?.size.width ?? element.size.width;
-        const logicalH = preview?.size.height ?? element.size.height;
+          const logicalX = preview?.position.x ?? element.position.x;
+          const logicalY = preview?.position.y ?? element.position.y;
+          const logicalW = preview?.size.width ?? element.size.width;
+          const logicalH = preview?.size.height ?? element.size.height;
+          const dx = dragOffsets[element.id]?.x ?? 0;
+          const dy = dragOffsets[element.id]?.y ?? 0;
 
-        const screenX = scaleInfo.offsetX + logicalX * scaleInfo.scale;
-        const screenY = scaleInfo.offsetY + logicalY * scaleInfo.scale;
-        const screenW = logicalW * scaleInfo.scale;
-        const screenH = logicalH * scaleInfo.scale;
-
-        return (
-          <SlideElement
-            key={element.id}
-            element={element}
-            slideSize={size}
-            slideId={slide.id}
+          return (
+            <SlideElement
+              key={element.id}
+              element={element}
+              slideSize={size}
+              slideId={slide.id}
+              slideElements={slide.elements}
+              selectedElementsIds={selection.selectedElementIds}
+              isEditable={!!isEditable}
+              isInteractive={isInteractive}
+              isPlacing={isPlacing}
+              isActive={isEditable && activeElements?.includes(element.id)}
+              onDragStart={(clientX, clientY) =>
+                handleDragStart(clientX, clientY)
+              }
+              resizePreview={resizePreview?.[element.id]}
+              styleOverride={{
+                left: `${logicalX + dx}px`,
+                top: `${logicalY + dy}px`,
+                width: `${logicalW}px`,
+                height: `${logicalH}px`,
+              }}
+            />
+          );
+        })}
+        {isEditable && (
+          <SelectionOverlay
+            selectedElementIds={selection.selectedElementIds}
             slideElements={slide.elements}
-            selectedElementsIds={selection.selectedElementIds}
-            isEditable={!!isEditable}
-            isInteractive={isInteractive}
-            isPlacing={isPlacing}
-            isActive={isEditable && activeElements?.includes(element.id)}
-            onDragStart={(clientX, clientY) =>
-              handleDragStart(clientX, clientY)
-            }
-            dragOffset={dragOffsets[element.id] || { x: 0, y: 0 }}
-            resizePreview={resizePreview?.[element.id]}
-            styleOverride={{
-              left: `${screenX}px`,
-              top: `${screenY}px`,
-              width: `${screenW}px`,
-              height: `${screenH}px`,
-            }}
+            slideSize={size}
+            dragOffsets={dragOffsets}
+            resizePreview={resizePreview}
+            onStartResizing={startResizing}
             scale={scaleInfo.scale}
+            offsetX={scaleInfo.offsetX}
+            offsetY={scaleInfo.offsetY}
           />
-        );
-      })}
-      {isEditable && (
-        <SelectionOverlay
-          selectedElementIds={selection.selectedElementIds}
-          slideElements={slide.elements}
-          slideSize={size}
-          dragOffsets={dragOffsets}
-          resizePreview={resizePreview}
-          onStartResizing={startResizing}
-          scale={scaleInfo.scale}
-          offsetX={scaleInfo.offsetX}
-          offsetY={scaleInfo.offsetY}
-        />
-      )}
-      {placementPreview && (
-        <div
-          style={{
-            position: 'absolute',
-            top: placementPreview.y,
-            left: placementPreview.x,
-            width: placementPreview.width,
-            height: placementPreview.height,
-            border: '1px dashed #0078d4',
-            backgroundColor: 'rgba(0, 120, 212, 0.1)',
-            pointerEvents: 'none',
-            zIndex: 1000,
-          }}
-        />
-      )}
+        )}
+        {placementPreview && (
+          <div
+            style={{
+              position: 'absolute',
+              top: placementPreview.y,
+              left: placementPreview.x,
+              width: placementPreview.width,
+              height: placementPreview.height,
+              border: '1px dashed #0078d4',
+              backgroundColor: 'rgba(0, 120, 212, 0.1)',
+              pointerEvents: 'none',
+              zIndex: 1000,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

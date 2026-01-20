@@ -39,7 +39,8 @@
 .holder {
     position: relative;
 
-    width: 240px;
+    width: calc(1920px / 8); /* width: 240px; */
+    height: calc(1080px / 8);
     display: flex;
     gap: 10px;
 

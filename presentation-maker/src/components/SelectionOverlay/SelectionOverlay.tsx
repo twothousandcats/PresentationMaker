@@ -2,7 +2,6 @@ import styles from './SelectionOverlay.module.css';
 import type { Size, SlideElement, Position } from '../../store/types/types.ts';
 import {
   concatClassNames,
-  getPercentValue,
   getRandomId,
 } from '../../store/utils/functions.ts';
 import type { ResizeItem } from '../../store/types/utility-types.ts';
@@ -108,7 +107,6 @@ const RESIZE_HANDLERS: Handler[] = [
 export const SelectionOverlay = ({
   selectedElementIds,
   slideElements,
-  slideSize,
   scale,
   offsetX,
   offsetY,
