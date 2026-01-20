@@ -1,5 +1,5 @@
 .container {
-    min-width: 260px;
+    min-width: 280px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -39,8 +39,8 @@
 .holder {
     position: relative;
 
-    width: calc(1920px / 8); /* width: 240px; */
-    height: calc(1080px / 8);
+    width: 240px;
+    height: 135px;
     display: flex;
     gap: 10px;
 

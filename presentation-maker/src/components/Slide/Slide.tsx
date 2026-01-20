@@ -18,7 +18,7 @@ export default function Slide({
   isEditable = false,
   mode,
 }: SlideProps) {
-  const { slides, size } = useSelector(selectCurrentPresentation);
+  const { slides } = useSelector(selectCurrentPresentation);
   const { selection } = useSelector(selectUI);
   const slide = slides.find((slide) => slide.id === slideId);
 
@@ -30,7 +30,6 @@ export default function Slide({
     <SlideContent
       slide={slide}
       selection={selection}
-      size={size}
       isEditable={isEditable}
       mode={mode}
     />

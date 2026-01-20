@@ -4,35 +4,37 @@ import { usePlacementMode } from '../../store/hooks/usePlacementMode.ts';
 import { useElementDND } from '../../store/hooks/useElementDND.ts';
 import { useResize } from '../../store/hooks/useResize.ts';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay.tsx';
-import type {
-  EditorMode,
-  Selection,
-  Size,
-  Slide,
-} from '../../store/types/types.ts';
+import type { EditorMode, Selection, Slide } from '../../store/types/types.ts';
 import SlideElement from '../SlideElement/SlideElement.tsx';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
+import { selectCurrentPresentation } from '../../store/selectors/editorSelectors.ts';
+import {
+  PADDING_FACTOR,
+  PREVIEW_LIST_SLIDE_HEIGHT,
+  PREVIEW_LIST_SLIDE_WIDTH,
+} from '../../store/utils/config.ts';
 
 type SlideContentProps = {
   slide: Slide;
   selection: Selection;
-  size: Size;
   isEditable?: boolean;
   mode?: EditorMode;
   isPreview?: boolean;
+  isCollection?: boolean;
 };
 
 export default function SlideContent({
   slide,
   selection,
-  size,
   isEditable,
   mode,
   isPreview,
+  isCollection,
 }: SlideContentProps) {
+  const { size } = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
   const isActive = selection.selectedSlideIds.includes(slide.id);
   const activeElements =
@@ -111,16 +113,17 @@ export default function SlideContent({
       const logicalWidth = size.width;
       const logicalHeight = size.height;
 
-      if (logicalWidth === 0 || logicalHeight === 0) {
-        return;
-      }
+      const paddedContainerWidth = containerWidth * PADDING_FACTOR;
+      const paddedContainerHeight = containerHeight * PADDING_FACTOR;
 
-      const scaleX = containerWidth / logicalWidth;
-      const scaleY = containerHeight / logicalHeight;
+      const scaleX = paddedContainerWidth / logicalWidth;
+      const scaleY = paddedContainerHeight / logicalHeight;
       const scale = Math.min(scaleX, scaleY); // сохраняем пропорции
 
-      const offsetX = (containerWidth - logicalWidth * scale) / 2;
-      const offsetY = (containerHeight - logicalHeight * scale) / 2;
+      const scaledWidth = logicalWidth * scale;
+      const scaledHeight = logicalHeight * scale;
+      const offsetX = (containerWidth - scaledWidth) / 2;
+      const offsetY = (containerHeight - scaledHeight) / 2;
 
       setScaleInfo({ scale, offsetX, offsetY });
     };
@@ -152,88 +155,97 @@ export default function SlideContent({
         ...(isEditable
           ? {
               cursor: isPlacing ? 'crosshair' : 'default',
+              transform: `translate(${scaleInfo.offsetX}px, ${scaleInfo.offsetY}px) scale(${scaleInfo.scale})`,
+              transformOrigin: '0 0',
+              width: `${size.width}px`,
+              height: `${size.height}px`,
             }
           : {
-              aspectRatio: `${size.width} / ${size.height}`,
+              ...(isPreview
+                ? {
+                    transformOrigin: isCollection ? '0 0' : '',
+                    scale: isCollection ? '0.2' : '0.9',
+                    width: `${size.width}px`,
+                    height: `${size.height}px`,
+                  }
+                : {
+                    width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
+                    height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
+                  }),
             }),
       }}
       onMouseDown={handlePlacementStart}
       onClick={handleNonElementClick}
     >
-      <div
-        style={{
-          transform: `translate(${scaleInfo.offsetX}px, ${scaleInfo.offsetY}px) scale(${scaleInfo.scale})`,
-          transformOrigin: '0 0',
-          position: 'relative',
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-        }}
-      >
-        {slide.elements.map((element) => {
-          // логические -> экранные
-          const preview = resizePreview?.[element.id];
+      {slide.elements.map((element) => {
+        // логические -> экранные
+        const preview = resizePreview?.[element.id];
 
-          const logicalX = preview?.position.x ?? element.position.x;
-          const logicalY = preview?.position.y ?? element.position.y;
-          const logicalW = preview?.size.width ?? element.size.width;
-          const logicalH = preview?.size.height ?? element.size.height;
-          const dx = dragOffsets[element.id]?.x ?? 0;
-          const dy = dragOffsets[element.id]?.y ?? 0;
+        const logicalX = preview?.position.x ?? element.position.x;
+        const logicalY = preview?.position.y ?? element.position.y;
+        let logicalW = preview?.size.width ?? element.size.width;
+        let logicalH = preview?.size.height ?? element.size.height;
+        const dx = dragOffsets[element.id]?.x ?? 0;
+        const dy = dragOffsets[element.id]?.y ?? 0;
 
-          return (
-            <SlideElement
-              key={element.id}
-              element={element}
-              slideSize={size}
-              slideId={slide.id}
-              slideElements={slide.elements}
-              selectedElementsIds={selection.selectedElementIds}
-              isEditable={!!isEditable}
-              isInteractive={isInteractive}
-              isPlacing={isPlacing}
-              isActive={isEditable && activeElements?.includes(element.id)}
-              onDragStart={(clientX, clientY) =>
-                handleDragStart(clientX, clientY)
-              }
-              resizePreview={resizePreview?.[element.id]}
-              styleOverride={{
-                left: `${logicalX + dx}px`,
-                top: `${logicalY + dy}px`,
-                width: `${logicalW}px`,
-                height: `${logicalH}px`,
-              }}
-            />
-          );
-        })}
-        {isEditable && (
-          <SelectionOverlay
-            selectedElementIds={selection.selectedElementIds}
-            slideElements={slide.elements}
+        if (!isEditable && !isPreview) {
+          logicalW = logicalW * scaleInfo.scale;
+          logicalH = logicalH * scaleInfo.scale;
+        }
+
+        return (
+          <SlideElement
+            key={element.id}
+            element={element}
             slideSize={size}
-            dragOffsets={dragOffsets}
-            resizePreview={resizePreview}
-            onStartResizing={startResizing}
-            scale={scaleInfo.scale}
-            offsetX={scaleInfo.offsetX}
-            offsetY={scaleInfo.offsetY}
-          />
-        )}
-        {placementPreview && (
-          <div
-            style={{
-              position: 'absolute',
-              top: placementPreview.y,
-              left: placementPreview.x,
-              width: placementPreview.width,
-              height: placementPreview.height,
-              border: '1px dashed #0078d4',
-              backgroundColor: 'rgba(0, 120, 212, 0.1)',
-              pointerEvents: 'none',
-              zIndex: 1000,
+            slideId={slide.id}
+            slideElements={slide.elements}
+            selectedElementsIds={selection.selectedElementIds}
+            isEditable={!!isEditable}
+            isInteractive={isInteractive}
+            isPlacing={isPlacing}
+            isActive={isEditable && activeElements?.includes(element.id)}
+            onDragStart={(clientX, clientY) =>
+              handleDragStart(clientX, clientY)
+            }
+            resizePreview={resizePreview?.[element.id]}
+            styleOverride={{
+              left: `${logicalX + dx}px`,
+              top: `${logicalY + dy}px`,
+              width: `${logicalW}px`,
+              height: `${logicalH}px`,
             }}
           />
-        )}
-      </div>
+        );
+      })}
+      {isEditable && (
+        <SelectionOverlay
+          selectedElementIds={selection.selectedElementIds}
+          slideElements={slide.elements}
+          slideSize={size}
+          dragOffsets={dragOffsets}
+          resizePreview={resizePreview}
+          onStartResizing={startResizing}
+          scale={scaleInfo.scale}
+          offsetX={scaleInfo.offsetX}
+          offsetY={scaleInfo.offsetY}
+        />
+      )}
+      {placementPreview && (
+        <div
+          style={{
+            position: 'absolute',
+            top: placementPreview.y,
+            left: placementPreview.x,
+            width: placementPreview.width,
+            height: placementPreview.height,
+            border: '1px dashed #0078d4',
+            backgroundColor: 'rgba(0, 120, 212, 0.1)',
+            pointerEvents: 'none',
+            zIndex: 1000,
+          }}
+        />
+      )}
     </div>
   );
 }

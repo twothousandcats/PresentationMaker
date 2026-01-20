@@ -37,7 +37,10 @@ export const CollectionPage = () => {
   const [loading, setLoading] = useState(true);
   const [confirmationToDelete, setConfirmationToDelete] =
     useState<ConfirmationState>(null);
-  const [toast, setToast] = useState<{message: string; type: ToastType} | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: ToastType;
+  } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -146,7 +149,6 @@ export const CollectionPage = () => {
                   <CollectionItem
                     title={item.title}
                     updatedAt={item.updatedAt}
-                    size={JSON.parse(item.size)}
                     preview={JSON.parse(item.preview)}
                   />
                   <div
@@ -179,11 +181,11 @@ export const CollectionPage = () => {
           cancelText={LANGUAGES.ru.dialogCancel}
         />
       )}
-        <Toast
-          message={toast?.message || ''}
-          type={toast?.type || 'success'}
-          visible={!!toast}
-        />
+      <Toast
+        message={toast?.message || ''}
+        type={toast?.type || 'success'}
+        visible={!!toast}
+      />
     </section>
   );
 };
