@@ -3,24 +3,26 @@ import type { Position, Selection, Slide } from '../types/types.ts';
 import { changeElPosition } from '../slices/editorSlice.ts';
 import { useDispatch } from 'react-redux';
 
-const calculateDelta = (clientPos: number, startMousePos: number) => {
-  return clientPos - startMousePos;
-};
+// const calculateDelta = (clientPos: number, startMousePos: number) => {
+//   return clientPos - startMousePos;
+// };
 
 export const useElementDND = (
   slide: Slide,
   selection: Selection,
-  isEditable?: boolean
+  isEditable?: boolean,
+  screenToLogical?: (x: number, y: number) => { x: number; y: number }
 ) => {
   const dispatch = useDispatch();
   const [dragOffsets, setDragOffsets] = useState<Record<string, Position>>({});
 
   const handleDragStart = useCallback(
     (clientX: number, clientY: number) => {
-      if (!isEditable) {
+      if (!isEditable || !screenToLogical) {
         return;
       }
 
+      const startMouse = screenToLogical(clientX, clientY);
       const startPositions: Record<string, Position> = {};
       selection.selectedElementIds.forEach((id) => {
         const element = slide.elements.find((el) => el.id === id);
@@ -35,8 +37,10 @@ export const useElementDND = (
       };
 
       const handleMouseMove = (event: MouseEvent) => {
-        const deltaX = calculateDelta(event.clientX, dragData.startMouse.x);
-        const deltaY = calculateDelta(event.clientY, dragData.startMouse.y);
+        const current = screenToLogical(event.clientX, event.clientY);
+        const deltaX = current.x - startMouse.x;
+        const deltaY = current.y - startMouse.y;
+
         const newOffsets: Record<string, Position> = {};
         selection.selectedElementIds.forEach((id) => {
           newOffsets[id] = {
@@ -48,14 +52,10 @@ export const useElementDND = (
       };
 
       const handleMouseUp = (event: MouseEvent) => {
-        const finalDeltaX = calculateDelta(
-          event.clientX,
-          dragData.startMouse.x
-        );
-        const finalDeltaY = calculateDelta(
-          event.clientY,
-          dragData.startMouse.y
-        );
+        const final = screenToLogical(event.clientX, event.clientY);
+        const finalDeltaX = final.x - startMouse.x;
+        const finalDeltaY = final.y - startMouse.y;
+
         selection.selectedElementIds.forEach((id) => {
           const startPosition = dragData.startPositions[id];
           if (!startPosition) {

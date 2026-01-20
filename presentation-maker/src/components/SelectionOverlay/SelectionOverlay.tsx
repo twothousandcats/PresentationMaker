@@ -1,18 +1,12 @@
 import styles from './SelectionOverlay.module.css';
 import type { Size, SlideElement, Position } from '../../store/types/types.ts';
-import {
-  concatClassNames,
-  getRandomId,
-} from '../../store/utils/functions.ts';
+import { concatClassNames, getRandomId } from '../../store/utils/functions.ts';
 import type { ResizeItem } from '../../store/types/utility-types.ts';
 
 interface SelectionOverlayProps {
   selectedElementIds: string[];
   slideElements: SlideElement[];
   slideSize: Size;
-  scale: number;
-  offsetX: number;
-  offsetY: number;
   dragOffsets?: Record<string, Position>;
   resizePreview?: Record<string, { size: Size; position: Position }> | null;
   onStartResizing?: (
@@ -107,9 +101,6 @@ const RESIZE_HANDLERS: Handler[] = [
 export const SelectionOverlay = ({
   selectedElementIds,
   slideElements,
-  scale,
-  offsetX,
-  offsetY,
   onStartResizing,
   resizePreview,
   dragOffsets = {},
@@ -132,10 +123,10 @@ export const SelectionOverlay = ({
       y += dragOffsets[id].y;
     }
 
-    const screenX = offsetX + x * scale;
-    const screenY = offsetY + y * scale;
-    const screenW = displaySize.width * scale;
-    const screenH = displaySize.height * scale;
+    const screenX = x;
+    const screenY = y;
+    const screenW = displaySize.width;
+    const screenH = displaySize.height;
 
     return (
       <div

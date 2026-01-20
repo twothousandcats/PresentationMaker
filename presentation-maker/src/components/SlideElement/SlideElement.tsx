@@ -27,20 +27,20 @@ type ElementProps = {
 };
 
 export default function SlideElement({
-  element,
-  slideId,
-  slideElements,
-  selectedElementsIds,
-  styleOverride,
-  // scale,
-  isEditable,
-  isInteractive,
-  isPlacing,
-  isActive,
-  onDragStart,
-  // offsetX,
-  // offsetY,
-}: ElementProps) {
+                                       element,
+                                       slideId,
+                                       slideElements,
+                                       selectedElementsIds,
+                                       styleOverride,
+                                       // scale,
+                                       isEditable,
+                                       isInteractive,
+                                       isPlacing,
+                                       isActive,
+                                       onDragStart,
+                                       // offsetX,
+                                       // offsetY,
+                                     }: ElementProps) {
   const { handleSelectElement } = useSelectElements({
     elements: slideElements,
     selection: selectedElementsIds,

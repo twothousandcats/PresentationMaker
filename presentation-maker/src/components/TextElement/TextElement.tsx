@@ -13,12 +13,12 @@ type TextElementProps = {
 };
 
 export const TextElement: React.FC<TextElementProps> = ({
-  element,
-  slideId,
-  isEditable,
-  // scale,
-  isActive,
-}) => {
+                                                          element,
+                                                          slideId,
+                                                          isEditable,
+                                                          // scale,
+                                                          isActive,
+                                                        }) => {
   const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);
