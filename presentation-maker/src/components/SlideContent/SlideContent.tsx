@@ -131,10 +131,6 @@ export default function SlideContent({
 
     updateScale();
 
-    console.log(scaleInfo.scale);
-    console.log(size.width);
-    console.log(size.height);
-
     if (isEditable) {
       const ro = new ResizeObserver(updateScale);
       ro.observe(containerRef.current);
@@ -143,7 +139,14 @@ export default function SlideContent({
         ro.disconnect();
       };
     }
-  }, [size.width, size.height, isEditable, isPreview, containerRef, scaleInfo.scale]);
+  }, [
+    size.width,
+    size.height,
+    isEditable,
+    isPreview,
+    containerRef,
+    scaleInfo.scale,
+  ]);
   const previewScale =
     !isEditable && !isPreview && !isCollection
       ? Math.min(
@@ -167,7 +170,7 @@ export default function SlideContent({
         ...(isEditable
           ? {
               cursor: isPlacing ? 'crosshair' : 'default',
-              transform: `scale(${scaleInfo.scale})`,
+              scale: scaleInfo.scale,
               width: `${size.width}px`,
               height: `${size.height}px`,
             }
@@ -175,7 +178,7 @@ export default function SlideContent({
               ...(isPreview
                 ? {
                     transformOrigin: isCollection ? '0 0' : '',
-                    transform: `scale(${isCollection ? 0.2 : 0.9})`,
+                    transform: `scale(${isCollection ? 0.167 : 0.77})`,
                     width: `${size.width}px`,
                     height: `${size.height}px`,
                   }
