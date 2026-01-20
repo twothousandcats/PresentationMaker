@@ -7,7 +7,7 @@ const PRESENTATION_SIZE = {
   width: 1920, // width: 1240,
   height: 1080, // height: 720,
 };
-const PADDING_FACTOR = 0.8; // масштаб редактируемой области
+const PADDING_FACTOR = 0.7; // масштаб редактируемой области
 const DIVISION_FACTOR = 8;
 
 const PREVIEW_LIST_SLIDE_WIDTH = PRESENTATION_SIZE.width / DIVISION_FACTOR;

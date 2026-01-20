@@ -27,13 +27,13 @@ type SlideContentProps = {
 };
 
 export default function SlideContent({
-                                       slide,
-                                       selection,
-                                       isEditable,
-                                       mode,
-                                       isPreview,
-                                       isCollection,
-                                     }: SlideContentProps) {
+  slide,
+  selection,
+  isEditable,
+  mode,
+  isPreview,
+  isCollection,
+}: SlideContentProps) {
   const { size } = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
   const isActive = selection.selectedSlideIds.includes(slide.id);
@@ -131,6 +131,10 @@ export default function SlideContent({
 
     updateScale();
 
+    console.log(scaleInfo.scale);
+    console.log(size.width);
+    console.log(size.height);
+
     if (isEditable) {
       const ro = new ResizeObserver(updateScale);
       ro.observe(containerRef.current);
@@ -139,13 +143,13 @@ export default function SlideContent({
         ro.disconnect();
       };
     }
-  }, [size.width, size.height, isEditable, isPreview, containerRef]);
+  }, [size.width, size.height, isEditable, isPreview, containerRef, scaleInfo.scale]);
   const previewScale =
     !isEditable && !isPreview && !isCollection
       ? Math.min(
-        PREVIEW_LIST_SLIDE_WIDTH / size.width,
-        PREVIEW_LIST_SLIDE_HEIGHT / size.height
-      )
+          PREVIEW_LIST_SLIDE_WIDTH / size.width,
+          PREVIEW_LIST_SLIDE_HEIGHT / size.height
+        )
       : 1;
 
   return (
@@ -162,24 +166,24 @@ export default function SlideContent({
         }),
         ...(isEditable
           ? {
-            cursor: isPlacing ? 'crosshair' : 'default',
-            scale: scaleInfo.scale,
-            width: `${size.width}px`,
-            height: `${size.height}px`,
-          }
+              cursor: isPlacing ? 'crosshair' : 'default',
+              transform: `scale(${scaleInfo.scale})`,
+              width: `${size.width}px`,
+              height: `${size.height}px`,
+            }
           : {
-            ...(isPreview
-              ? {
-                transformOrigin: isCollection ? '0 0' : '',
-                transform: `scale(${isCollection ? 0.2 : 0.9})`,
-                width: `${size.width}px`,
-                height: `${size.height}px`,
-              }
-              : {
-                width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
-                height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
-              }),
-          }),
+              ...(isPreview
+                ? {
+                    transformOrigin: isCollection ? '0 0' : '',
+                    transform: `scale(${isCollection ? 0.2 : 0.9})`,
+                    width: `${size.width}px`,
+                    height: `${size.height}px`,
+                  }
+                : {
+                    width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
+                    height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
+                  }),
+            }),
       }}
       onMouseDown={handlePlacementStart}
       onClick={handleNonElementClick}
