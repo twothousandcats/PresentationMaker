@@ -4,35 +4,37 @@ import { usePlacementMode } from '../../store/hooks/usePlacementMode.ts';
 import { useElementDND } from '../../store/hooks/useElementDND.ts';
 import { useResize } from '../../store/hooks/useResize.ts';
 import { SelectionOverlay } from '../SelectionOverlay/SelectionOverlay.tsx';
-import type {
-  EditorMode,
-  Selection,
-  Size,
-  Slide,
-} from '../../store/types/types.ts';
+import type { EditorMode, Selection, Slide } from '../../store/types/types.ts';
 import SlideElement from '../SlideElement/SlideElement.tsx';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
+import { selectCurrentPresentation } from '../../store/selectors/editorSelectors.ts';
+import {
+  PADDING_FACTOR,
+  PREVIEW_LIST_SLIDE_HEIGHT,
+  PREVIEW_LIST_SLIDE_WIDTH,
+} from '../../store/utils/config.ts';
 
 type SlideContentProps = {
   slide: Slide;
   selection: Selection;
-  size: Size;
   isEditable?: boolean;
   mode?: EditorMode;
   isPreview?: boolean;
+  isCollection?: boolean;
 };
 
 export default function SlideContent({
   slide,
   selection,
-  size,
   isEditable,
   mode,
   isPreview,
+  isCollection,
 }: SlideContentProps) {
+  const { size } = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
   const isActive = selection.selectedSlideIds.includes(slide.id);
   const activeElements =
@@ -103,7 +105,7 @@ export default function SlideContent({
 
     const updateScale = () => {
       const container = containerRef.current;
-      if(!container) {
+      if (!container) {
         return;
       }
       const containerWidth = container.clientWidth;
@@ -111,16 +113,17 @@ export default function SlideContent({
       const logicalWidth = size.width;
       const logicalHeight = size.height;
 
-      if (logicalWidth === 0 || logicalHeight === 0) {
-        return;
-      }
+      const paddedContainerWidth = containerWidth * PADDING_FACTOR;
+      const paddedContainerHeight = containerHeight * PADDING_FACTOR;
 
-      const scaleX = containerWidth / logicalWidth;
-      const scaleY = containerHeight / logicalHeight;
+      const scaleX = paddedContainerWidth / logicalWidth;
+      const scaleY = paddedContainerHeight / logicalHeight;
       const scale = Math.min(scaleX, scaleY); // сохраняем пропорции
 
-      const offsetX = (containerWidth - logicalWidth * scale) / 2;
-      const offsetY = (containerHeight - logicalHeight * scale) / 2;
+      const scaledWidth = logicalWidth * scale;
+      const scaledHeight = logicalHeight * scale;
+      const offsetX = (containerWidth - scaledWidth) / 2;
+      const offsetY = (containerHeight - scaledHeight) / 2;
 
       setScaleInfo({ scale, offsetX, offsetY });
     };
@@ -136,6 +139,13 @@ export default function SlideContent({
       };
     }
   }, [size.width, size.height, isEditable, isPreview, containerRef]);
+  const previewScale =
+    !isEditable && !isPreview && !isCollection
+      ? Math.min(
+          PREVIEW_LIST_SLIDE_WIDTH / size.width,
+          PREVIEW_LIST_SLIDE_HEIGHT / size.height
+        )
+      : 1;
 
   return (
     <div
@@ -152,9 +162,23 @@ export default function SlideContent({
         ...(isEditable
           ? {
               cursor: isPlacing ? 'crosshair' : 'default',
+              transform: `translate(${scaleInfo.offsetX}px, ${scaleInfo.offsetY}px) scale(${scaleInfo.scale})`,
+              transformOrigin: '0 0',
+              width: `${size.width}px`,
+              height: `${size.height}px`,
             }
           : {
-              aspectRatio: `${size.width} / ${size.height}`,
+              ...(isPreview
+                ? {
+                    transformOrigin: isCollection ? '0 0' : '',
+                    transform: `scale(${isCollection ? 0.2 : 0.9})`,
+                    width: `${size.width}px`,
+                    height: `${size.height}px`,
+                  }
+                : {
+                    width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
+                    height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
+                  }),
             }),
       }}
       onMouseDown={handlePlacementStart}
@@ -168,11 +192,20 @@ export default function SlideContent({
         const logicalY = preview?.position.y ?? element.position.y;
         const logicalW = preview?.size.width ?? element.size.width;
         const logicalH = preview?.size.height ?? element.size.height;
+        const dx = dragOffsets[element.id]?.x ?? 0;
+        const dy = dragOffsets[element.id]?.y ?? 0;
 
-        const screenX = scaleInfo.offsetX + logicalX * scaleInfo.scale;
-        const screenY = scaleInfo.offsetY + logicalY * scaleInfo.scale;
-        const screenW = logicalW * scaleInfo.scale;
-        const screenH = logicalH * scaleInfo.scale;
+        let x = logicalX * previewScale + dx * previewScale;
+        let y = logicalY * previewScale + dy * previewScale;
+        let w = logicalW * previewScale;
+        let h = logicalH * previewScale;
+
+        if (isEditable) {
+          x = logicalX + dx;
+          y = logicalY + dy;
+          w = logicalW;
+          h = logicalH;
+        }
 
         return (
           <SlideElement
@@ -189,15 +222,13 @@ export default function SlideContent({
             onDragStart={(clientX, clientY) =>
               handleDragStart(clientX, clientY)
             }
-            dragOffset={dragOffsets[element.id] || { x: 0, y: 0 }}
             resizePreview={resizePreview?.[element.id]}
             styleOverride={{
-              left: `${screenX}px`,
-              top: `${screenY}px`,
-              width: `${screenW}px`,
-              height: `${screenH}px`,
+              left: `${x}px`,
+              top: `${y}px`,
+              width: `${w}px`,
+              height: `${h}px`,
             }}
-            scale={scaleInfo.scale}
           />
         );
       })}

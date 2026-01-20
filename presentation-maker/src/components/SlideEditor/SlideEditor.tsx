@@ -7,7 +7,7 @@ import {
 } from '../../store/selectors/editorSelectors.ts';
 
 export default function SlideEditor() {
-  const { slides, size } = useSelector(selectCurrentPresentation);
+  const { slides } = useSelector(selectCurrentPresentation);
   const { selection, mode } = useSelector(selectUI);
   const activeSlide = slides.find(
     (slide) =>
@@ -17,13 +17,7 @@ export default function SlideEditor() {
 
   return (
     <div className={style.editor}>
-      <div
-        className={style.editor__container}
-        style={{
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-        }}
-      >
+      <div className={style.editor__container}>
         {activeSlide && (
           <Slide slideId={activeSlide.id} isEditable={true} mode={mode} />
         )}

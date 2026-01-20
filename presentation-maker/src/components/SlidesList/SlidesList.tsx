@@ -1,5 +1,5 @@
 import style from './SlidesList.module.css';
-import type { Presentation, UIState } from '../../store/types/types.ts';
+import type { Presentation } from '../../store/types/types.ts';
 import Slide from '../Slide/Slide.tsx';
 import { useSelectSlides } from '../../store/hooks/useSelectSlides.ts';
 import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
@@ -13,7 +13,7 @@ import { concatClassNames } from '../../store/utils/functions.ts';
 
 export default function SlidesList() {
   const { slides }: Presentation = useSelector(selectCurrentPresentation);
-  const { selection }: UIState = useSelector(selectUI);
+  const { selection }: Presentation = useSelector(selectUI);
   const dispatch = useDispatch();
 
   const { handleSelectSlide } = useSelectSlides({

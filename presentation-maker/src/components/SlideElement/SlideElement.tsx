@@ -14,7 +14,7 @@ type ElementProps = {
   slideElements: SlideElement[];
   selectedElementsIds: string[];
   styleOverride: ScreenStyle;
-  scale: number;
+  // scale: number;
   isEditable?: boolean;
   isInteractive?: boolean;
   isPlacing?: boolean;
@@ -22,6 +22,8 @@ type ElementProps = {
   onDragStart?: (clientX: number, clientY: number) => void;
   dragOffset?: Position;
   resizePreview?: { size: Size; position: Position } | null;
+  // offsetX: number;
+  // offsetY: number;
 };
 
 export default function SlideElement({
@@ -30,13 +32,14 @@ export default function SlideElement({
   slideElements,
   selectedElementsIds,
   styleOverride,
-  scale,
+  // scale,
   isEditable,
   isInteractive,
   isPlacing,
   isActive,
   onDragStart,
-  dragOffset,
+  // offsetX,
+  // offsetY,
 }: ElementProps) {
   const { handleSelectElement } = useSelectElements({
     elements: slideElements,
@@ -59,9 +62,6 @@ export default function SlideElement({
       className={classNames}
       style={{
         ...styleOverride,
-        transform: dragOffset
-          ? `translate(${dragOffset.x * scale}px, ${dragOffset.y * scale}px)`
-          : 'none',
         cursor: isPlacing
           ? 'inherit'
           : isEditable && isActive
@@ -82,7 +82,7 @@ export default function SlideElement({
           element={element}
           slideId={slideId}
           isEditable={isEditable}
-          scale={scale}
+          // scale={scale}
           isActive={isActive}
         />
       ) : null}

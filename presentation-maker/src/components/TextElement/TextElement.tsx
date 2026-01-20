@@ -8,7 +8,7 @@ type TextElementProps = {
   element: SlideElement & { type: 'text' };
   slideId: string;
   isEditable?: boolean;
-  scale: number;
+  // scale: number;
   isActive?: boolean;
 };
 
@@ -16,7 +16,7 @@ export const TextElement: React.FC<TextElementProps> = ({
   element,
   slideId,
   isEditable,
-  scale,
+  // scale,
   isActive,
 }) => {
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ export const TextElement: React.FC<TextElementProps> = ({
 
   const textStyle = {
     fontFamily: element.fontFamily ?? 'inherit',
-    fontSize: `${(element.fontSize * scale).toFixed(2)}px`,
+    fontSize: `${element.fontSize}px`,
     fontWeight: element.fontWeight ?? 'normal',
     color: element.color ?? 'inherit',
     backgroundColor:
