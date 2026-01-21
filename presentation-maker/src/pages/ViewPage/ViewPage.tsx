@@ -143,7 +143,6 @@ export const ViewPage = () => {
           <SlideContent
             slide={currentSlide}
             selection={selection}
-            size={presentation.size}
             isEditable={false}
             isPreview={true}
           />

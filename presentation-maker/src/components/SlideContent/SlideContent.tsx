@@ -126,27 +126,28 @@ export default function SlideContent({
       const offsetX = (containerWidth - scaledWidth) / 2;
       const offsetY = (containerHeight - scaledHeight) / 2;
 
+      console.log(scale, offsetX, offsetY);
       setScaleInfo({ scale, offsetX, offsetY });
     };
 
     updateScale();
 
-    if (isEditable) {
-      const ro = new ResizeObserver(updateScale);
-      ro.observe(containerRef.current);
+    let ro: ResizeObserver | null = null;
 
-      return () => {
-        ro.disconnect();
-      };
+    if (isEditable) {
+      ro = new ResizeObserver(updateScale);
+      ro.observe(containerRef.current);
     }
-  }, [
-    size.width,
-    size.height,
-    isEditable,
-    isPreview,
-    containerRef,
-    scaleInfo.scale,
-  ]);
+
+    const handleWindowResize = () => updateScale();
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [size.width, size.height, isEditable, containerRef]);
+
   const previewScale =
     !isEditable && !isPreview && !isCollection
       ? Math.min(
@@ -178,7 +179,7 @@ export default function SlideContent({
               ...(isPreview
                 ? {
                     transformOrigin: isCollection ? '0 0' : '',
-                    transform: `scale(${isCollection ? 0.167 : 0.77})`,
+                    transform: `scale(${isCollection ? 0.25 : 1})`,
                     width: `${size.width}px`,
                     height: `${size.height}px`,
                   }

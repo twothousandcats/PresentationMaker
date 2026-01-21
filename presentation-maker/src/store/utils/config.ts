@@ -4,11 +4,11 @@ const CONTROLS_TO_HIDE_DELAY_MS: number = 3000;
 
 // 16:9
 const PRESENTATION_SIZE = {
-  width: 1920, // width: 1240,
-  height: 1080, // height: 720,
+  width: 1280,
+  height: 720,
 };
-const PADDING_FACTOR = 0.7; // масштаб редактируемой области
-const DIVISION_FACTOR = 8;
+const PADDING_FACTOR = 0.9; // масштаб редактируемой области
+const DIVISION_FACTOR = 6;
 
 const PREVIEW_LIST_SLIDE_WIDTH = PRESENTATION_SIZE.width / DIVISION_FACTOR;
 const PREVIEW_LIST_SLIDE_HEIGHT = PRESENTATION_SIZE.height / DIVISION_FACTOR;
