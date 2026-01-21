@@ -179,7 +179,7 @@ export default function SlideContent({
               ...(isPreview
                 ? {
                     transformOrigin: isCollection ? '0 0' : '',
-                    transform: `scale(${isCollection ? 0.25 : 1})`,
+                    transform: `scale(${isCollection ? 0.25 : 1.05})`,
                     width: `${size.width}px`,
                     height: `${size.height}px`,
                   }
