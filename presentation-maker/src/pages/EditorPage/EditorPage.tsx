@@ -14,7 +14,7 @@ import Toolbar from '../../components/Toolbar/Toolbar.tsx';
 import SlidesList from '../../components/SlidesList/SlidesList.tsx';
 import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPresentation } from '../../lib/presentationService.ts';
+import { getPresentation } from '../../api/presentationService.ts';
 import { createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';

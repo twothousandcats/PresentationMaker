@@ -19,6 +19,7 @@
     /* TEXT */
     --default-text-color: #444746;
     --accent-text-color: #fbfcfd;
+    --accent-text-color2: #ffffff;
 
     /* RGB */
     --accent-border-color-rgb: 123, 123, 123;
@@ -65,6 +66,7 @@
     /* TEXT */
     --default-text-color: #fbfcfd;
     --accent-text-color: #444746;
+    --accent-text-color2: #000000;
 
     /* RGB (для прозрачности и градиентов) */
     --accent-border-color-rgb: 161, 161, 161;

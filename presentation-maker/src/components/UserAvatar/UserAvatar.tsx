@@ -1,5 +1,5 @@
 import style from './UserAvatar.module.css';
-import { getCurrentUser } from '../../lib/authService.ts';
+import { getCurrentUser } from '../../api/authService.ts';
 import { useEffect, useState } from 'react';
 import {
   generateAvatarColor,

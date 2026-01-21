@@ -6,9 +6,9 @@ import {
 } from '../../store/selectors/editorSelectors.ts';
 import { useMemo } from 'react';
 import {
+  changeElementFontFamily,
   changeElementFontColor,
   changeElementFontSize,
-  changeFontFamily,
 } from '../../store/slices/editorSlice.ts';
 import type {
   HEXColor,
@@ -60,10 +60,11 @@ export default function TextFormattingToolbar() {
   }, [selectedTextElements]);
 
   const handleChangeFontSize = (size: number) => {
+    console.log(selection.selectedElementIds);
     dispatch(
       changeElementFontSize({
         slideId,
-        elementId: selection.selectedElementIds[0], // todo: для множества?
+        elementIds: selection.selectedElementIds,
         newFontSize: size,
       })
     );
@@ -71,9 +72,9 @@ export default function TextFormattingToolbar() {
 
   const handleChangeFontFamily = (family: string) => {
     dispatch(
-      changeFontFamily({
+      changeElementFontFamily({
         slideId,
-        elementId: selection.selectedElementIds[0], // todo: для множества?
+        elementIds: selection.selectedElementIds,
         newFF: family,
       })
     );
@@ -83,7 +84,7 @@ export default function TextFormattingToolbar() {
     dispatch(
       changeElementFontColor({
         slideId,
-        elementId: selection.selectedElementIds[0], // todo: для множества?
+        elementIds: selection.selectedElementIds,
         newColor: color as HEXColor | RGBColor,
       })
     );

@@ -346,32 +346,6 @@ export function changeTextElContent(
   };
 }
 
-export function changeFontFamily(
-  pres: Presentation,
-  payload: {
-    slideId: string;
-    elementId: string;
-    newFF: string;
-  }
-): HistoryEntry {
-  const { slideId, elementId, newFF } = payload;
-  const updatedPresentation = updateElementInSlide(
-    slideId,
-    elementId,
-    (el) => ({ ...el, fontFamily: newFF }) as SlideElement,
-    pres
-  );
-
-  return {
-    presentation: updatedPresentation,
-    context: {
-      affectedSlideIds: [slideId],
-      affectedElementIds: [elementId],
-      scrollTargetSlideId: slideId,
-    },
-  };
-}
-
 export function changeElementBg(
   pres: Presentation,
   payload: {
@@ -687,27 +661,60 @@ export function moveElementsDown(
   };
 }
 
-export function changeElementFontSize(
+export function changeElementFontFamily(
   pres: Presentation,
   payload: {
     slideId: string;
-    elementId: string;
-    newFontSize: number;
+    elementIds: string[];
+    newFF: string;
   }
 ): HistoryEntry {
-  const { slideId, elementId, newFontSize } = payload;
-  const updatedPresentation = updateElementInSlide(
-    slideId,
-    elementId,
-    (el) => ({ ...el, fontSize: newFontSize }) as SlideElement,
-    pres
-  );
+  const { slideId, elementIds, newFF } = payload;
+  let updatedPresentation = pres;
+
+  elementIds.forEach((id) => {
+    updatedPresentation = updateElementInSlide(
+      slideId,
+      id,
+      (el) => ({ ...el, fontFamily: newFF }) as SlideElement,
+      updatedPresentation
+    );
+  });
 
   return {
     presentation: updatedPresentation,
     context: {
       affectedSlideIds: [slideId],
-      affectedElementIds: [elementId],
+      affectedElementIds: [...elementIds],
+      scrollTargetSlideId: slideId,
+    },
+  };
+}
+
+export function changeElementFontSize(
+  pres: Presentation,
+  payload: {
+    slideId: string;
+    elementIds: string[];
+    newFontSize: number;
+  }
+): HistoryEntry {
+  const { slideId, elementIds, newFontSize } = payload;
+  let updatedPresentation = pres;
+  elementIds.forEach((elementId) => {
+    updatedPresentation = updateElementInSlide(
+      slideId,
+      elementId,
+      (el) => ({ ...el, fontSize: newFontSize }) as SlideElement,
+      updatedPresentation
+    );
+  });
+
+  return {
+    presentation: updatedPresentation,
+    context: {
+      affectedSlideIds: [slideId],
+      affectedElementIds: [...elementIds],
       scrollTargetSlideId: slideId,
     },
   };
@@ -717,23 +724,26 @@ export function changeElementFontColor(
   pres: Presentation,
   payload: {
     slideId: string;
-    elementId: string;
+    elementIds: string[];
     newColor: string;
   }
 ): HistoryEntry {
-  const { slideId, elementId, newColor } = payload;
-  const updatedPresentation = updateElementInSlide(
-    slideId,
-    elementId,
-    (el) => ({ ...el, color: newColor }) as SlideElement,
-    pres
-  );
+  const { slideId, elementIds, newColor } = payload;
+  let updatedPresentation = pres;
+  elementIds.forEach((elementId) => {
+    updatedPresentation = updateElementInSlide(
+      slideId,
+      elementId,
+      (el) => ({ ...el, color: newColor }) as SlideElement,
+      updatedPresentation
+    );
+  });
 
   return {
     presentation: updatedPresentation,
     context: {
       affectedSlideIds: [slideId],
-      affectedElementIds: [elementId],
+      affectedElementIds: [...elementIds],
       scrollTargetSlideId: slideId,
     },
   };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { isAuthenticated } from '../../lib/authService.ts';
+import { isAuthenticated } from '../../api/authService.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { Loader } from '../Loader/Loader.tsx';
 

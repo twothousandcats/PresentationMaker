@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Loader } from '../Loader/Loader.tsx';
-import { isAuthenticated, logout } from '../../lib/authService.ts';
+import { isAuthenticated, logout } from '../../api/authService.ts';
 import { AppHeader } from '../AppHeader/AppHeader.tsx';
 import { PAGES_URL } from '../../store/utils/config.ts';
 

@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   getUserPresentations,
   removePresentation,
-} from '../../lib/presentationService.ts';
-import { getCurrentUser } from '../../lib/authService.ts';
+} from '../../api/presentationService.ts';
+import { getCurrentUser } from '../../api/authService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { INFO_DELAY_MS, PAGES_URL } from '../../store/utils/config.ts';
 import { LANGUAGES } from '../../store/utils/langs.ts';

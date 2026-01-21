@@ -12,6 +12,8 @@ export const selectUI = (state: RootState) => state.editor.ui;
 export const selectLastAppliedContext = (state: RootState) =>
   state.editor.ui.lastAppliedContext;
 
+// мемоизированный селектор
+// deps: selectCurrentPresentation, selectUI
 export const selectCurrentSlideElements = createSelector(
   [selectCurrentPresentation, selectUI],
   (presentation, ui) => {

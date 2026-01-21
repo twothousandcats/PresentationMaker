@@ -4,7 +4,7 @@ import type {
   AuthMode,
   ValidationError,
 } from '../../store/types/utility-types.ts';
-import { login, register } from '../../lib/authService.ts';
+import { login, register } from '../../api/authService.ts';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import style from './AuthPage.module.css';

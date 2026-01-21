@@ -4,7 +4,7 @@ import { resizeElement } from '../slices/editorSlice.ts';
 import type { ResizeItem, ResizePreview } from '../types/utility-types.ts';
 import { useDispatch } from 'react-redux';
 
-const MIN_SIZE = 10;
+const MIN_SIZE = 25;
 
 const computeFinalResize = (
   resizeItem: ResizeItem,

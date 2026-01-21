@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPresentation } from '../../lib/presentationService.ts';
+import { getPresentation } from '../../api/presentationService.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import type { Presentation, Selection } from '../../store/types/types.ts';
 import SlideContent from '../../components/SlideContent/SlideContent.tsx';

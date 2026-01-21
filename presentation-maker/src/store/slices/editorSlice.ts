@@ -73,21 +73,6 @@ function createHistoryReducer<T>(
       };
     }
 
-    // Восстанавливаем UI
-    // const { affectedSlideIds, affectedElementIds, scrollTargetSlideId } =
-    //   result.context;
-    // if (scrollTargetSlideId) {
-    //   state.ui.selection = {
-    //     selectedSlideIds: [scrollTargetSlideId],
-    //     selectedElementIds: [],
-    //   };
-    // } else if (affectedSlideIds.length > 0 || affectedElementIds.length > 0) {
-    //   state.ui.selection = {
-    //     selectedSlideIds: [...affectedSlideIds],
-    //     selectedElementIds: [...affectedElementIds],
-    //   };
-    // }
-
     state.ui.lastAppliedContext = result.context;
   };
 }
@@ -114,7 +99,7 @@ const editorSlice = createSlice({
     resizeElement: createHistoryReducer(pureActions.resizeElement),
 
     // text el
-    changeFontFamily: createHistoryReducer(pureActions.changeFontFamily),
+    changeElementFontFamily: createHistoryReducer(pureActions.changeElementFontFamily),
     changeElementFontSize: createHistoryReducer(pureActions.changeElementFontSize),
     changeElementFontColor: createHistoryReducer(pureActions.changeElementFontColor),
 
@@ -282,7 +267,7 @@ export const {
   changeSlideBg,
   resizeElement,
 
-  changeFontFamily,
+  changeElementFontFamily,
   changeElementFontSize,
   changeElementFontColor,
 

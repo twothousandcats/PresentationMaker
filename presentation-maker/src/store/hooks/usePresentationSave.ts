@@ -2,14 +2,14 @@ import { useSelector } from 'react-redux';
 import { selectCurrentPresentation } from '../selectors/editorSelectors.ts';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AUTOSAVE_DELAY_MS } from '../utils/config.ts';
-import { getCurrentUser } from '../../lib/authService.ts';
-import { savePresentation } from '../../lib/presentationService.ts';
+import { getCurrentUser } from '../../api/authService.ts';
+import { savePresentation } from '../../api/presentationService.ts';
 
 export const usePresentationSave = () => {
   const presentation = useSelector(selectCurrentPresentation);
   const [isSaving, setIsSaving] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const savedPresentationRef = useRef(presentation);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // хранит ID таймера(для отмены)
+  const savedPresentationRef = useRef(presentation); // кэширует последнюю сохранённую версию
 
   // Сброс при размонтировании
   useEffect(() => {
@@ -46,7 +46,7 @@ export const usePresentationSave = () => {
       clearTimeout(timeoutRef.current);
     }
 
-    // защита (нужна ли)
+    // защита
     if (presentation === savedPresentationRef.current) {
       return;
     }
@@ -54,7 +54,7 @@ export const usePresentationSave = () => {
     timeoutRef.current = setTimeout(() => {
       save();
     }, AUTOSAVE_DELAY_MS);
-  }, [presentation, save]); // presentation триггер
+  }, [presentation, save]);
 
   return { save, isSaving };
 };

@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 
 const threshold = 5;
 
-interface UsePlacementModeProps {
+type UsePlacementModeProps = {
   slide: Slide;
   isEditable: boolean;
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -32,12 +32,14 @@ export function usePlacementMode({
 }: UsePlacementModeProps) {
   const dispatch = useDispatch();
   const safeMode: EditorMode = mode ?? { type: 'idle' };
+  // синхронизирует актуальное значение превью
   const placementPreviewRef = useRef<{
     x: number;
     y: number;
     width: number;
     height: number;
   } | null>(null);
+  // состояние превью
   const [placementPreview, setPlacementPreview] = useState<{
     x: number;
     y: number;

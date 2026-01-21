@@ -9,7 +9,7 @@ import IconBrush from '../Icons/IconBrush.tsx';
 import IconAddImage from '../Icons/IconAddImage.tsx';
 import * as React from 'react';
 import IconAddUrl from '../Icons/IconAddUrl.tsx';
-import { uploadFile } from '../../lib/fileService.ts';
+import { uploadFile } from '../../api/fileService.ts';
 import { ColorPicker } from '../ColorPicker/ColorPicker.tsx';
 import { Loader } from '../Loader/Loader.tsx';
 
@@ -119,7 +119,7 @@ export function AddBgDialog({ isOpen, onClose, onAdd }: DialogProps) {
     if (isOpen) {
       setActiveTab('file');
       setUrlContent('');
-      setCurrentColor('#000000');
+      setCurrentColor('#ffffff');
       setUploadedImageUrl(null);
       setUploading(false);
     }
