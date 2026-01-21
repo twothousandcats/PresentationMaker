@@ -1,6 +1,5 @@
 import style from './SlidesList.module.css';
-import type { Presentation } from '../../store/types/types.ts';
-import Slide from '../Slide/Slide.tsx';
+import type { Presentation, UIState } from '../../store/types/types.ts';
 import { useSelectSlides } from '../../store/hooks/useSelectSlides.ts';
 import { useSlidesDND } from '../../store/hooks/useSlidesDND.ts';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
@@ -10,10 +9,11 @@ import {
   selectUI,
 } from '../../store/selectors/editorSelectors.ts';
 import { concatClassNames } from '../../store/utils/functions.ts';
+import SlideContent from '../SlideContent/SlideContent.tsx';
 
 export default function SlidesList() {
   const { slides }: Presentation = useSelector(selectCurrentPresentation);
-  const { selection }: Presentation = useSelector(selectUI);
+  const { selection }: UIState = useSelector(selectUI);
   const dispatch = useDispatch();
 
   const { handleSelectSlide } = useSelectSlides({
@@ -47,6 +47,7 @@ export default function SlidesList() {
             <div
               className={concatClassNames([
                 style.holder,
+                selection.selectedSlideIds.includes(slide.id) && style.holderActive, // isActive
                 draggedIds.includes(slide.id) && style.holder_dragged,
                 targetId === slide.id &&
                   (insertAfter
@@ -54,7 +55,14 @@ export default function SlidesList() {
                     : style.holder_drop_before),
               ])}
             >
-              <Slide slideId={slide.id} isEditable={false} />
+              {/*<Slide slideId={slide.id} isEditable={false} /> */}
+              <SlideContent
+                slide={slide}
+                selection={selection}
+                isEditable={false}
+                isPreview={false}
+                isCollection={false}
+              />
             </div>
           </li>
         ))}

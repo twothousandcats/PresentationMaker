@@ -1,5 +1,5 @@
 .container {
-    min-width: 260px;
+    min-width: 270px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -7,8 +7,6 @@
     padding-right: 10px;
 
     overflow-y: scroll;
-
-    /* Для WebKit */
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -26,7 +24,6 @@
 }
 
 .frame {
-    width: 240px;
     display: flex;
     gap: 10px;
 
@@ -39,15 +36,25 @@
 .holder {
     position: relative;
 
-    width: 240px;
-    height: 135px;
-    display: flex;
-    gap: 10px;
+    width: calc((1280px * 0.9) * 0.2 + (3px * 2)); /*320px*/
+    height: calc((720px * 0.9) * 0.2 + (3px * 2)); /*180px*/
 
     font-family: var(--base-font);
     color: var(--default-text-color);
 
+    border: 3px solid var(--default-border-color);
+    border-radius: 5px;
+
     user-select: none;
+    transition: border 0.3s;
+
+    &:hover {
+        border: 3px solid var(--accent-border-color);
+    }
+
+    &.holderActive {
+        border-color: var(--selected-border-color);
+    }
 }
 
 .holder_dragged {
@@ -93,9 +100,4 @@
 .holder__num {
     font-family: inherit;
     color: inherit;
-}
-
-.dragging {
-    opacity: 0.5;
-    scale: 0.8;
 }

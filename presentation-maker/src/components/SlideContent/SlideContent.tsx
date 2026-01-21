@@ -11,10 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { selectCurrentPresentation } from '../../store/selectors/editorSelectors.ts';
-import {
-  PREVIEW_LIST_SLIDE_HEIGHT,
-  PREVIEW_LIST_SLIDE_WIDTH,
-} from '../../store/utils/config.ts';
 
 type SlideContentProps = {
   slide: Slide;
@@ -143,13 +139,6 @@ export default function SlideContent({
     };
   }, [size.width, size.height, isEditable, containerRef]);
 
-  const previewScale =
-    !isEditable && !isPreview && !isCollection
-      ? Math.min(
-          PREVIEW_LIST_SLIDE_WIDTH / size.width,
-          PREVIEW_LIST_SLIDE_HEIGHT / size.height
-        )
-      : 1;
   const containerStyles = {
     backgroundColor: `${bgColor}`,
     ...(bgImg && {
@@ -174,8 +163,10 @@ export default function SlideContent({
                 height: `${size.height}px`,
               }
             : {
-                width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
-                height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
+                transformOrigin: '0 0',
+                transform: `scale(${0.2})`,
+                width: `${size.width}px`,
+                height: `${size.height}px`,
               }),
         }),
   };
@@ -199,10 +190,10 @@ export default function SlideContent({
         const dx = dragOffsets[element.id]?.x ?? 0;
         const dy = dragOffsets[element.id]?.y ?? 0;
 
-        let x = logicalX * previewScale + dx * previewScale;
-        let y = logicalY * previewScale + dy * previewScale;
-        let w = logicalW * previewScale;
-        let h = logicalH * previewScale;
+        let x = logicalX + dx;
+        let y = logicalY + dy;
+        let w = logicalW;
+        let h = logicalH;
 
         if (isEditable) {
           x = logicalX + dx;
