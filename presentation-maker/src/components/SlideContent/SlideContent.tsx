@@ -9,10 +9,10 @@ import SlideElement from '../SlideElement/SlideElement.tsx';
 import { clearSelection } from '../../store/slices/editorSlice.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { selectCurrentPresentation } from '../../store/selectors/editorSelectors.ts';
 import {
-  PADDING_FACTOR,
+  SCALE_FACTOR,
   PREVIEW_LIST_SLIDE_HEIGHT,
   PREVIEW_LIST_SLIDE_WIDTH,
 } from '../../store/utils/config.ts';
@@ -36,6 +36,7 @@ export default function SlideContent({
 }: SlideContentProps) {
   const { size } = useSelector(selectCurrentPresentation);
   const dispatch = useDispatch();
+  const containerRef = useRef<HTMLDivElement>(null);
   const isActive = selection.selectedSlideIds.includes(slide.id);
   const activeElements =
     isActive && isEditable ? selection.selectedElementIds : [];
@@ -59,14 +60,6 @@ export default function SlideContent({
     slide.background && slide.background.type === 'image'
       ? slide.background.data
       : '';
-
-  const { containerRef, placementPreview, handlePlacementStart, isPlacing } =
-    usePlacementMode({
-      mode,
-      slide,
-      isEditable: !!isEditable,
-    });
-  const isInteractive = isEditable && !isPlacing;
   const screenToLogical = useCallback(
     (screenX: number, screenY: number) => {
       if (!containerRef.current) {
@@ -79,6 +72,17 @@ export default function SlideContent({
     },
     [scaleInfo, containerRef]
   );
+
+  const { placementPreview, handlePlacementStart, isPlacing } =
+    usePlacementMode({
+      mode,
+      slide,
+      containerRef,
+      screenToLogical,
+      isEditable: !!isEditable,
+    });
+  const isInteractive = isEditable && !isPlacing;
+
   const { dragOffsets, handleDragStart } = useElementDND(
     slide,
     selection,
@@ -114,8 +118,8 @@ export default function SlideContent({
       const logicalWidth = size.width;
       const logicalHeight = size.height;
 
-      const paddedContainerWidth = containerWidth * PADDING_FACTOR;
-      const paddedContainerHeight = containerHeight * PADDING_FACTOR;
+      const paddedContainerWidth = containerWidth * SCALE_FACTOR;
+      const paddedContainerHeight = containerHeight * SCALE_FACTOR;
 
       const scaleX = paddedContainerWidth / logicalWidth;
       const scaleY = paddedContainerHeight / logicalHeight;
@@ -126,7 +130,6 @@ export default function SlideContent({
       const offsetX = (containerWidth - scaledWidth) / 2;
       const offsetY = (containerHeight - scaledHeight) / 2;
 
-      console.log(scale, offsetX, offsetY);
       setScaleInfo({ scale, offsetX, offsetY });
     };
 
@@ -139,12 +142,8 @@ export default function SlideContent({
       ro.observe(containerRef.current);
     }
 
-    const handleWindowResize = () => updateScale();
-    window.addEventListener('resize', handleWindowResize);
-
     return () => {
       if (ro) ro.disconnect();
-      window.removeEventListener('resize', handleWindowResize);
     };
   }, [size.width, size.height, isEditable, containerRef]);
 
@@ -171,7 +170,7 @@ export default function SlideContent({
         ...(isEditable
           ? {
               cursor: isPlacing ? 'crosshair' : 'default',
-              scale: scaleInfo.scale,
+              // scale: scaleInfo.scale,
               width: `${size.width}px`,
               height: `${size.height}px`,
             }
@@ -179,7 +178,7 @@ export default function SlideContent({
               ...(isPreview
                 ? {
                     transformOrigin: isCollection ? '0 0' : '',
-                    transform: `scale(${isCollection ? 0.25 : 1})`,
+                    transform: `scale(${isCollection ? 0.278 : 1.15})`,
                     width: `${size.width}px`,
                     height: `${size.height}px`,
                   }
@@ -256,12 +255,12 @@ export default function SlideContent({
             position: 'absolute',
             top: placementPreview.y,
             left: placementPreview.x,
+            zIndex: 1000,
             width: placementPreview.width,
             height: placementPreview.height,
             border: '1px dashed #0078d4',
             backgroundColor: 'rgba(0, 120, 212, 0.1)',
             pointerEvents: 'none',
-            zIndex: 1000,
           }}
         />
       )}

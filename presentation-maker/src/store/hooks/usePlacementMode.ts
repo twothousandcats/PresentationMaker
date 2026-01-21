@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type {
   EditorMode,
   Slide,
-  Position,
   SlideElement,
 } from '../types/types.ts';
 import { createTextEl, createRectangleEl } from '../utils/functions.ts';
@@ -19,17 +18,20 @@ const threshold = 5;
 interface UsePlacementModeProps {
   slide: Slide;
   isEditable: boolean;
+  containerRef: React.RefObject<HTMLDivElement>;
+  screenToLogical: (x: number, y: number) => { x: number; y: number };
   mode?: EditorMode;
 }
 
 export function usePlacementMode({
   slide,
   isEditable,
+  containerRef,
+  screenToLogical,
   mode,
 }: UsePlacementModeProps) {
   const dispatch = useDispatch();
   const safeMode: EditorMode = mode ?? { type: 'idle' };
-  const containerRef = useRef<HTMLDivElement>(null);
   const placementPreviewRef = useRef<{
     x: number;
     y: number;
@@ -70,11 +72,7 @@ export function usePlacementMode({
         return;
       }
 
-      const rect = containerRef.current.getBoundingClientRect();
-      const startPosition: Position = {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
+      const startPosition = screenToLogical(event.clientX, event.clientY);
 
       setPlacementPreview({
         x: startPosition.x,
@@ -84,15 +82,12 @@ export function usePlacementMode({
       });
 
       const handleMouseMove = (moveEvent: MouseEvent) => {
-        const currentPosition: Position = {
-          x: moveEvent.clientX - rect.left,
-          y: moveEvent.clientY - rect.top,
-        };
+        const currentLogical = screenToLogical(moveEvent.clientX, moveEvent.clientY);
 
-        const x = Math.min(startPosition.x, currentPosition.x);
-        const y = Math.min(startPosition.y, currentPosition.y);
-        const width = Math.abs(currentPosition.x - startPosition.x);
-        const height = Math.abs(currentPosition.y - startPosition.y);
+        const x = Math.min(startPosition.x, currentLogical.x);
+        const y = Math.min(startPosition.y, currentLogical.y);
+        const width = Math.abs(currentLogical.x - startPosition.x);
+        const height = Math.abs(currentLogical.y - startPosition.y);
 
         setPlacementPreview({ x, y, width, height });
       };

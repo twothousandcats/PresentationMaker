@@ -4,11 +4,11 @@ const CONTROLS_TO_HIDE_DELAY_MS: number = 3000;
 
 // 16:9
 const PRESENTATION_SIZE = {
-  width: 1280,
-  height: 720,
+  width: 1280 * 0.9,
+  height: 720 * 0.9,
 };
-const PADDING_FACTOR = 0.9; // масштаб редактируемой области
-const DIVISION_FACTOR = 6;
+const SCALE_FACTOR = 1; // масштаб редактируемой области
+const DIVISION_FACTOR = 5;
 
 const PREVIEW_LIST_SLIDE_WIDTH = PRESENTATION_SIZE.width / DIVISION_FACTOR;
 const PREVIEW_LIST_SLIDE_HEIGHT = PRESENTATION_SIZE.height / DIVISION_FACTOR;
@@ -61,7 +61,7 @@ export {
   CONTROLS_TO_HIDE_DELAY_MS,
   PREVIEW_LIST_SLIDE_WIDTH,
   PREVIEW_LIST_SLIDE_HEIGHT,
-  PADDING_FACTOR,
+  SCALE_FACTOR,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
   PAGES_URL,
