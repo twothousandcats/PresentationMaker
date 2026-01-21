@@ -18,7 +18,7 @@ const threshold = 5;
 interface UsePlacementModeProps {
   slide: Slide;
   isEditable: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
   screenToLogical: (x: number, y: number) => { x: number; y: number };
   mode?: EditorMode;
 }
@@ -153,7 +153,6 @@ export function usePlacementMode({
   );
 
   return {
-    containerRef,
     placementPreview,
     handlePlacementStart,
     isPlacing: safeMode.type === 'placing',

@@ -154,40 +154,41 @@ export default function SlideContent({
           PREVIEW_LIST_SLIDE_HEIGHT / size.height
         )
       : 1;
+  const containerStyles = {
+    backgroundColor: `${bgColor}`,
+    ...(bgImg && {
+      backgroundImage: `url(${bgImg})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }),
+    ...(isEditable
+      ? {
+          cursor: isPlacing ? 'crosshair' : 'default',
+          // scale: scaleInfo.scale,
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+        }
+      : {
+          ...(isPreview
+            ? {
+                transformOrigin: isCollection ? '0 0' : '',
+                transform: `scale(${isCollection ? 0.278 : 1.15})`,
+                width: `${size.width}px`,
+                height: `${size.height}px`,
+              }
+            : {
+                width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
+                height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
+              }),
+        }),
+  };
 
   return (
     <div
       ref={containerRef}
       className={classNames}
-      style={{
-        backgroundColor: `${bgColor}`,
-        ...(bgImg && {
-          backgroundImage: `url(${bgImg})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }),
-        ...(isEditable
-          ? {
-              cursor: isPlacing ? 'crosshair' : 'default',
-              // scale: scaleInfo.scale,
-              width: `${size.width}px`,
-              height: `${size.height}px`,
-            }
-          : {
-              ...(isPreview
-                ? {
-                    transformOrigin: isCollection ? '0 0' : '',
-                    transform: `scale(${isCollection ? 0.278 : 1.15})`,
-                    width: `${size.width}px`,
-                    height: `${size.height}px`,
-                  }
-                : {
-                    width: `${PREVIEW_LIST_SLIDE_WIDTH}px`,
-                    height: `${PREVIEW_LIST_SLIDE_HEIGHT}px`,
-                  }),
-            }),
-      }}
+      style={containerStyles}
       onMouseDown={handlePlacementStart}
       onClick={handleNonElementClick}
     >
