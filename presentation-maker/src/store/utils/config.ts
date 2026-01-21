@@ -2,12 +2,12 @@ const AUTOSAVE_DELAY_MS: number = 5000;
 const INFO_DELAY_MS: number = 4000;
 const CONTROLS_TO_HIDE_DELAY_MS: number = 3000;
 
+const SCALE_FACTOR = 0.9; // масштаб редактируемой области
 // 16:9
 const PRESENTATION_SIZE = {
-  width: 1280 * 0.9,
-  height: 720 * 0.9,
+  width: 1280 * SCALE_FACTOR,
+  height: 720 * SCALE_FACTOR,
 };
-const SCALE_FACTOR = 1; // масштаб редактируемой области
 const DIVISION_FACTOR = 5;
 
 const PREVIEW_LIST_SLIDE_WIDTH = PRESENTATION_SIZE.width / DIVISION_FACTOR;
@@ -61,7 +61,6 @@ export {
   CONTROLS_TO_HIDE_DELAY_MS,
   PREVIEW_LIST_SLIDE_WIDTH,
   PREVIEW_LIST_SLIDE_HEIGHT,
-  SCALE_FACTOR,
   LOCAL_STORAGE_NAMES,
   PRESENTATION_SIZE,
   PAGES_URL,

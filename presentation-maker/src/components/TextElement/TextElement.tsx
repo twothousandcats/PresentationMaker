@@ -8,17 +8,15 @@ type TextElementProps = {
   element: SlideElement & { type: 'text' };
   slideId: string;
   isEditable?: boolean;
-  // scale: number;
   isActive?: boolean;
 };
 
 export const TextElement: React.FC<TextElementProps> = ({
-                                                          element,
-                                                          slideId,
-                                                          isEditable,
-                                                          // scale,
-                                                          isActive,
-                                                        }) => {
+  element,
+  slideId,
+  isEditable,
+  isActive,
+}) => {
   const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);

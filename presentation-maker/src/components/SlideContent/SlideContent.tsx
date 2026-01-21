@@ -12,7 +12,6 @@ import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { selectCurrentPresentation } from '../../store/selectors/editorSelectors.ts';
 import {
-  SCALE_FACTOR,
   PREVIEW_LIST_SLIDE_HEIGHT,
   PREVIEW_LIST_SLIDE_WIDTH,
 } from '../../store/utils/config.ts';
@@ -118,11 +117,8 @@ export default function SlideContent({
       const logicalWidth = size.width;
       const logicalHeight = size.height;
 
-      const paddedContainerWidth = containerWidth * SCALE_FACTOR;
-      const paddedContainerHeight = containerHeight * SCALE_FACTOR;
-
-      const scaleX = paddedContainerWidth / logicalWidth;
-      const scaleY = paddedContainerHeight / logicalHeight;
+      const scaleX = containerWidth / logicalWidth;
+      const scaleY = containerHeight / logicalHeight;
       const scale = Math.min(scaleX, scaleY); // сохраняем пропорции
 
       const scaledWidth = logicalWidth * scale;
