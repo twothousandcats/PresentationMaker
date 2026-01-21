@@ -4,8 +4,8 @@ import { concatClassNames } from '../../store/utils/functions.ts';
 import * as React from 'react';
 import { useSelectElements } from '../../store/hooks/useSelectElements.ts';
 import type { ScreenStyle } from '../../store/types/utility-types.ts';
-import { RectangleElement } from '../RectangleElement/RectangleElement.tsx';
-import { TextElement } from '../TextElement/TextElement.tsx';
+import RectangleElement from '../RectangleElement/RectangleElement.tsx';
+import TextElement from '../TextElement/TextElement.tsx';
 
 type ElementProps = {
   element: SlideElement;
@@ -76,7 +76,6 @@ export default function SlideElement({
           element={element}
           slideId={slideId}
           isEditable={isEditable}
-          isActive={isActive}
         />
       ) : null}
     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import style from './RectangleElement.module.css';
 import type { Background } from '../../store/types/types.ts';
 
@@ -6,9 +5,9 @@ type RectangleElementProps = {
   background: Background;
 };
 
-export const RectangleElement: React.FC<RectangleElementProps> = ({
+export default function RectangleElement({
   background,
-}) => {
+}: RectangleElementProps) {
   return (
     <div
       className={style.image}

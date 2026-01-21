@@ -8,27 +8,22 @@ type TextElementProps = {
   element: SlideElement & { type: 'text' };
   slideId: string;
   isEditable?: boolean;
-  isActive?: boolean;
 };
 
-export const TextElement: React.FC<TextElementProps> = ({
+export default function TextElement({
   element,
   slideId,
   isEditable,
-  isActive,
-}) => {
+}: TextElementProps) {
   const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // состояние редактирования
-  useEffect(() => {
-    if (isEditable && isActive) {
+  const handleDoubleClick = () => {
+    if (isEditable) {
       setIsEditing(true);
-    } else {
-      setIsEditing(false);
     }
-  }, [isEditable, isActive]);
+  };
 
   // Фокус на textarea
   useEffect(() => {
@@ -36,6 +31,19 @@ export const TextElement: React.FC<TextElementProps> = ({
       textareaRef.current.focus();
       textareaRef.current.select();
     }
+  }, [isEditing]);
+
+  // размонтирование статусов
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isEditing) {
+        setIsEditing(false);
+        textareaRef.current?.blur();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
   }, [isEditing]);
 
   const handleBlur = () => {
@@ -80,10 +88,11 @@ export const TextElement: React.FC<TextElementProps> = ({
     overflow: 'hidden' as const,
     whiteSpace: 'pre-wrap' as const,
     wordWrap: 'break-word' as const,
+    userSelect: 'none' as const,
   };
 
   return (
-    <div className={style.text}>
+    <div className={style.text} onDoubleClick={handleDoubleClick}>
       <textarea
         ref={textareaRef}
         value={element.content}
@@ -91,7 +100,15 @@ export const TextElement: React.FC<TextElementProps> = ({
         onBlur={handleBlur}
         style={textStyle}
         className={style.textarea}
+        readOnly={!isEditing}
+        tabIndex={isEditing ? 0 : -1} // запрет фокуса
+        onFocus={(e) => {
+          if (!isEditing) {
+            e.preventDefault();
+            e.target.blur();
+          }
+        }}
       />
     </div>
   );
-};
+}

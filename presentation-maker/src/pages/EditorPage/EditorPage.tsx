@@ -15,9 +15,7 @@ import SlidesList from '../../components/SlidesList/SlidesList.tsx';
 import SlideEditor from '../../components/SlideEditor/SlideEditor.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPresentation } from '../../lib/presentationService.ts';
-import {
-  createNewPresentation,
-} from '../../store/utils/functions.ts';
+import { createNewPresentation } from '../../store/utils/functions.ts';
 import { PAGES_URL } from '../../store/utils/config.ts';
 import { selectUI } from '../../store/selectors/editorSelectors.ts';
 import { Loader } from '../../components/Loader/Loader.tsx';
@@ -70,7 +68,10 @@ export const EditorPage = () => {
           target.tagName === 'TEXTAREA' ||
           target.isContentEditable)
       ) {
-        return;
+        // esc не учитывается
+        if (event.key !== 'Escape') {
+          return;
+        }
       }
 
       if (event.key === 'Backspace' || event.key === 'Delete') {

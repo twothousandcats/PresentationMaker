@@ -122,18 +122,19 @@ export function usePlacementMode({
             },
           };
 
+          // data
           dispatch(
             addElementToSlide({
               slideId: slide.id,
               newElement,
             })
           );
+          // ui
           dispatch(
             setSelectedElements({
               elementsIds: [newElement.id],
             })
           );
-
           dispatch(
             setEditorMode({
               mode: {
